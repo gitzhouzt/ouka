@@ -1,0 +1,414 @@
+<template>
+  <div>
+    <n-modal
+      v-model:show="showModalRef"
+      :style="bodyStyleRef"
+      transform-origin="center"
+      :mask-closable="false"
+      preset="card"
+      :title="titleRef"
+      closable
+      @update-show="onUpdateShow"
+    >
+      <n-card size="huge" role="dialog" aria-modal="true">
+        <n-spin :show="loading">
+          <n-form
+            ref="formRef"
+            label-placement="left"
+            :label-width="100"
+            :model="formValue"
+            :rules="rules"
+            :size="size"
+          >
+            <n-grid :cols="2">
+              <n-gi :span="2">
+                <n-form-item label="事故車両" path="carName">
+                  <n-input-group>
+                    <n-input
+                      v-model:value="formValue.carName"
+                      readonly
+                      placeholder="クリック車両を選択"
+                      :disabled="!!formValue.id"
+                      @click="showCar()"
+                    ></n-input>
+                    <n-input-group-label>番号</n-input-group-label>
+                    <n-input v-model:value="formValue.carNo" :disabled="true" placeholder="車両を選択して表示" />
+                  </n-input-group>
+                </n-form-item>
+              </n-gi>
+              <n-gi :span="2">
+                <n-form-item label="事故者" path="driverName">
+                  <n-input-group>
+                    <n-input
+                      v-model:value="formValue.driverName"
+                      readonly
+                      placeholder="クリックドライバーを選択"
+                      :disabled="!!formValue.id"
+                      @click="showDriver()"
+                    ></n-input>
+                    <n-input-group-label>番号</n-input-group-label>
+                    <n-input
+                      v-model:value="formValue.driverNo"
+                      :disabled="true"
+                      placeholder="ドライバーを選択して表示"
+                    />
+                  </n-input-group>
+                </n-form-item>
+              </n-gi>
+              <n-gi>
+                <n-form-item label="事故性質" path="accidentType">
+                  <n-input
+                    v-model:value="formValue.accidentType"
+                    placeholder="クリック分類を選択"
+                    readonly
+                    @click="showDict('operate_accident_type')"
+                  /> </n-form-item
+              ></n-gi>
+              <n-gi>
+                <n-form-item label="事故日時" path="accidentTime" required>
+                  <n-date-picker v-model:value="formValue.accidentTime" type="datetime" clearable
+                /></n-form-item>
+              </n-gi>
+              <n-gi>
+                <n-form-item label="キズ確認者" path="confirmBy">
+                  <n-input v-model:value="formValue.confirmBy" /></n-form-item
+              ></n-gi>
+              <n-gi>
+                <n-form-item label="事故通知日時" path="noticeTime">
+                  <n-date-picker v-model:value="formValue.noticeTime" type="datetime" clearable
+                /></n-form-item>
+              </n-gi>
+              <n-gi>
+                <n-form-item label="修理業者" path="repairBy">
+                  <n-input v-model:value="formValue.repairBy" /></n-form-item
+              ></n-gi>
+              <n-gi>
+                <n-form-item label="修理日時" path="repairTime">
+                  <n-date-picker v-model:value="formValue.repairTime" type="datetime" clearable
+                /></n-form-item>
+              </n-gi>
+              <n-gi :span="2">
+                <n-form-item label="事故詳細" path="details"> <n-input v-model:value="formValue.details" /></n-form-item
+              ></n-gi>
+              <n-gi :span="2">
+                <n-form-item label="事故写真" path="images">
+                  <n-space>
+                    <file-upload
+                      ref="fileUploadRef"
+                      accept="image/*"
+                      list-type="image-card"
+                      file-key="images/accident"
+                      :file-list-style="{
+                        width: '600px'
+                      }"
+                      :max="5"
+                      :size="1048576"
+                      @finish="onFinish"
+                    />
+                  </n-space>
+                </n-form-item>
+              </n-gi>
+              <n-gi :span="2">
+                <n-form-item label="備考" path="remark">
+                  <n-input-group>
+                    <n-input v-model:value="formValue.remark" placeholder="備考" />
+                  </n-input-group> </n-form-item
+              ></n-gi>
+              <n-gi>
+                <n-form-item label="ステータス" path="status">
+                  <n-select
+                    v-model:value="formValue.status"
+                    :options="selectAccidentStatusOptions"
+                    :consistent-menu-width="false"
+                  /> </n-form-item
+              ></n-gi> </n-grid
+          ></n-form>
+          <n-divider />
+          <n-space justify="center">
+            <n-button type="primary" ghost @click="close">Cancel</n-button>
+            <n-button type="primary" @click="handleValidateClick">保存</n-button>
+          </n-space>
+        </n-spin>
+      </n-card>
+      <car-select-modal ref="carModal" @click="selectCar" />
+      <driver-select-modal ref="driverModal" @click="selectDriver" />
+      <dict-select-modal ref="dictModal" @click="selectDict" />
+    </n-modal>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { nextTick, ref } from 'vue';
+import { FormInst, useMessage, useLoadingBar } from 'naive-ui';
+import { request } from '@/service/request';
+import { useMyOptions } from '@/composables/options';
+import { getEnvConfig } from '~/.env-config';
+
+const emits = defineEmits(['close']);
+const bodyStyleRef = ref({
+  width: '1000px'
+});
+
+const { selectAccidentStatusOptions } = useMyOptions();
+const formRef = ref<FormInst | null>(null);
+const size = ref<'small' | 'medium' | 'large'>('medium');
+const message = useMessage();
+const loadingBar = useLoadingBar();
+const formValue = ref<MyModel.Accident>({
+  id: '',
+  carId: '',
+  carNo: '',
+  carName: '',
+  driverId: '',
+  driverNo: '',
+  driverName: '',
+
+  accidentType: '',
+  accidentTypeCode: '',
+  details: '',
+  confirmBy: '',
+  accidentTime: new Date().getTime(),
+  images: '',
+
+  repairTime: new Date().getTime(),
+  repairBy: '',
+  insuranceAmount: 0,
+  driverAmount: 0,
+  amount: 0,
+  companyAmount: 0,
+  noticeTime: new Date().getTime(),
+
+  status: 'Waiting',
+  remark: ''
+});
+const rules = {
+  carName: {
+    required: true,
+    message: '事故車両を選択してください',
+    trigger: 'change'
+  },
+  driverName: {
+    required: true,
+    message: 'ドライバーを選択してください',
+    trigger: 'change'
+  },
+  accidentType: {
+    required: true,
+    message: '分類を選択してください',
+    trigger: 'change'
+  },
+  details: {
+    required: true,
+    message: '1~500まで入力してください',
+    trigger: 'input'
+  },
+  confirmBy: {
+    required: true,
+    message: '1~50まで入力してください',
+    trigger: 'input'
+  }
+};
+
+const carModal = ref<any>(null);
+const showCar = () => {
+  carModal.value?.showModal();
+};
+const selectCar = (result: any) => {
+  formValue.value.carId = result.value;
+  formValue.value.carName = result.text;
+  formValue.value.carNo = result.carNo;
+};
+
+const driverModal = ref<any>(null);
+const showDriver = () => {
+  driverModal.value?.showModal();
+};
+const selectDriver = (result: any) => {
+  formValue.value.driverId = result.id;
+  formValue.value.driverName = result.userName;
+  formValue.value.driverNo = result.userNo;
+};
+
+const envConfig = getEnvConfig(import.meta.env);
+const fileUploadRef = ref<any>();
+function renderFileUpload() {
+  const uploadFiles: any[] = [];
+  const { images } = formValue.value;
+  if (images) {
+    const array = images.split(',');
+
+    array.forEach((f, index) => {
+      const file = {
+        uid: f + index,
+        name: f,
+        status: 'finished',
+        thumbnailUrl: `${envConfig.static}${f}`,
+        url: `${envConfig.static}${f}`,
+        fileUrl: f
+      };
+      uploadFiles.push(file);
+    });
+    console.debug(uploadFiles);
+
+    fileUploadRef.value.initFiles(uploadFiles);
+  }
+}
+
+const showModalRef = ref<boolean | undefined>(false);
+const showModal = (row: MyModel.Accident | undefined) => {
+  showModalRef.value = true;
+  if (row) {
+    formValue.value.id = row?.id;
+    formValue.value.carId = row?.carId;
+    formValue.value.carNo = row?.carNo;
+    formValue.value.carName = row?.carName;
+    formValue.value.driverId = row?.driverId;
+    formValue.value.driverName = row?.driverName;
+    formValue.value.driverNo = row?.driverNo;
+
+    formValue.value.accidentType = row?.accidentType;
+    formValue.value.accidentTypeCode = row?.accidentTypeCode;
+    formValue.value.details = row?.details;
+    formValue.value.confirmBy = row?.confirmBy;
+    formValue.value.accidentTime = new Date(row?.accidentTime ?? new Date()).getTime();
+    formValue.value.images = row?.images;
+
+    formValue.value.repairTime = new Date(row?.repairTime ?? new Date()).getTime();
+    formValue.value.repairBy = row?.repairBy;
+    formValue.value.noticeTime = new Date(row?.noticeTime ?? new Date()).getTime();
+
+    formValue.value.status = row?.status;
+    formValue.value.remark = row?.remark;
+    nextTick(() => {
+      renderFileUpload();
+    });
+  } else {
+    formValue.value.id = '';
+    formValue.value.carId = '';
+    formValue.value.carNo = '';
+    formValue.value.carName = '';
+    formValue.value.driverId = '';
+    formValue.value.driverName = '';
+    formValue.value.driverNo = '';
+
+    formValue.value.accidentType = '';
+    formValue.value.accidentTypeCode = '';
+    formValue.value.details = '';
+    formValue.value.confirmBy = '';
+    formValue.value.accidentTime = new Date().getTime();
+    formValue.value.images = '';
+
+    formValue.value.repairTime = new Date().getTime();
+    formValue.value.repairBy = '';
+    formValue.value.noticeTime = new Date().getTime();
+
+    formValue.value.status = 'Waiting';
+    formValue.value.remark = '';
+  }
+};
+
+const close = () => {
+  emits('close');
+  showModalRef.value = false;
+};
+const titleRef = ref<string | undefined>('');
+const setTitle = (title: string) => {
+  titleRef.value = title;
+};
+const onUpdateShow = (show: Boolean) => {
+  if (!show) {
+    emits('close');
+  }
+};
+
+const onFinish = (files: any) => {
+  if (!files || files.length <= 0) {
+    formValue.value.images = '';
+    return;
+  }
+  formValue.value.images = files
+    .map((f: any) => {
+      return f.url.replace(envConfig.static, '');
+    })
+    .join(',');
+};
+
+const urls = {
+  addOrEdit: `car/setAccident`
+};
+const loading = ref<boolean>(false);
+const handleValidateClick = (e: MouseEvent) => {
+  e.preventDefault();
+  formRef.value?.validate(errors => {
+    if (!errors) {
+      if (!formValue.value.images) {
+        message.warning('写真をアップロードしてください');
+        return;
+      }
+      const params: MyModel.Accident = {
+        id: formValue.value.id,
+        carId: formValue.value.carId,
+        carNo: formValue.value.carNo,
+        carName: formValue.value.carName,
+        driverId: formValue.value.driverId,
+        driverNo: formValue.value.driverNo,
+        driverName: formValue.value.driverName,
+
+        accidentType: formValue.value.accidentType,
+        accidentTypeCode: formValue.value.accidentTypeCode,
+        details: formValue.value.details,
+        confirmBy: formValue.value.confirmBy,
+        accidentTime: formValue.value.accidentTime,
+        images: formValue.value.images,
+
+        repairTime: formValue.value.repairTime,
+        repairBy: formValue.value.repairBy,
+        noticeTime: formValue.value.noticeTime,
+
+        status: formValue.value.status,
+        remark: formValue.value.remark
+      };
+      const promise = request.post<Boolean>(`${urls.addOrEdit}`, params);
+      loadingBar.start();
+      loading.value = true;
+      promise
+        .then(res => {
+          if (res.data) {
+            message.success('保存しました');
+            close();
+          }
+        })
+        .catch(err => {
+          message.warning(err);
+        })
+        .finally(() => {
+          loading.value = false;
+          loadingBar.finish();
+        });
+    }
+  });
+};
+
+const dictModal = ref<any>(null);
+const showDict = (typeCode: string) => {
+  dictModal.value?.showModal();
+  dictModal.value?.setDictCode(typeCode);
+};
+const selectDict = (result: any) => {
+  switch (result.type) {
+    case 'operate_accident_type':
+      formValue.value.accidentType = result.text;
+      formValue.value.accidentTypeCode = result.value;
+      break;
+    default:
+      break;
+  }
+};
+
+defineExpose({
+  showModal,
+  setTitle
+});
+</script>
+
+<style scoped></style>

@@ -1,0 +1,678 @@
+[
+	{
+			"label": "赤系",
+			"data": [
+					{
+							"label": "退紅色",
+							"color": "#A98175"
+					},
+					{
+							"label": "浅緋",
+							"color": "#B36D61"
+					},
+					{
+							"label": "蘇芳",
+							"color": "#60281E"
+					},
+					{
+							"label": "深緋",
+							"color": "#622A1D"
+					},
+					{
+							"label": "ワイン",
+							"color": "#9D2933"
+					},
+					{
+							"label": "カージナル",
+							"color": "#BE002F"
+					},
+					{
+							"label": "茜色",
+							"color": "#C32136"
+					},
+					{
+							"label": "赤",
+							"color": "#C3272B"
+					},
+					{
+							"label": "スカー",
+							"color": "#C83C23"
+					},
+					{
+							"label": "猩々緋",
+							"color": "#C91F37"
+					},
+					{
+							"label": "ストロベ",
+							"color": "#C93756"
+					},
+					{
+							"label": "ローズ",
+							"color": "#CB3A56"
+					},
+					{
+							"label": "チェリー",
+							"color": "#DB5A6B"
+					},
+					{
+							"label": "赤今様",
+							"color": "#DC3023"
+					},
+					{
+							"label": "金赤",
+							"color": "#ED5736"
+					},
+					{
+							"label": "鴇色",
+							"color": "#EF7A82"
+					},
+					{
+							"label": "紅赤",
+							"color": "#F00056"
+					},
+					{
+							"label": "薔薇色",
+							"color": "#F20C00"
+					},
+					{
+							"label": "今様色",
+							"color": "#F05654"
+					},
+					{
+							"label": "朱色",
+							"color": "#F35336"
+					},
+					{
+							"label": "桃色",
+							"color": "#F47983"
+					},
+					{
+							"label": "インディ",
+							"color": "#F9906F"
+					},
+					{
+							"label": "韓紅色",
+							"color": "#FF0097"
+					},
+					{
+							"label": "紅色",
+							"color": "#FF2121"
+					},
+					{
+							"label": "シグナル",
+							"color": "#FF2D51"
+					},
+					{
+							"label": "スカーレット",
+							"color": "#FF3300"
+					},
+					{
+							"label": "ベゴニア",
+							"color": "#FF4C00"
+					},
+					{
+							"label": "トマト",
+							"color": "#FF4E20"
+					},
+					{
+							"label": "ネール",
+							"color": "#FFB3A7"
+					},
+					{
+							"label": "シェル",
+							"color": "#E4C6D0"
+					},
+					{
+							"label": "ピンク",
+							"color": "#EDD1D8"
+					},
+					{
+							"label": "コーラル",
+							"color": "#F3D3E7"
+					},
+					{
+							"label": "シェル",
+							"color": "#FCEFE8"
+					}
+			]
+	},
+	{
+			"label": "茶系",
+			"data": [
+					{
+							"label": "褐色",
+							"color": "#6E511E"
+					},
+					{
+							"label": "焦茶",
+							"color": "#7C4B00"
+					},
+					{
+							"label": "丁字茶",
+							"color": "#955539"
+					},
+					{
+							"label": "赤茶",
+							"color": "#9B4400"
+					},
+					{
+							"label": "柿渋色",
+							"color": "#9C5333"
+					},
+					{
+							"label": "桑染",
+							"color": "#A88462"
+					},
+					{
+							"label": "代赭色",
+							"color": "#B25D25"
+					},
+					{
+							"label": "茶色",
+							"color": "#B35C44"
+					},
+					{
+							"label": "琥珀色",
+							"color": "#CA6924"
+					},
+					{
+							"label": "イエロ",
+							"color": "#E29C45"
+					},
+					{
+							"label": "ローシェンナ",
+							"color": "#FA8C35"
+					},
+					{
+							"label": "肉桂色",
+							"color": "#FF7500"
+					},
+					{
+							"label": "海老茶",
+							"color": "#FF8936"
+					},
+					{
+							"label": "赤銅色",
+							"color": "#FF8C31"
+					},
+					{
+							"label": "胡桃色",
+							"color": "#FFA400"
+					},
+					{
+							"label": "狐色",
+							"color": "#FFA631"
+					},
+					{
+							"label": "砥粉色",
+							"color": "#FFC773"
+					}
+			]
+	},
+	{
+			"label": "黄系",
+			"data": [
+					{
+							"label": "黧",
+							"color": "#5D513C"
+					},
+					{
+							"label": "オリーブ",
+							"color": "#75664D"
+					},
+					{
+							"label": "油色",
+							"color": "#827100"
+					},
+					{
+							"label": "秋色",
+							"color": "#896C39"
+					},
+					{
+							"label": "鶸茶",
+							"color": "#A29B7C"
+					},
+					{
+							"label": "芥子色",
+							"color": "#A78E44"
+					},
+					{
+							"label": "ハニー",
+							"color": "#AE7000"
+					},
+					{
+							"label": "昏黄",
+							"color": "#C89B40"
+					},
+					{
+							"label": "肌色",
+							"color": "#D3B17D"
+					},
+					{
+							"label": "鬱金色",
+							"color": "#D9B611"
+					},
+					{
+							"label": "雌黄",
+							"color": "#EACD76"
+					},
+					{
+							"label": "卵色",
+							"color": "#EEDEB0"
+					},
+					{
+							"label": "缃色",
+							"color": "#F0C239"
+					},
+					{
+							"label": "赤金",
+							"color": "#F2BE45"
+					},
+					{
+							"label": "メイズ",
+							"color": "#FAFF72"
+					},
+					{
+							"label": "レモン",
+							"color": "#FFF143"
+					},
+					{
+							"label": "缟",
+							"color": "#F2ECDE"
+					},
+					{
+							"label": "象牙白",
+							"color": "#FFFBF0"
+					}
+			]
+	},
+	{
+			"label": "緑系",
+			"data": [
+					{
+							"label": "青竹色",
+							"color": "#789262"
+					},
+					{
+							"label": "オリーブ",
+							"color": "#41555D"
+					},
+					{
+							"label": "灰緑",
+							"color": "#426666"
+					},
+					{
+							"label": "薄緑",
+							"color": "#057748"
+					},
+					{
+							"label": "緑",
+							"color": "#0C8918"
+					},
+					{
+							"label": "深緑",
+							"color": "#009900"
+					},
+					{
+							"label": "萌葱色",
+							"color": "#0AA344"
+					},
+					{
+							"label": "暗緑色",
+							"color": "#549688"
+					},
+					{
+							"label": "若竹色",
+							"color": "#519A73"
+					},
+					{
+							"label": "青緑",
+							"color": "#21A675"
+					},
+					{
+							"label": "葱青",
+							"color": "#0EB83A"
+					},
+					{
+							"label": "油緑",
+							"color": "#00BC12"
+					},
+					{
+							"label": "緑",
+							"color": "#00E500"
+					},
+					{
+							"label": "薄緑",
+							"color": "#40DE5A"
+					},
+					{
+							"label": "豆青",
+							"color": "#96CE54"
+					},
+					{
+							"label": "鶸色",
+							"color": "#9ED048"
+					},
+					{
+							"label": "若草色",
+							"color": "#9ED900"
+					},
+					{
+							"label": "萌黄",
+							"color": "#A3D900"
+					},
+					{
+							"label": "黄緑",
+							"color": "#AFDD22"
+					},
+					{
+							"label": "シャルト",
+							"color": "#BDDD22"
+					},
+					{
+							"label": "抹茶色",
+							"color": "#C9DD22"
+					},
+					{
+							"label": "薄緑",
+							"color": "#BCE672"
+					},
+					{
+							"label": "山葵色",
+							"color": "#EAFF56"
+					}
+			]
+	},
+	{
+			"label": "青緑系",
+			"data": [
+					{
+							"label": "新橋色",
+							"color": "#88ADA6"
+					},
+					{
+							"label": "浅葱色",
+							"color": "#48C0A3"
+					},
+					{
+							"label": "ジェード",
+							"color": "#1BD1A5"
+					},
+					{
+							"label": "石青",
+							"color": "#7BCFA6"
+					},
+					{
+							"label": "ビリヤード",
+							"color": "#00E079"
+					},
+					{
+							"label": "ビリジアン",
+							"color": "#00E09E"
+					},
+					{
+							"label": "エメラルド",
+							"color": "#2ADD9C"
+					},
+					{
+							"label": "マラカイト",
+							"color": "#2EDFA3"
+					},
+					{
+							"label": "翡翠",
+							"color": "#3DE1AD"
+					},
+					{
+							"label": "青緑",
+							"color": "#7FECAD"
+					},
+					{
+							"label": "青磁色",
+							"color": "#3EEDE7"
+					},
+					{
+							"label": "千草色",
+							"color": "#25F8CD"
+					},
+					{
+							"label": "苗色",
+							"color": "#A4E2C6"
+					},
+					{
+							"label": "若苗色",
+							"color": "#C0EBD7"
+					},
+					{
+							"label": "裏葉柳",
+							"color": "#D4F2E7"
+					},
+					{
+							"label": "白緑",
+							"color": "#E0EEE8"
+					},
+					{
+							"label": "セラドン",
+							"color": "#E0F0E9"
+					},
+					{
+							"label": "アイス",
+							"color": "#F3F9F1"
+					}
+			]
+	},
+	{
+		"label": "青系",
+		"data": [
+				{
+						"label": "濃紺",
+						"color": "#3B2E7E"
+				},
+				{
+						"label": "藤納戸",
+						"color": "#4B5CC4"
+				},
+				{
+						"label": "紺色",
+						"color": "#003371"
+				},
+				{
+						"label": "鉄紺",
+						"color": "#2E4E7E"
+				},
+				{
+						"label": "鉄納戸",
+						"color": "#065279"
+				},
+				{
+						"label": "浅葱色",
+						"color": "#177CB0"
+				},
+				{
+						"label": "群青",
+						"color": "#4C8DAE"
+				},
+				{
+						"label": "青",
+						"color": "#44CEF6"
+				},
+				{
+						"label": "露草色",
+						"color": "#30DFF3"
+				},
+				{
+						"label": "空色",
+						"color": "#70F3FF"
+				},
+				{
+						"label": "ザー",
+						"color": "#D6ECF0"
+				},
+				{
+						"label": "スカイ",
+						"color": "#D2F0F4"
+				},
+				{
+						"label": "ベビー",
+						"color": "#E3F9FD"
+				},
+				{
+						"label": "水色",
+						"color": "#F0FCFF"
+				}
+		]
+},
+{
+		"label": "紫系",
+		"data": [
+				{
+						"label": "江戸紫",
+						"color": "#4A4266"
+				},
+				{
+						"label": "濃色",
+						"color": "#4C211B"
+				},
+				{
+						"label": "紫",
+						"color": "#56004F"
+				},
+				{
+						"label": "京紫",
+						"color": "#574266"
+				},
+				{
+						"label": "チリアン",
+						"color": "#8C4356"
+				},
+				{
+						"label": "葡萄染",
+						"color": "#815463"
+				},
+				{
+						"label": "滅紫",
+						"color": "#815476"
+				},
+				{
+						"label": "薄色",
+						"color": "#6B6882"
+				},
+				{
+						"label": "ロイヤル",
+						"color": "#801DAE"
+				},
+				{
+						"label": "紫",
+						"color": "#8D4BBB"
+				},
+				{
+						"label": "藤紫",
+						"color": "#B0A4E3"
+				},
+				{
+						"label": "菖蒲色",
+						"color": "#CCA4E3"
+				}
+		]
+},
+{
+		"label": "白黒系",
+		"data": [
+				{
+						"label": "ブラック",
+						"color": "#000000"
+				},
+				{
+						"label": "漆黒",
+						"color": "#161823"
+				},
+				{
+						"label": "消炭色",
+						"color": "#312520"
+				},
+				{
+						"label": "濡羽色",
+						"color": "#392F41"
+				},
+				{
+						"label": "チャコール",
+						"color": "#3D3B4F"
+				},
+				{
+						"label": "憲房色",
+						"color": "#493131"
+				},
+				{
+						"label": "涅色",
+						"color": "#665757"
+				},
+				{
+						"label": "トープ",
+						"color": "#424C50"
+				},
+				{
+						"label": "スレート",
+						"color": "#425066"
+				},
+				{
+						"label": "ガンメタル",
+						"color": "#395260"
+				},
+				{
+						"label": "薄墨色",
+						"color": "#50616D"
+				},
+				{
+						"label": "グレー",
+						"color": "#808080"
+				},
+				{
+						"label": "フォグ",
+						"color": "#75878A"
+				},
+				{
+						"label": "鈍色",
+						"color": "#758A99"
+				},
+				{
+						"label": "青鈍",
+						"color": "#7397AB"
+				},
+				{
+						"label": "鼠色",
+						"color": "#A1AFC9"
+				},
+				{
+						"label": "深川鼠",
+						"color": "#BACAC6"
+				},
+				{
+						"label": "利休鼠",
+						"color": "#BBCDC5"
+				},
+				{
+						"label": "パール",
+						"color": "#D1D9E0"
+				},
+				{
+						"label": "藍鼠",
+						"color": "#D3E0F3"
+				},
+				{
+						"label": "鉛白",
+						"color": "#E9E7EF"
+				},
+				{
+						"label": "スカイ",
+						"color": "#E9F1F6"
+				},
+				{
+						"label": "卯の花色",
+						"color": "#F0F0F4"
+				},
+				{
+						"label": "白",
+						"color": "#FFFFFF"
+				}
+		]
+}
+]
