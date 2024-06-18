@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ログレベルは、TRACE <DEBUG <INFO <WARN <ERROR <FATALにローからハイに分割され、WARNに設定されている場合、WARN以下の情報は出力されません。 -->
+<!-- scan:このプロパティがtrueに設定されている場合、構成ドキュメントが変更されると再ロードされます。デフォルト値はtrueです。 -->
+<!-- scanPeriod:構成ファイルが変更されているかどうかを監視するための時間間隔を設定します。時間単位が指定されていない場合、デフォルトの単位はミリ秒です。 このプロパティは、スキャンがtrueの場合に有効になります。 デフォルトの時間間隔は1分です。 -->
+<!-- debug:このプロパティをtrueに設定すると、ログバックの内部ログ情報が出力され、ログバックの実行ステータスがリアルタイムで表示されます。 デフォルト値はfalseです。 -->
+<configuration  scan="true" scanPeriod="10 seconds">
+  <contextName>logback</contextName>
+
+  <!-- ファイルカットサイズ -->
+  <property name="maxFileSize" value="500MB"/>
+  <!-- ドキュメントの保存日 -->
+  <property name="maxHistory" value="20"/>
+  <!-- ドキュメントの合計サイズ -->
+  <property name="totalSizeCap" value="50GB"/>
+
+  <!-- nameの値は変数の名前であり、valueの値は変数によって定義された値です。 定義された値がロガーコンテキストに挿入されます。 定義したら、「${}」を使用して変数を使用できます。${}”来使用变量。 -->
+  <property name="log.path" value="C:\\oukasystem\\logs" />
+
+  <!--0. ログ形式とカラーレンダリング -->
+  <!-- カラーログ依存のレンダリングクラス -->
+  <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter" />
+  <conversionRule conversionWord="wex" converterClass="org.springframework.boot.logging.logback.WhitespaceThrowableProxyConverter" />
+  <conversionRule conversionWord="wEx" converterClass="org.springframework.boot.logging.logback.ExtendedWhitespaceThrowableProxyConverter" />
+  <!-- カラーログ形式 -->
+  <property name="CONSOLE_LOG_PATTERN" value="${CONSOLE_LOG_PATTERN:-%clr(%d{yyyy/MM/dd HH:mm:ss.SSS}){faInteger} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr(---){faInteger} %clr([%15.15t]){faInteger} %clr(%-40.40logger{39}){cyan} %clr(:){faInteger} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}}"/>
+
+  <!--1. コンソールへの出力-->
+  <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+    <!--このログアペンダーは開発用であり、最下位レベルのみが構成され、コンソールによって出力されるログレベルは、このレベル以上のログ情報です。-->
+    <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+      <level>debug</level>
+    </filter>
+    <encoder>
+      <Pattern>${CONSOLE_LOG_PATTERN}</Pattern>
+      <!-- セット文字 -->
+      <charset>UTF-8</charset>
+    </encoder>
+  </appender>
+
+  <!--2. ドキュメントへの出力-->
+  <!-- 2.1 レベルはDEBUGログ、タイムローリング出力です -->
+  <appender name="DEBUG_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <!-- 記録されているログファイルのパスとファイル名 -->
+    <file>${log.path}/web_debug.log</file>
+    <!--ログファイルの出力形式-->
+    <encoder>
+      <pattern>%d{yyyy/MM/dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n</pattern>
+      <charset>UTF-8</charset> <!-- セット文字 -->
+    </encoder>
+    <!-- ロガーのローリング戦略、日付別、サイズ別のログ -->
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <!-- ログアーカイブ -->
+      <fileNamePattern>${log.path}/web-debug-%d{yyyy/MM/dd}.%i.log</fileNamePattern>
+      <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+        <maxFileSize>100MB</maxFileSize>
+      </timeBasedFileNamingAndTriggeringPolicy>
+      <!--ログドキュメントを保持する日数-->
+      <maxHistory>15</maxHistory>
+    </rollingPolicy>
+    <!-- このログファイルは、デバッグレベルのみを記録します -->
+    <filter class="ch.qos.logback.classic.filter.LevelFilter">
+      <level>debug</level>
+      <onMatch>ACCEPT</onMatch>
+      <onMismatch>DENY</onMismatch>
+    </filter>
+  </appender>
+
+  <!-- 2.2レベルはINFOログ、タイムローリング出力です-->
+  <appender name="INFO_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <!-- 記録されているログファイルのパスとファイル名 -->
+    <file>${log.path}/web_info.log</file>
+    <!--ログファイルの出力形式-->
+    <encoder>
+      <pattern>%d{yyyy/MM/dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n</pattern>
+      <charset>UTF-8</charset>
+    </encoder>
+    <!-- ロガーのローリング戦略、日付別、サイズ別のログ -->
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <!-- 毎日のログアーカイブパスと形式 -->
+      <fileNamePattern>${log.path}/web-info-%d{yyyy/MM/dd}.%i.log</fileNamePattern>
+      <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+        <maxFileSize>100MB</maxFileSize>
+      </timeBasedFileNamingAndTriggeringPolicy>
+      <!--ログドキュメントを保持する日数-->
+      <maxHistory>15</maxHistory>
+    </rollingPolicy>
+    <!-- このログファイルは、infoレベルのみを記録します -->
+    <filter class="ch.qos.logback.classic.filter.LevelFilter">
+      <level>info</level>
+      <onMatch>ACCEPT</onMatch>
+      <onMismatch>DENY</onMismatch>
+    </filter>
+  </appender>
+
+  <!-- 2.3 レベルはWARNログ、タイムローリング出力です  -->
+  <appender name="WARN_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <!-- 記録されているログファイルのパスとファイル名 -->
+    <file>${log.path}/web_warn.log</file>
+    <!--ログファイルの出力形式-->
+    <encoder>
+      <pattern>%d{yyyy/MM/dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n</pattern>
+      <charset>UTF-8</charset>
+    </encoder>
+    <!-- ロガーのローリング戦略、日付別、サイズ別のログ -->
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <fileNamePattern>${log.path}/web-warn-%d{yyyy/MM/dd}.%i.log</fileNamePattern>
+      <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+        <maxFileSize>100MB</maxFileSize>
+      </timeBasedFileNamingAndTriggeringPolicy>
+      <!--ログドキュメントを保持する日数-->
+      <maxHistory>15</maxHistory>
+    </rollingPolicy>
+    <!-- このログファイルは、warnレベルのみを記録します -->
+    <filter class="ch.qos.logback.classic.filter.LevelFilter">
+      <level>warn</level>
+      <onMatch>ACCEPT</onMatch>
+      <onMismatch>DENY</onMismatch>
+    </filter>
+  </appender>
+
+  <!-- 2.4 レベルはWARNログ、タイムローリング出力です   -->
+  <appender name="ERROR_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <!-- 記録されているログファイルのパスとファイル名 -->
+    <file>${log.path}/web_error.log</file>
+    <!--ログファイルの出力形式-->
+    <encoder>
+      <pattern>%d{yyyy/MM/dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n</pattern>
+      <charset>UTF-8</charset> 
+    </encoder>
+    <!-- ロガーのローリング戦略、日付別、サイズ別のログ -->
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <fileNamePattern>${log.path}/web-error-%d{yyyy/MM/dd}.%i.log</fileNamePattern>
+      <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+        <maxFileSize>100MB</maxFileSize>
+      </timeBasedFileNamingAndTriggeringPolicy>
+      <!--ログドキュメントを保持する日数-->
+      <maxHistory>15</maxHistory>
+    </rollingPolicy>
+    <!-- このログファイルは、warnレベルのみを記録します -->
+    <filter class="ch.qos.logback.classic.filter.LevelFilter">
+      <level>ERROR</level>
+      <onMatch>ACCEPT</onMatch>
+      <onMismatch>DENY</onMismatch>
+    </filter>
+  </appender>
+
+  <root level="debug">
+    <appender-ref ref="CONSOLE" />
+   <appender-ref ref="DEBUG_FILE" />
+   <appender-ref ref="INFO_FILE" />
+   <appender-ref ref="WARN_FILE" />
+   <appender-ref ref="ERROR_FILE" />
+  </root>
+
+
+</configuration>

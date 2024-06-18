@@ -1,0 +1,44 @@
+package com.cbs.oukasystem.entity.order;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
+import com.cbs.oukasystem.entity.OperatorEntity;
+
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Schema // swagger3
+@Data // lombok
+@Entity // JPA-Hibernate
+@Table(name = "order_goods") // JPA-Hibernate
+@NoArgsConstructor
+@AllArgsConstructor
+public class OrderGoodsEntity extends OperatorEntity {
+
+    /*
+     * 订单备品
+     */
+    @Schema(name = "orderId", description = "注文")
+    private String orderId;
+
+    @Schema(name = "orderNo", description = "注文番号")
+    private String orderNo;
+
+    @Schema(name = "goodsType", description = "备品类型")
+    private String goodsType;
+
+    @Schema(name = "goodsTypeCode", description = "备品类型")
+    private String goodsTypeCode;
+
+    @Schema(name = "amount", description = "备品数量")
+    private int amount;
+
+    @Column(length = 500)
+    @Schema(name = "remark", description = "备注")
+    private String remark;
+
+}
