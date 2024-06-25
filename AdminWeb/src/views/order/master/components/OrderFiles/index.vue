@@ -42,7 +42,7 @@
             <n-gi>
               <n-form-item label="シェア" path="share">
                 <n-switch v-model:value="formValue.share">
-                  <template #checked> 公共 </template>
+                  <template #checked> 公開 </template>
                   <template #unchecked> 機密 </template>
                 </n-switch>
               </n-form-item></n-gi
@@ -149,7 +149,7 @@ const handleShare = (row: MyModel.OrderFile) => {
   promise
     .then(res => {
       if (res.data) {
-        window.$message?.success(`${!share ? `${objStr}を公共` : `${objStr}を機密`}された`);
+        window.$message?.success(`${!share ? `${objStr}を公開` : `${objStr}を機密`}された`);
       }
     })
     .finally(() => {
@@ -222,7 +222,7 @@ const columns: DataTableColumn<MyModel.OrderFile>[] = [
       return h(
         NSwitch,
         { onClick: () => handleShare(row), value: row.share },
-        { checked: () => '公共', unchecked: () => '機密' }
+        { checked: () => '公開', unchecked: () => '機密' }
       );
     }
   },
