@@ -63,7 +63,7 @@ export enum EnumOrderStatus {
   'Sending' = '発送待ち',
   'Check' = 'チェック待ち',
   'Booked' = '予約済み',
-  'Working' = 'サービス',
+  'Working' = 'サービス開始',
   'Completed' = '注文完了',
   'Cancelled' = 'キャンセル'
 }
@@ -97,6 +97,7 @@ export enum EnumOrderType {
   '' = '選択してください',
   'Single' = 'シングル',
   'Haiya' = 'ハイヤー',
+  'LongHaul' = '長距離',
   'TimeLimitHaiya' = '時間制限ハイヤー',
   'Airport_Y' = '空港迎',
   'Airport_S' = '空港送'

@@ -24,7 +24,7 @@
             </n-form-item>
           </n-gi>
           <n-gi>
-            <n-form-item label="注文内容" path="orderType">
+            <n-form-item label="運行内容" path="orderType">
               <n-select
                 v-model:value="formValue.orderType"
                 :options="orderTypeOptions"
@@ -40,7 +40,7 @@
                 :step="0.25"
                 :min="0"
                 :show-button="false"
-                :disabled="EnumOrderType[formValue.orderType ?? ''] !== EnumOrderType.Haiya"
+                :disabled="EnumOrderType[formValue.orderType ?? ''] !== EnumOrderType.Haiya && EnumOrderType[formValue.orderType ?? ''] !== EnumOrderType.LongHaul"
                 @update:value="onUpdate"
               >
                 <template #suffix> 日 </template>
@@ -56,7 +56,8 @@
                 clearable
                 @update:value="onUpdate" /></n-form-item
           ></n-gi>
-          <n-gi v-if="EnumOrderType[formValue.orderType ?? ''] === EnumOrderType.Haiya">
+          <!--<n-gi v-if="EnumOrderType[formValue.orderType ?? ''] === EnumOrderType.Haiya">-->
+          <n-gi>
             <n-form-item label="終了日" path="endTime" required>
               <n-date-picker v-model:value="formValue.endTime" type="datetime" clearable /> </n-form-item
           ></n-gi>
@@ -401,7 +402,7 @@ const handleUpdateValue = (value: string, option: SelectOption) => {
 
       break;
     case EnumOrderType.Single:
-      formValue.value.orderDays = 1;
+      formValue.value.orderDays = 0.25;
       break;
     case EnumOrderType.Airport_S:
     case EnumOrderType.Airport_Y:
