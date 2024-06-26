@@ -54,6 +54,8 @@ export default function useDataTable<T = MyModel.Root>(module: string, modulePar
     pageCount: 1,
     pageSize: 10,
     itemCount: 0,
+    showSizePicker: true,
+    pageSizes: [10, 30, 50, 100],
     prefix({ itemCount }: { itemCount: any }) {
       return `合計 ${itemCount} 件`;
     }
@@ -118,6 +120,12 @@ export default function useDataTable<T = MyModel.Root>(module: string, modulePar
     searchQuery();
   }
 
+  function handleUpdatePageSize(pageSize: number) {
+    searchParamsReactive.pageSize = pageSize;
+    searchParamsReactive.page = 1;
+    searchQuery();
+  }
+
   function handleSorter(options: DataTableSortState | DataTableSortState[] | null) {
     searchParamsReactive.sort = options?.columnKey;
     searchParamsReactive.sortType = options?.order;
@@ -156,6 +164,7 @@ export default function useDataTable<T = MyModel.Root>(module: string, modulePar
     handleAudit,
     handleDelete,
     handlePageChange,
+    handleUpdatePageSize,
     handleExport,
     handleSorter,
     searchQuery,
