@@ -73,9 +73,16 @@
                 <n-input v-model:value="formValue.flightNo" placeholder="E99999" /></n-form-item
             ></n-gi>
             <n-gi>
-              <n-form-item label="空港" path="airport">
+              <!-- <n-form-item label="空港" path="airport">
                 <n-input v-model:value="formValue.airport" placeholder="成田空港" /></n-form-item
-            ></n-gi>
+            > -->
+            <n-form-item label="空港" path="airport">
+              <n-select
+                v-model:value="formValue.airport"
+                :options="airportTypeOptions"
+                :consistent-menu-width="false"/> 
+              </n-form-item>
+          </n-gi>
           </template>
 
           <n-gi>
@@ -202,6 +209,7 @@ import { ref, PropType, onMounted } from 'vue';
 import { FormInst, useMessage, useLoadingBar, SelectOption } from 'naive-ui';
 import moment from 'moment';
 import { EnumOrderType } from '@/enum';
+import { EnumAirportType } from '@/enum';
 import { useMyOptions } from '@/composables';
 import { request } from '@/service/request';
 
@@ -215,6 +223,7 @@ const props = defineProps({
   }
 });
 const { orderTypeOptions } = useMyOptions();
+const { airportTypeOptions } = useMyOptions();
 const formRef = ref<FormInst | null>(null);
 const size = ref<'small' | 'medium' | 'large'>('medium');
 const message = useMessage();
@@ -223,6 +232,7 @@ const loading = ref<boolean>(false);
 const formValue = ref<MyModel.Order>({
   id: props.model?.id ?? '',
   orderType: props.model?.orderType,
+  airportType: props.model?.airportType,
   orderDays: props.model?.orderDays ?? 1,
   startTime: new Date(props.model?.startTime ?? new Date()).getTime(),
   endTime: new Date(props.model?.endTime ?? new Date()).getTime(),
@@ -263,6 +273,11 @@ const formValue = ref<MyModel.Order>({
 
 const rules = {
   orderType: {
+    required: true,
+    trigger: 'change',
+    message: '選択してください'
+  },
+  airportType: {
     required: true,
     trigger: 'change',
     message: '選択してください'
@@ -327,6 +342,7 @@ const save = () => {
   const params: MyModel.Order = {
     id: formValue.value.id,
     orderType: formValue.value.orderType,
+    airportType: formValue.value.airportType,
     orderDays: formValue.value.orderDays,
     startTime: formValue.value.startTime,
     endTime: formValue.value.endTime,
@@ -412,7 +428,7 @@ const handleUpdateValue = (value: string, option: SelectOption) => {
       formValue.value.orderDays = 1;
       break;
   }
-  formValue.value.endTime = moment(formValue.value.startTime).add(formValue.value.orderDays, 'days').valueOf();
+  // formValue.value.endTime = moment(formValue.value.startTime).add(formValue.value.orderDays, 'days').valueOf();
 };
 const dictModal = ref<any>(null);
 const showDict = (typeCode: string) => {
@@ -452,7 +468,8 @@ const selectDriver = (result: any) => {
 };
 
 const onUpdate = () => {
-  formValue.value.endTime = moment(formValue.value.startTime).add(formValue.value.orderDays, 'days').valueOf();
+  // formValue.value.endTime = moment(formValue.value.startTime).add(formValue.value.orderDays, 'days').valueOf();
+   formValue.value.endTime = moment(formValue.value.startTime).add(3, 'hours').valueOf();
 };
 
 onMounted(() => {

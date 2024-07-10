@@ -2,6 +2,7 @@ import {
   EnumUserRole,
   EnumOrderStatus,
   EnumOrderType,
+  EnumAirportType,
   EnumUserStatus,
   EnumFinanceType,
   EnumSex,
@@ -81,6 +82,18 @@ export function useMyOptions() {
     return options;
   }
 
+  function airportTypeOptions() {
+    const keys = Object.keys(EnumAirportType) as MyEnumType.EnumAirportTypeKey[];
+    const options: any = [];
+    keys.forEach((key: MyEnumType.EnumAirportTypeKey) => {
+      options.push({
+        value: key,
+        label: EnumAirportType[key]
+      });
+    });
+    return options;
+  }
+
   function selectFinanceTypeOptions() {
     const keys = Object.keys(EnumFinanceType) as MyEnumType.EnumFinanceTypeKey[];
     const options: any = [];
@@ -113,6 +126,7 @@ export function useMyOptions() {
 
     orderStatusOptions: orderStatusOptions(),
     orderTypeOptions: orderTypeOptions(),
+    airportTypeOptions: airportTypeOptions(),
 
     selectStatusOptions: selectStatusOptions(),
     selectFinanceTypeOptions: selectFinanceTypeOptions()

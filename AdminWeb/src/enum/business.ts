@@ -91,6 +91,19 @@ export enum EnumFinanceType {
 }
 
 /**
+ * 注文空港 タイプ
+ */
+export enum EnumAirportType {
+  '' = '選択してください',
+  'Narita_N' = '成田（都内）',
+  'Narita_Y' = '成田（都外）',
+  'Haneda_N' = '羽田（都内）',
+  'Haneda_Y' = '羽田（都外）',
+  'Kansai' = '関西',
+  'Ibaraki' = '茨城'
+}
+
+/**
  * 注文 タイプ
  */
 export enum EnumOrderType {

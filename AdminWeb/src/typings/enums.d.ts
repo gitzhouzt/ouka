@@ -2,6 +2,7 @@ declare namespace MyEnumType {
   /** 注文 */
   type EnumOrderStatusKey = keyof typeof import('@/enum').EnumOrderStatus;
   type EnumOrderTypeKey = keyof typeof import('@/enum').EnumOrderType;
+  type EnumAirportTypeKey = keyof typeof import('@/enum').EnumAirportType;
 
   /** 利用者 */
   type EnumUserRoleKey = keyof typeof import('@/enum').EnumUserRole;
