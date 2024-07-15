@@ -505,7 +505,7 @@ const onUpdate = () => {
     default:
       break;
   }
-  switch (formValue.value.airportType) {
+  switch (formValue.value.airport) {
     case 'Narita_N':
     case 'Narita_Y':
       hours = 4;
