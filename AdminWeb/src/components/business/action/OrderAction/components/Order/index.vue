@@ -80,7 +80,8 @@
               <n-select
                 v-model:value="formValue.airport"
                 :options="airportTypeOptions"
-                :consistent-menu-width="false"/> 
+                :consistent-menu-width="false" 
+                @update:value="airportUpdateValue"/>
               </n-form-item>
           </n-gi>
           </template>
@@ -409,16 +410,19 @@ const handleUpdateValue = (value: string, option: SelectOption) => {
   // message.info(`value: ${JSON.stringify(value)}`);
   // message.info(`option: ${JSON.stringify(option)}`);
   const type = value as MyEnumType.EnumOrderTypeKey;
+  let hours = 1;
   switch (EnumOrderType[type]) {
     case EnumOrderType.Haiya:
       formValue.value.orderDays = 1;
+      hours = 10;
       break;
     case EnumOrderType.TimeLimitHaiya:
       formValue.value.orderDays = 0.5;
-
+      hours = 5;
       break;
     case EnumOrderType.Single:
       formValue.value.orderDays = 0.25;
+      hours = 3;
       break;
     case EnumOrderType.Airport_S:
     case EnumOrderType.Airport_Y:
@@ -429,6 +433,7 @@ const handleUpdateValue = (value: string, option: SelectOption) => {
       break;
   }
   // formValue.value.endTime = moment(formValue.value.startTime).add(formValue.value.orderDays, 'days').valueOf();
+  formValue.value.endTime = moment(formValue.value.startTime).add(hours, 'hours').valueOf();
 };
 const dictModal = ref<any>(null);
 const showDict = (typeCode: string) => {
@@ -467,9 +472,52 @@ const selectDriver = (result: any) => {
   formValue.value.driverPhoto = result.userAvatar;
 };
 
+const airportUpdateValue = (value: string) => {
+  const type = value as MyEnumType.EnumAirportTypeKey;
+  let hours = 1;
+  switch (EnumAirportType[type]) {
+    case EnumAirportType.Narita_N:
+    case EnumAirportType.Narita_Y:
+      hours = 4;
+      break;
+    case EnumAirportType.Haneda_N:
+    case EnumAirportType.Haneda_Y:
+     hours = 3;
+      break;
+    default:
+      break;
+  }
+  formValue.value.endTime = moment(formValue.value.startTime).add(hours, 'hours').valueOf();
+};
 const onUpdate = () => {
   // formValue.value.endTime = moment(formValue.value.startTime).add(formValue.value.orderDays, 'days').valueOf();
-   formValue.value.endTime = moment(formValue.value.startTime).add(3, 'hours').valueOf();
+  let hours = 1;
+  switch (formValue.value.orderType) {
+    case 'Haiya':
+      hours = 10;
+      break;
+    case 'TimeLimitHaiya':
+      hours = 5;
+      break;
+    case 'Single':
+      hours = 3;
+      break;
+    default:
+      break;
+  }
+  switch (formValue.value.airportType) {
+    case 'Narita_N':
+    case 'Narita_Y':
+      hours = 4;
+      break;
+    case 'Haneda_N':
+    case 'Haneda_Y':
+      hours = 3;
+      break;
+    default:
+      break;
+  }
+   formValue.value.endTime = moment(formValue.value.startTime).add(hours, 'hours').valueOf();
 };
 
 onMounted(() => {
