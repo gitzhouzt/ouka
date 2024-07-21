@@ -143,7 +143,7 @@ const columns: DataTableColumn<MyModel.Earnings>[] = [
 		}
 	},
 	{
-		title: '第三方',
+		title: '第三者',
 		key: 'orderSource',
 		align: 'center',
 		sorter: true,

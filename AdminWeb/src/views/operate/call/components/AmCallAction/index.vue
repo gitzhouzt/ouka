@@ -79,7 +79,7 @@
                 /></n-form-item>
               </n-gi>
               <n-gi>
-                <n-form-item label="点呼時間" path="amCallTime">
+                <n-form-item label="点呼日" path="amCallTime">
                   <n-time-picker v-model:value="formValue.amCallTime" clearable
                 /></n-form-item>
               </n-gi>

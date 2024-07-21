@@ -13,7 +13,7 @@
                   @click="showDict('order_source')"
                 />
               </n-form-item>
-              <n-form-item label="第三方" path="orderKey">
+              <n-form-item label="第三者" path="orderKey">
                 <n-input-group>
                   <n-input v-model:value="params.orderKey"></n-input>
                 </n-input-group>

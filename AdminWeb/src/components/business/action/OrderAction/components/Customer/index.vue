@@ -14,7 +14,7 @@
             </n-form-item>
           </n-gi>
           <n-gi>
-            <n-form-item label="第三方&nbsp;&nbsp;" path="orderKey">
+            <n-form-item label="第三者&nbsp;&nbsp;" path="orderKey">
               <n-input v-model:value="formValue.orderKey" />
             </n-form-item>
           </n-gi>

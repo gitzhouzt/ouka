@@ -19,7 +19,7 @@
 					</n-form-item>
 					<n-form-item label="車両" path="carName">
 						<n-input-group>
-							<n-input v-model:value="searchParams.carName" readonly placeholder="クリック車両を選択"
+							<n-input v-model:value="searchParams.carNo" readonly placeholder="クリック車両を選択"
 								@click="showCar()"></n-input>
 						</n-input-group>
 					</n-form-item>
@@ -43,7 +43,7 @@
 				</div>
 				<div>
 					<n-button class="ml-2" @click="handleQuery">詳細検索</n-button>
-					<n-button class="ml-2" @click="handleCols">栏目筛选</n-button>
+					<n-button class="ml-2" @click="handleCols">表示項目設定</n-button>
 				</div>
 			</n-space>
 			<loading-empty-wrapper :style="{ height: hightRef + 'px' }" :loading="loading" :empty="empty">
@@ -164,7 +164,7 @@ const columns: DataTableColumn<MyModel.Order>[] = [
 		width: 150
 	},
 	{
-		title: '第三方',
+		title: '第三者',
 		key: 'orderKey',
 		align: 'center',
 		width: 150
@@ -383,7 +383,7 @@ const cols = ref<any>(columns);
 const scrollX = ref<number>(6000);
 const colsModal = ref<any>(null);
 const handleCols = () => {
-	colsModal.value?.setTitle('栏目筛选');
+	colsModal.value?.setTitle('表示項目設定');
 	colsModal.value?.showModal(columns, cols.value, ['details', 'orderNo', 'edit']);
 };
 const setCols = (c: any) => {
