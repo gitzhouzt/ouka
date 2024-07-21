@@ -51,6 +51,7 @@ declare namespace AuthRoute {
     | 'finance_advance'
     | 'finance_accident'
     | 'finance_dict'
+    | 'finance_motone'
     | 'base'
     | 'base_dict'
     | 'base_area'

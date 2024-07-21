@@ -22,24 +22,25 @@
 						</van-button>
 					</div>
 				</van-form></van-tab>
-			<van-tab title="請求あり"><van-form @submit="onSubmit">
+			<van-tab title="請求あり"><van-form @submit="onSubmit2">
 					<van-cell-group inset>
 						<van-field v-model="modelRef.orderNo" label="注文番号" readonly />
 						<van-field v-model="modelRef.sellerName" label="責任人" readonly />
-						<van-field v-model="formValue.advance_water" name="advance_water" label="立替水代" placeholder="選択してください"
-							type="number" />
-						<van-field v-model="formValue.advance_ticket" name="advance_ticket" label="立替入門料チケット" type="number" />
-						<van-field v-model="formValue.advance_road" name="advance_road" label="立替有料道路" type="number" />
-						<van-field v-model="formValue.advance_park" name="advance_park" label="立替駐車代" type="number" />
-						<van-field v-model="formValue.advance_overtime" name="advance_overtime" label="超時料金" type="number" />
-						<van-field v-model="formValue.advance_meal" name="advance_meal" label="立替食事代" type="number" />
-						<van-field v-model="formValue.advance_hotel" name="advance_hotel" label="立替ホテル代" type="number" />
-						<van-field v-model="formValue.advance_bath" name="advance_bath" label="立替入湯税" type="number" />
-						<van-field v-model="formValue.advance_etc" name="	advance_etc" label="ETC料金" type="number" />
-						<van-field v-model="formValue.advance_other1" name="advance_other1" label="立替その他①" type="number" />
-						<van-field v-model="formValue.advance_other2" name="advance_other2" label="立替その他②" type="number" />
+						<van-field v-model="formValue2.currency" name="currency" label="通貨" required placeholder="選択してください" readonly
+							@click="onShowPicker('currency')" />
+						<van-field v-model="formValue2.advance_water" name="advance_water" label="立替水代" type="number" />
+						<van-field v-model="formValue2.advance_ticket" name="advance_ticket" label="立替入門料チケット" type="number" />
+						<van-field v-model="formValue2.advance_road" name="advance_road" label="立替有料道路" type="number" />
+						<van-field v-model="formValue2.advance_park" name="advance_park" label="立替駐車代" type="number" />
+						<van-field v-model="formValue2.advance_overtime" name="advance_overtime" label="超時料金" type="number" />
+						<van-field v-model="formValue2.advance_meal" name="advance_meal" label="立替食事代" type="number" />
+						<van-field v-model="formValue2.advance_hotel" name="advance_hotel" label="立替ホテル代" type="number" />
+						<van-field v-model="formValue2.advance_bath" name="advance_bath" label="立替入湯税" type="number" />
+						<van-field v-model="formValue2.advance_etc" name="	advance_etc" label="ETC料金" type="number" />
+						<van-field v-model="formValue2.advance_other1" name="advance_other1" label="立替その他①" type="number" />
+						<van-field v-model="formValue2.advance_other2" name="advance_other2" label="立替その他②" type="number" />
 						<file-upload class="m-4" :max="8" file-key="files/advance" @finish="onFinish" />
-						<van-field v-model="formValue.remark" name="remark" label="備考" type="textarea" rows="3" maxlength="200"
+						<van-field v-model="formValue2.remark" name="remark" label="備考" type="textarea" rows="3" maxlength="200"
 							show-word-limit />
 					</van-cell-group>
 					<div style="margin: 16px">
@@ -81,6 +82,11 @@ const formValue = ref<MyModel.PayRecord>({
 	amount: 0,
 	currencyAmount: 0,
 });
+const formValue2 = ref<any>({
+	id: '',
+	amount: 0,
+	currencyAmount: 0,
+});
 
 const { routerPush } = useRouterPush();
 const loading = ref<boolean>(false);
@@ -89,6 +95,7 @@ const active = ref(0);
 const route = useRouter();
 const urls = {
 	driverPay: '/driver/order/driverPay',
+	driverPay2: '/driver/order/driverPay2',
 	dict: '/base/dictItem/list',
 	upload: '/common/upload',
 };
@@ -155,6 +162,51 @@ const onSubmit = () => {
 		});
 };
 
+const onSubmit2 = () => {
+	const params: any = [];
+	selectPayItemOptions.value.forEach((payItems: any) => {
+		const p = {
+			orderId: modelRef.value?.id,
+			orderNo: modelRef.value?.orderNo,
+			payMethod: '現金',
+			payMethodCode: 'cash',
+			payItem: payItems.text,
+			payItemCode: payItems.value,
+			amount: formValue2.value[payItems.value],
+			currency: formValue2.value?.currency,
+			currencyCode: formValue2.value?.currencyCode,
+			currencyAmount: Number(formValue2.value?.currencyAmount),
+			remark: formValue2.value?.remark,
+			financeType: 'OutAdvance',
+			images: formValue2.value.images,
+		};
+		params.push(p);
+	});
+
+	console.log(params);
+
+	const promise = request.post<Boolean>(`${urls.driverPay2}`, params);
+	loading.value = true;
+	promise
+		.then((res) => {
+			if (res.data) {
+				toOrder();
+				showNotify({
+					type: 'success',
+					message: '申請しました',
+				});
+			}
+		})
+		.catch((err) => {
+			showNotify({
+				type: 'danger',
+				message: err,
+			});
+		})
+		.finally(() => {
+			loading.value = false;
+		});
+};
 const completed = ref({
 	payItem: false,
 	currency: false,
@@ -174,6 +226,8 @@ const onConfirm = (
 		const vf = `${flag}Code`;
 		formValue.value[flag] = selectedOptions[0].text;
 		formValue.value[vf] = selectedOptions[0].value;
+		formValue2.value[flag] = selectedOptions[0].text;
+		formValue2.value[vf] = selectedOptions[0].value;
 		showPicker.value[flag] = false;
 	}
 };

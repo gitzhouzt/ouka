@@ -18,16 +18,16 @@ public interface PayRecordRepository
         List<PayRecordEntity> findAllByOrderIdAndPayMethodCode(String orderId, String payMethodCode);
 
         @Modifying
-        @Query(nativeQuery = true, value = "update finance_pay_record set status = :status where id in(:ids)")
+        @Query(nativeQuery = true, value = "update finance_pay_record set status = :status, status_name= :statusName where id in(:ids)")
         void settlementByIds(@Param("ids") List<String> ids,
-                        @Param("status") int status);
+                        @Param("status") int status, @Param("statusName") String statusName);
 
         @Modifying
         @Query(nativeQuery = true, value = "update finance_pay_record set pay_method = :payMethod "
                         + ",pay_method_code = :payMethodCode"
-                        + ",bank = :bank, status = :status where id in(:ids)")
+                        + ",bank = :bank, status = :status, status_name= :statusName where id in(:ids)")
         void paidByIds(@Param("ids") List<String> ids, @Param("payMethod") String payMethod,
                         @Param("payMethodCode") String payMethodCode, @Param("bank") String bank,
-                        @Param("status") int status);
+                        @Param("status") int status, @Param("statusName") String statusName);
 
 }

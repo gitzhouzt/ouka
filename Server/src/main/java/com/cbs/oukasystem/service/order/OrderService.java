@@ -259,7 +259,7 @@ public class OrderService {
                 }
 
                 listAnd.add(cb.equal(root.get("isAudit"), true));
-                listAnd.add(cb.notEqual(root.get("isDelete"), true));
+                listAnd.add(cb.notEqual(root.get("isDelete"), false));
 
                 List<Predicate> listOr = new ArrayList<>();
                 if (null != qVo.getStartBeginTime() && null != qVo.getStartEndTime()) {
@@ -625,6 +625,7 @@ public class OrderService {
                 || entity.getOrderStatus() == EnumOrderStatus.Booked) {
             // 受付待ちと予約済みの場合
             entity.setOrderStatus(EnumOrderStatus.Cancelled);
+            entity.setOrderStatusName(EnumOrderStatus.Cancelled.getMessage());
 
             // 先删除日程表
             scheduleService.deletePhysicsByOrderId(entity.getId(), EnumTargetType.Driver);
@@ -650,6 +651,7 @@ public class OrderService {
                 || entity.getOrderStatus() == EnumOrderStatus.Booked) {
             // 受付待ちと予約済みの場合
             entity.setOrderStatus(EnumOrderStatus.Cancelled);
+            entity.setOrderStatusName(EnumOrderStatus.Cancelled.getMessage());
 
             // 先删除日程表
             scheduleService.deletePhysicsByOrderId(entity.getId(), EnumTargetType.Driver);
@@ -1082,8 +1084,10 @@ public class OrderService {
                     && null != entity.getDriverId()
                     && !entity.getDriverId().isEmpty()) {
                 entity.setOrderStatus(EnumOrderStatus.Sending);
+                entity.setOrderStatusName(EnumOrderStatus.Sending.getMessage());
             } else {
                 entity.setOrderStatus(EnumOrderStatus.Assigning);
+                entity.setOrderStatusName(EnumOrderStatus.Assigning.getMessage());
             }
             repository.save(entity);
         } catch (Exception e) {

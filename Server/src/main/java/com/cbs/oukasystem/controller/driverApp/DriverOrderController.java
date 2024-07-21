@@ -91,4 +91,12 @@ public class DriverOrderController {
         return ResultVO.success(service.driverPay(iuPayVO));
     }
 
+    @ResponseBody
+    @Operation(summary = "driverPay Order - 立替申请")
+    @PostMapping(value = "/driverPay2")
+    @Parameters(@Parameter(name = "iuPayVOs", description = "立替申请", required = true))
+    public ResultVO<Boolean> driverPay2(@Validated @RequestBody List<IUPayRecordVO> iuPayVOs) {
+        return ResultVO.success(service.driverPay2(iuPayVOs));
+    }
+
 }

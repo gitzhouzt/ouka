@@ -19,9 +19,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
 import com.cbs.oukasystem.common.LoginUtils;
+import com.cbs.oukasystem.common.BusinessEnum.EnumFinanceStatus;
 import com.cbs.oukasystem.common.BusinessEnum.EnumFinanceType;
 import com.cbs.oukasystem.common.CommonEnum.EnumStatus;
 import com.cbs.oukasystem.common.CsvUtils;
@@ -274,7 +276,7 @@ public class PayRecordService {
      * 精算済
      */
     public Boolean paid(List<String> ids, String payMethod, String payMethodCode, String bank) {
-        repository.paidByIds(ids, payMethod, payMethodCode, bank, 1);
+        repository.paidByIds(ids, payMethod, payMethodCode, bank, 1, EnumFinanceStatus.Paid.getMessage());
         return true;
     }
 
@@ -282,7 +284,7 @@ public class PayRecordService {
      * 現金精算済
      */
     public Boolean cashPaid(List<String> ids) {
-        repository.paidByIds(ids, "現金", "cash", "", 1);
+        repository.paidByIds(ids, "現金", "cash", "", 1, EnumFinanceStatus.Paid.getMessage());
         return true;
     }
 
@@ -290,7 +292,7 @@ public class PayRecordService {
      * 決算済
      */
     public Boolean settlement(List<String> ids) {
-        repository.settlementByIds(ids, 2);
+        repository.settlementByIds(ids, 2, EnumFinanceStatus.Completed.getMessage());
         return true;
     }
 

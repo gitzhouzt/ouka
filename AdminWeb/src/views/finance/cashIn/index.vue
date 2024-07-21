@@ -121,7 +121,7 @@ const handleFinance = (title: string, ids: Array<string | number>) => {
 };
 
 const urls = {
-	financePays: `/order/financePays`
+	cashPaid: `/order/cashPaid`
 };
 
 const handleBatchFinance = () => {
@@ -132,7 +132,7 @@ const handleBatchFinance = () => {
 	const params = {
 		ids: checkedRowKeys.value
 	};
-	const promise = request.post<Boolean>(`${urls.financePays}`, params);
+	const promise = request.post<Boolean>(`${urls.cashPaid}`, params);
 	loading.value = true;
 	promise
 		.then(res => {

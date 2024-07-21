@@ -157,6 +157,13 @@ public class DriverOrderService {
         return payRecordVO;
     }
 
+    public Boolean driverPay2(List<IUPayRecordVO> iuVos) {
+        for (IUPayRecordVO iuPayRecordVO : iuVos) {
+            driverPay(iuPayRecordVO);
+        }
+        return true;
+    }
+
     // 订单是否有ETC费用产生
     public Boolean setETC(String id) {
         OrderEntity entity = getEntity(id);

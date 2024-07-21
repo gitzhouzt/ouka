@@ -133,7 +133,7 @@ public final class BusinessEnum {
      */
     public enum EnumFinanceStatus {
         Waiting("Waiting", "精算待ち"),
-        Paid("Paid", "精算済"),
+        Paid("Paid", "確認済"),
         Completed("Completed", "精算済");
 
         private String code;
