@@ -48,6 +48,7 @@ declare namespace AuthRoute {
     | 'finance_adv'
     | 'finance_mae'
     | 'finance_earnings'
+    | 'finance_costAccounting'
     | 'finance_advance'
     | 'finance_accident'
     | 'finance_dict'

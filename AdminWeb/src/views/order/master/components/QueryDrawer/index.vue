@@ -5,7 +5,7 @@
         <n-space :vertical="true">
           <n-grid :y-gap="2" :cols="1">
             <n-grid-item>
-              <n-form-item label="第三方" path="orderKey">
+              <n-form-item label="第三者" path="orderKey">
                 <n-input-group>
                   <n-input v-model:value="params.orderKey"></n-input>
                 </n-input-group>

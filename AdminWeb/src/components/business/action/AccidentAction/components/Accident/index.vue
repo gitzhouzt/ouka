@@ -34,7 +34,7 @@
             </n-form-item>
           </n-gi>
           <n-gi>
-            <n-form-item label="事故性質" path="accidentType">
+            <n-form-item label="事故原因" path="accidentType">
               <n-input
                 v-model:value="formValue.accidentType"
                 placeholder="クリック分類を選択"
@@ -48,7 +48,7 @@
             /></n-form-item>
           </n-gi>
           <n-gi>
-            <n-form-item label="主责任方" path="responsible">
+            <n-form-item label="責任側" path="responsible">
               <n-input v-model:value="formValue.responsible"
             /></n-form-item>
           </n-gi>

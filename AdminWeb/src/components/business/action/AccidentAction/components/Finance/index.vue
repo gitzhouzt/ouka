@@ -4,7 +4,7 @@
       <n-form ref="formRef" label-placement="left" :label-width="100" :model="formValue" :rules="rules" :size="size">
         <n-grid :cols="2">
           <n-gi>
-            <n-form-item label="財務通知日時" path="financeNoticeTime">
+            <n-form-item label="経理通知日時" path="financeNoticeTime">
               <n-date-picker v-model:value="formValue.financeNoticeTime" type="datetime" clearable
             /></n-form-item>
           </n-gi>

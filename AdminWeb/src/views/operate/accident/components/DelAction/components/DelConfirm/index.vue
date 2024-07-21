@@ -24,7 +24,7 @@
                 </div>
               </n-space>
             </n-descriptions-item>
-            <n-descriptions-item label="事故性質">
+            <n-descriptions-item label="事故原因">
               <n-space>
                 <div class="flex items-center">
                   <span class="ml-4px">{{ props.model?.accidentType }}</span>

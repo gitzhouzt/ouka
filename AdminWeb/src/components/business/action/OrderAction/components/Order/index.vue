@@ -69,10 +69,6 @@
             "
           >
             <n-gi>
-              <n-form-item label="航空便" path="flightNo">
-                <n-input v-model:value="formValue.flightNo" placeholder="E99999" /></n-form-item
-            ></n-gi>
-            <n-gi>
               <!-- <n-form-item label="空港" path="airport">
                 <n-input v-model:value="formValue.airport" placeholder="成田空港" /></n-form-item
             > -->
@@ -84,6 +80,10 @@
                 @update:value="airportUpdateValue"/>
               </n-form-item>
           </n-gi>
+          <n-gi>
+              <n-form-item label="航空便" path="flightNo">
+                <n-input v-model:value="formValue.flightNo" placeholder="E99999" /></n-form-item
+            ></n-gi>
           </template>
 
           <n-gi>
@@ -109,13 +109,13 @@
             </n-form-item></n-gi
           > -->
           <n-gi>
-            <n-form-item label="超时收现" path="isOutTimeCash">
+            <n-form-item label="時間超過料" path="isOutTimeCash">
               <n-radio-group v-model:value="formValue.isOutTimeCash" name="isOutTimeCashRdo">
                 <n-radio-button key="true" value="true" label="是" />
                 <n-radio-button key="false" value="false" label="否" /></n-radio-group></n-form-item
           ></n-gi>
           <n-gi>
-            <n-form-item label="超时料金" path="outTimeAmount">
+            <n-form-item label="超過料金" path="outTimeAmount">
               <n-input-number v-model:value="formValue.outTimeAmount" :precision="0" :min="0" :show-button="false">
                 <template #suffix> 円/30分 </template>
               </n-input-number></n-form-item

@@ -5,7 +5,7 @@
         <span>{{ props.model?.carNo }}</span>
       </n-space>
     </n-descriptions-item>
-    <n-descriptions-item label="事故性質">
+    <n-descriptions-item label="事故原因">
       <n-space>
         {{ `${props.model?.accidentType}` }}
       </n-space>
@@ -44,7 +44,7 @@
       </n-space></n-descriptions-item
     >
 
-    <n-descriptions-item label="主责任方">
+    <n-descriptions-item label="責任側">
       <n-space>
         <span> {{ props.model?.responsible }}</span>
       </n-space></n-descriptions-item
@@ -95,7 +95,7 @@
         <span> {{ props.model?.driverAmount }}</span>
       </n-space></n-descriptions-item
     >
-    <n-descriptions-item label="財務通知日時">
+    <n-descriptions-item label="経理通知日時">
       <n-space>
         <span> {{ props.model?.financeNoticeTime }}</span>
       </n-space></n-descriptions-item

@@ -7,7 +7,7 @@
 						<n-input v-model:value="searchParams.keyword" style="min-width: 30%" type="text" placeholder="車両番号/事故者/確認者"
 							clearable />
 					</n-form-item>
-					<n-form-item label="事故性質">
+					<n-form-item label="事故原因">
 						<n-input v-model:value="searchParams.accidentType" placeholder="クリック性質を選択" readonly
 							@click="showDict('operate_accident_type')" />
 					</n-form-item>
@@ -89,7 +89,7 @@ const columns: DataTableColumn<MyModel.Accident>[] = [
 		align: 'center'
 	},
 	{
-		title: '事故性質',
+		title: '事故原因',
 		key: 'accidentType',
 		width: 150,
 		align: 'center'
@@ -146,7 +146,7 @@ const columns: DataTableColumn<MyModel.Accident>[] = [
 		}
 	},
 	{
-		title: '主责任方',
+		title: '責任側',
 		key: 'responsible',
 		width: 100,
 		align: 'center',
@@ -273,7 +273,7 @@ const columns: DataTableColumn<MyModel.Accident>[] = [
 		}
 	},
 	{
-		title: '財務通知日時',
+		title: '経理通知日時',
 		key: 'financeNoticeTime',
 		width: 120,
 		align: 'center',

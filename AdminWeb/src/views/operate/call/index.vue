@@ -7,7 +7,7 @@
 						<n-input v-model:value="searchParams.keyword" style="min-width: 30%" type="text" placeholder="車両/ドライバー/管理者"
 							clearable />
 					</n-form-item>
-					<n-form-item label="点呼時間" path="selTime">
+					<n-form-item label="点呼日" path="selTime">
 						<n-date-picker v-model:value="searchParams.selTime" type="daterange" clearable @update:value="onUpdate" />
 					</n-form-item>
 					<n-form-item>
@@ -96,7 +96,7 @@ const rowClassName = (row: MyModel.Call) => {
 };
 const columns: DataTableColumn<MyModel.Call>[] = [
 	{
-		title: '日時',
+		title: '日付',
 		key: 'date',
 		width: 100,
 		align: 'center'

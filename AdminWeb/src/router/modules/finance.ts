@@ -81,6 +81,17 @@ const sys: AuthRoute.Route = {
         icon: 'icon-park-outline:finance'
       }
     },
+    {
+      name: 'finance_costAccounting',
+      path: '/finance/costAccounting',
+      component: 'self',
+      meta: {
+        title: '原価精算',
+        permissions: ['Super', 'Admin', 'Accounting'],
+        requiresAuth: true,
+        icon: 'icon-park-outline:finance'
+      }
+    },
     // {
     //   name: 'finance_accident',
     //   path: '/finance/accident',

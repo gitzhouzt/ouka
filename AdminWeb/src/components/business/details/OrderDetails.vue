@@ -24,7 +24,7 @@
         </div>
       </n-space>
     </n-descriptions-item>
-    <n-descriptions-item label="第三方" :span="2">
+    <n-descriptions-item label="第三者" :span="2">
       <n-space>
         <div class="flex items-center">
           {{ `${props.model?.orderKey ?? '-'}` }}

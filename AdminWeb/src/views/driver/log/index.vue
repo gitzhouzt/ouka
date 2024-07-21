@@ -73,7 +73,7 @@ const { isMobile } = useMyCommon();
 
 const columns: DataTableColumn<MyModel.Log>[] = [
 	{
-		title: '日時',
+		title: '日付',
 		key: 'date',
 		width: 100,
 		align: 'center'
