@@ -116,7 +116,7 @@
           ></n-gi>
           <n-gi>
             <n-form-item label="超過料金" path="outTimeAmount">
-              <n-input-number v-model:value="formValue.outTimeAmount" :precision="0" :min="0" :show-button="false">
+              <n-input-number v-model:value="formValue.outTimeAmount" :precision="0" :min="0" :show-button="false" :disabled="formValue.isOutTimeCash == 'false'">
                 <template #suffix> 円/30分 </template>
               </n-input-number></n-form-item
             ></n-gi
