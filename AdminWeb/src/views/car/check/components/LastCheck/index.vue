@@ -15,7 +15,7 @@
           <n-form
             ref="formRef"
             label-placement="left"
-            :label-width="100"
+            :label-width="103"
             :model="formValue"
             :rules="rules"
             :size="size"
@@ -23,7 +23,7 @@
             <n-form-item label="番号">
               <n-input v-model:value="formValue.carNo" :disabled="true" />
             </n-form-item>
-            <n-form-item label="前回年検" path="lastYearCheckDate">
+            <n-form-item label="前回点検（年）" path="lastYearCheckDate">
               <div class="items-center flex">
                 <n-date-picker v-model:value="formValue.lastYearCheckDate" type="date" clearable />
               </div>

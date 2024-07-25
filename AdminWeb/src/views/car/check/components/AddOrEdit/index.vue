@@ -26,7 +26,7 @@
             <n-form-item label="年度" path="trainYear">
               <n-date-picker v-model:value="formValue.year" type="year" clearable :disabled="true" />
             </n-form-item>
-            <n-form-item label="年検" path="yearCheckDate">
+            <n-form-item label="点検（年）" path="yearCheckDate">
               <div class="items-center flex">
                 <n-date-picker v-model:value="formValue.yearCheckDate" type="date" clearable />
                 <n-switch v-model:value="formValue.yearCheckStatus" class="ml-2">
@@ -35,21 +35,21 @@
                 </n-switch>
               </div>
             </n-form-item>
-            <n-form-item label="第一回点検" path="monthCheckDate1">
+            <n-form-item label="１回目点検" path="monthCheckDate1">
               <n-date-picker v-model:value="formValue.monthCheckDate1" type="date" clearable />
               <n-switch v-model:value="formValue.checkStatus1" class="ml-2">
                 <template #checked> 点検済 </template>
                 <template #unchecked> なし </template>
               </n-switch>
             </n-form-item>
-            <n-form-item label="第二回点検" path="monthCheckDate2">
+            <n-form-item label="２回目点検" path="monthCheckDate2">
               <n-date-picker v-model:value="formValue.monthCheckDate2" type="date" clearable />
               <n-switch v-model:value="formValue.checkStatus2" class="ml-2">
                 <template #checked> 点検済 </template>
                 <template #unchecked> なし </template>
               </n-switch>
             </n-form-item>
-            <n-form-item label="第三回点検" path="monthCheckDate3">
+            <n-form-item label="３回目点検" path="monthCheckDate3">
               <n-date-picker v-model:value="formValue.monthCheckDate3" type="date" clearable />
               <n-switch v-model:value="formValue.checkStatus3" class="ml-2">
                 <template #checked> 点検済 </template>
