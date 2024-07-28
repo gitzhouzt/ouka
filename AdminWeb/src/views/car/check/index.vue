@@ -93,9 +93,9 @@ const columns: DataTableColumn<MyModel.CarCheck>[] = [
 		align: 'center'
 	},
 	{
-		title: '前回年検',
+		title: '前回点検（年）',
 		key: 'lastYearCheckDate',
-		width: 100,
+		width: 116,
 		align: 'center',
 		render(row) {
 			const tipsOption = [
@@ -149,7 +149,7 @@ const columns: DataTableColumn<MyModel.CarCheck>[] = [
 		}
 	},
 	{
-		title: '年检',
+		title: '点検（年）',
 		key: 'yearCheckDate',
 		align: 'center',
 		render(row) {
@@ -176,7 +176,7 @@ const columns: DataTableColumn<MyModel.CarCheck>[] = [
 		}
 	},
 	{
-		title: '点検第一回',
+		title: '１回目点検',
 		key: 'monthCheckDate1',
 		align: 'center',
 		render(row) {
@@ -203,7 +203,7 @@ const columns: DataTableColumn<MyModel.CarCheck>[] = [
 		}
 	},
 	{
-		title: '点検第二回',
+		title: '２回目点検',
 		key: 'monthCheckDate2',
 		align: 'center',
 		render(row) {
@@ -230,7 +230,7 @@ const columns: DataTableColumn<MyModel.CarCheck>[] = [
 		}
 	},
 	{
-		title: '点検第三回',
+		title: '３回目点検',
 		key: 'monthCheckDate3',
 		align: 'center',
 		render(row) {

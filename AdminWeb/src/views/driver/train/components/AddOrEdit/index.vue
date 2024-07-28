@@ -29,16 +29,16 @@
             <n-form-item label="年度" path="trainYear">
               <n-date-picker v-model:value="formValue.trainYear" type="year" clearable :disabled="true" />
             </n-form-item>
-            <n-form-item label="第一回" path="trainDate1">
+            <n-form-item label="1回目" path="trainDate1">
               <n-date-picker v-model:value="formValue.trainDate1" type="date" clearable />
             </n-form-item>
-            <n-form-item label="第二回" path="trainDate2">
+            <n-form-item label="2回目" path="trainDate2">
               <n-date-picker v-model:value="formValue.trainDate2" type="date" clearable />
             </n-form-item>
-            <n-form-item label="第三回" path="trainDate3">
+            <n-form-item label="3回目" path="trainDate3">
               <n-date-picker v-model:value="formValue.trainDate3" type="date" clearable />
             </n-form-item>
-            <n-form-item label="第四回" path="trainDate4">
+            <n-form-item label="4回目" path="trainDate4">
               <n-date-picker v-model:value="formValue.trainDate4" type="date" clearable />
             </n-form-item>
           </n-form>

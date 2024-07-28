@@ -100,7 +100,7 @@ const columns: DataTableColumn<MyModel.Train>[] = [
 		align: 'center'
 	},
 	{
-		title: '第一回',
+		title: '1回目',
 		key: 'trainDate1',
 		width: 100,
 		align: 'center',
@@ -111,7 +111,7 @@ const columns: DataTableColumn<MyModel.Train>[] = [
 					{
 						class: `${row.trainDate1 ?? 'text-red'}`
 					},
-					{ default: () => (row.trainDate1 ? moment(row.trainDate1).format('yyyy/MM/DD') : '未培训') }
+					{ default: () => (row.trainDate1 ? moment(row.trainDate1).format('yyyy/MM/DD') : '未実施') }
 				)
 			];
 			const editOption = h(
@@ -128,7 +128,7 @@ const columns: DataTableColumn<MyModel.Train>[] = [
 		}
 	},
 	{
-		title: '第二回',
+		title: '2回目',
 		key: 'trainDate2',
 		width: 100,
 		align: 'center',
@@ -139,7 +139,7 @@ const columns: DataTableColumn<MyModel.Train>[] = [
 					{
 						class: `${row.trainDate2 ?? 'text-red'}`
 					},
-					{ default: () => (row.trainDate2 ? moment(row.trainDate2).format('yyyy/MM/DD') : '未培训') }
+					{ default: () => (row.trainDate2 ? moment(row.trainDate2).format('yyyy/MM/DD') : '未実施') }
 				)
 			];
 			const editOption = h(
@@ -156,7 +156,7 @@ const columns: DataTableColumn<MyModel.Train>[] = [
 		}
 	},
 	{
-		title: '第三回',
+		title: '3回目',
 		key: 'trainDate3',
 		width: 100,
 		align: 'center',
@@ -167,7 +167,7 @@ const columns: DataTableColumn<MyModel.Train>[] = [
 					{
 						class: `${row.trainDate3 ?? 'text-red'}`
 					},
-					{ default: () => (row.trainDate3 ? moment(row.trainDate3).format('yyyy/MM/DD') : '未培训') }
+					{ default: () => (row.trainDate3 ? moment(row.trainDate3).format('yyyy/MM/DD') : '未実施') }
 				)
 			];
 			const editOption = h(
@@ -185,7 +185,7 @@ const columns: DataTableColumn<MyModel.Train>[] = [
 	},
 
 	{
-		title: '第四回',
+		title: '4回目',
 		key: 'trainDate4',
 		width: 100,
 		align: 'center',
@@ -196,7 +196,7 @@ const columns: DataTableColumn<MyModel.Train>[] = [
 					{
 						class: `${row.trainDate4 ?? 'text-red'}`
 					},
-					{ default: () => (row.trainDate4 ? moment(row.trainDate4).format('yyyy/MM/DD') : '未培训') }
+					{ default: () => (row.trainDate4 ? moment(row.trainDate4).format('yyyy/MM/DD') : '未実施') }
 				)
 			];
 			const editOption = h(

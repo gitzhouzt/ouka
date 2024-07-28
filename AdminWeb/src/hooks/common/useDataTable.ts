@@ -34,7 +34,7 @@ export default function useDataTable<T = MyModel.Root>(module: string, modulePar
     promise
       .then(res => {
         if (res.data) {
-          window.$message?.success(`${isAudit ? `${objStr}を停止` : `${objStr}を停止解除`}しました`);
+          window.$message?.success(`${isAudit ? `${objStr}を無効` : `${objStr}を無効解除`}しました`);
         }
       })
       .finally(() => {

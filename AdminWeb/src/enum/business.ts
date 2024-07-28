@@ -35,8 +35,8 @@ export enum EnumDateType {
  */
 export enum EnumUserStatus {
   '' = '選択してください',
-  'Working' = '仕事中',
-  'Resting' = '休憩',
+  'Working' = '出勤',
+  'Resting' = '休暇',
   'Retirement' = '退職',
   'Ban' = '禁止'
 }

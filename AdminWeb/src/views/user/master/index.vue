@@ -196,7 +196,7 @@ const columns: DataTableColumn<MyModel.User>[] = [
 		align: 'center',
 		render(row) {
 			const type = row.isAudit === true ? 'warning' : 'default';
-			const audit = row.isAudit === true ? '停止' : '停止解除';
+			const audit = row.isAudit === true ? '無効' : '無効解除';
 			const tipsOption = h(
 				NTag,
 				{
