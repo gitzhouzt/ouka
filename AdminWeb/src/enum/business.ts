@@ -50,7 +50,8 @@ export enum EnumStatus {
 
 export enum EnumTargetType {
   'Car' = '車両',
-  'Driver' = 'ドライバー'
+  'Driver' = 'ドライバー',
+  'All' = ''
 }
 
 /**
