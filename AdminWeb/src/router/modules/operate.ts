@@ -48,6 +48,17 @@ const sys: AuthRoute.Route = {
       }
     },
     {
+      name: 'operate_sku',
+      path: '/operate/sku',
+      component: 'self',
+      meta: {
+        title: '日常工作 ',
+        permissions: ['Super', 'Admin', 'Operator', 'Seller', 'Driver', 'OperationManager'],
+        requiresAuth: true,
+        icon: 'ic:outline-calendar-month'
+      }
+    },
+    {
       name: 'operate_dict',
       path: '/operate/dict',
       component: 'self',
