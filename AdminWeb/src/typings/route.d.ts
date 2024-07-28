@@ -36,6 +36,7 @@ declare namespace AuthRoute {
     | 'operate_accident'
     | 'operate_csku'
     | 'operate_dsku'
+    | 'operate_sku'
     | 'operate_dict'
     | 'order'
     | 'order_master'
