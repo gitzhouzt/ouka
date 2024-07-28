@@ -143,6 +143,10 @@ public class UserService {
         return repository.findAll(spec);
     }
 
+    public List<UserEntity> findByIsAuditAndIsDelete(Boolean isAudit, Boolean isDelete) {
+        return repository.findByIsAuditAndIsDelete(isAudit, isDelete);
+    }
+
     /*
      * ユーザーのリスト
      */

@@ -20,6 +20,8 @@ public interface UserRepository extends JpaRepository<UserEntity, String>, JpaSp
 
         UserEntity findByUserNo(String userNo);
 
+        List<UserEntity> findByIsAuditAndIsDelete(Boolean isAudit, Boolean isDelete);
+
         @Query(nativeQuery = true, value = "select u.* from user_master u  "
                         + " join operate_call c on u.id <> c.driver_id "
                         + " where u.user_roles like '%Driver%' and u.status = 1 "

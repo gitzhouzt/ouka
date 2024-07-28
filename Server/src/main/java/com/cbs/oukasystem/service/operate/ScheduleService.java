@@ -8,6 +8,7 @@ import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import com.cbs.oukasystem.common.BusinessEnum.EnumActionType;
@@ -15,6 +16,7 @@ import com.cbs.oukasystem.common.BusinessEnum.EnumTargetType;
 import com.cbs.oukasystem.common.MessageEnum.EnumDataCheck;
 import com.cbs.oukasystem.common.MessageEnum.EnumDeleteCheck;
 import com.cbs.oukasystem.common.MessageEnum.EnumIOUCheck;
+import com.cbs.oukasystem.common.MessageEnum.EnumInsertCheck;
 import com.cbs.oukasystem.config.BaseException;
 import com.cbs.oukasystem.entity.operate.ScheduleEntity;
 import com.cbs.oukasystem.mapstruct.operate.ScheduleVOEntityMapStruct;
@@ -95,6 +97,29 @@ public class ScheduleService {
         ListVO<ScheduleVO> listDto = new ListVO<>();
         long itemCnt = repository.countBySchedule(qVo.getKeyword(), target_type,
                 qVo.getWorkDate());
+        int pageCnt = (int) itemCnt / qVo.getPageSize() + (itemCnt %
+                qVo.getPageSize() == 0 ? 0 : 1);
+        listDto.setItemCount(itemCnt);
+        listDto.setPage(qVo.getPage());
+        listDto.setPageSize(qVo.getPageSize());
+        listDto.setPageCount(pageCnt);
+        listDto.setList(list);
+        return listDto;
+    }
+
+    public ListVO<ScheduleVO> getWorkByMonth(QueryScheduleVO qVo) {
+        qVo.setPageSize(9999);
+        List<Map> carMaps = repository.queryWorkByCar(qVo.getWorkDate());
+        List<Map> driverMaps = repository.queryWorkByDriver(qVo.getWorkDate());
+        if (null != driverMaps && null != carMaps) {
+            for (Map map : carMaps) {
+                driverMaps.add(map);
+            }
+        }
+        Object data = driverMaps;
+        List<ScheduleVO> list = (List<ScheduleVO>) data;
+        ListVO<ScheduleVO> listDto = new ListVO<>();
+        long itemCnt = list.size();
         int pageCnt = (int) itemCnt / qVo.getPageSize() + (itemCnt %
                 qVo.getPageSize() == 0 ? 0 : 1);
         listDto.setItemCount(itemCnt);

@@ -39,6 +39,24 @@ public interface ScheduleRepository
                         @Param("targetType") int targetType,
                         @Param("workDate") String workDate);
 
+        @Query(nativeQuery = true, value = "select s.id as id,  target_id as targetId,"
+                        + "c.car_no as targetNo,target_type as targetType,action_id as actionId,"
+                        + "action_type as actionType,work_date as workDate,work_time as workTime,s.remark"
+                        + " from schedule_master s "
+                        + " right join car_master c on s.target_id = c.id "
+                        + " where s.work_date  = :workDate "
+                        + " ORDER BY  workTime asc")
+        List<Map> queryWorkByCar(@Param("workDate") String workDate);
+
+        @Query(nativeQuery = true, value = "select s.id as id, target_id as targetId,"
+                        + "u.user_name as targetNo,target_type as targetType,action_id as actionId,"
+                        + "action_type as actionType,work_date as workDate,work_time as workTime,s.remark"
+                        + " from schedule_master s "
+                        + " right join user_master u on s.target_id = u.id and u.user_roles like '%Driver%' "
+                        + " where s.work_date  = :workDate "
+                        + " ORDER BY  workTime asc")
+        List<Map> queryWorkByDriver(@Param("workDate") String workDate);
+
         void deleteByActionIdAndTargetTypeAndActionType(String actionId, EnumTargetType targetType,
                         EnumActionType actionType);
 

@@ -24,6 +24,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import com.cbs.oukasystem.common.BusinessEnum.EnumActionType;
@@ -41,10 +42,12 @@ import com.cbs.oukasystem.common.LoginUtils;
 import com.cbs.oukasystem.common.MessageEnum.EnumDataCheck;
 import com.cbs.oukasystem.common.MessageEnum.EnumDeleteCheck;
 import com.cbs.oukasystem.common.MessageEnum.EnumIOUCheck;
+import com.cbs.oukasystem.common.MessageEnum.EnumInsertCheck;
 import com.cbs.oukasystem.common.MessageEnum.EnumOrderCheck;
 import com.cbs.oukasystem.common.PdfUtils;
 import com.cbs.oukasystem.config.BaseException;
 import com.cbs.oukasystem.entity.user.UserEntity;
+import com.cbs.oukasystem.entity.car.CarEntity;
 import com.cbs.oukasystem.entity.finance.AdvanceEntity;
 import com.cbs.oukasystem.entity.finance.EarningsEntity;
 import com.cbs.oukasystem.entity.operate.ScheduleEntity;
@@ -822,6 +825,55 @@ public class OrderService {
     }
 
     /*
+     * 毎日の工作日程を自動的に登録 Scheduled
+     * s m h day month week year
+     */
+    @Scheduled(cron = "0 30 0 * * ?")
+    public Boolean workAutoInsert() {
+        try {
+            List<UserEntity> userEntities = userService.findByIsAuditAndIsDelete(true, false);
+            List<CarEntity> carEntities = carService.findByIsAuditAndIsDelete(true, false);
+
+            List<ScheduleEntity> scheduleEntities = new ArrayList<ScheduleEntity>();
+            SimpleDateFormat sf = new SimpleDateFormat("yyyy/MM/dd");
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(new Date());
+            ScheduleEntity scheduleEntity = null;
+            for (UserEntity userEntity : userEntities) {
+                scheduleEntity = new ScheduleEntity();
+                scheduleEntity.setTargetId(userEntity.getId());
+                scheduleEntity.setTargetNo(userEntity.getUserNo());
+                scheduleEntity.setTargetName(userEntity.getUserName());
+                scheduleEntity.setActionId("");
+                scheduleEntity.setTargetType(EnumTargetType.Driver);
+                scheduleEntity.setActionType(null);
+                scheduleEntity.setRemark("");
+                scheduleEntity.setWorkDate(sf.format(calendar.getTime()));
+                scheduleEntity.setWorkTime(null);
+                scheduleEntities.add(scheduleEntity);
+            }
+            for (CarEntity carEntity : carEntities) {
+                scheduleEntity = new ScheduleEntity();
+                scheduleEntity.setTargetId(carEntity.getId());
+                scheduleEntity.setTargetNo(carEntity.getCarNo());
+                scheduleEntity.setTargetName(carEntity.getCarName());
+                scheduleEntity.setActionId("");
+                scheduleEntity.setTargetType(EnumTargetType.Car);
+                scheduleEntity.setActionType(null);
+                scheduleEntity.setRemark("");
+                scheduleEntity.setWorkDate(sf.format(calendar.getTime()));
+                scheduleEntity.setWorkTime(null);
+                scheduleEntities.add(scheduleEntity);
+            }
+            scheduleService.saveAll(scheduleEntities);
+        } catch (Exception e) {
+            throw new BaseException(EnumInsertCheck.ERROR, KEY + ":" +
+                    e.getMessage());
+        }
+        return true;
+    }
+
+    /*
      * 出发前3天提醒 Scheduled
      */
     // @Scheduled(cron = "9 0 0 * * ?")
@@ -1158,7 +1210,7 @@ public class OrderService {
         deployRecordEntity.setOrderNo(deployVO.getOrderNo());
         deployRecordEntity.setNewId(deployVO.getCarId());
         deployRecordEntity.setNewNo(deployVO.getCarNo());
-        deployRecordEntity.setNewName(deployVO.getCarName());
+        deployRecordEntity.setNewName(deployVO.getCarNo());
         deployRecordEntity.setTargetType(EnumTargetType.Car);
         deployRecordEntity.setRemark(deployVO.getCarRemark());
         deployRecordService.insertOrUpdate(deployRecordEntity);
@@ -1177,7 +1229,7 @@ public class OrderService {
             scheduleEntity = new ScheduleEntity();
             scheduleEntity.setTargetId(deployVO.getCarId());
             scheduleEntity.setTargetNo(deployVO.getCarNo());
-            scheduleEntity.setTargetName(deployVO.getCarName());
+            scheduleEntity.setTargetName(deployVO.getCarNo());
             scheduleEntity.setActionId(entity.getId());
             scheduleEntity.setTargetType(EnumTargetType.Car);
             scheduleEntity.setActionType(EnumActionType.Order);

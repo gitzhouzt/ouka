@@ -34,6 +34,7 @@ import com.cbs.oukasystem.common.MessageEnum.EnumIOUCheck;
 import com.cbs.oukasystem.config.BaseException;
 import com.cbs.oukasystem.entity.car.CarEntity;
 import com.cbs.oukasystem.entity.order.OrderEntity;
+import com.cbs.oukasystem.entity.user.UserEntity;
 import com.cbs.oukasystem.mapstruct.car.CarVOEntityMapStruct;
 import com.cbs.oukasystem.mapstruct.order.OrderVOEntityMapStruct;
 import com.cbs.oukasystem.repository.car.CarRepository;
@@ -80,8 +81,16 @@ public class CarService {
         return vos;
     }
 
+    public List<CarEntity> findAll() {
+        return repository.findAll();
+    }
+
     public List<CarEntity> findAll(Specification<CarEntity> spec) {
         return repository.findAll(spec);
+    }
+
+    public List<CarEntity> findByIsAuditAndIsDelete(Boolean isAudit, Boolean isDelete) {
+        return repository.findByIsAuditAndIsDelete(isAudit, isDelete);
     }
 
     public List<CarVO> queryTodayCars(String userId) {

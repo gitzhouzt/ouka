@@ -54,6 +54,13 @@ public class ScheduleController {
     }
 
     @ResponseBody
+    @Operation(summary = "schedule -スケジュールのリスト")
+    @PostMapping("/workByMonth/list")
+    public ResultVO<ListVO<ScheduleVO>> workByMonth(@RequestBody QueryScheduleVO queryVO) {
+        return ResultVO.success(service.getWorkByMonth(queryVO));
+    }
+
+    @ResponseBody
     @Operation(summary = "Delete Schedule - 物理削除スケジュール")
     @DeleteMapping("/deletePhysics/{id}")
     public ResultVO<Boolean> deletePhysics(@PathVariable String id) {

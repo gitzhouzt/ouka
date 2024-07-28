@@ -23,4 +23,6 @@ public interface CarRepository
                         + " and DATEDIFF(start_time,CURRENT_DATE) <= 1 and  DATEDIFF(start_time,CURRENT_DATE) >= 0 GROUP BY o.car_id ", nativeQuery = true)
         List<Map<String, String>> queryTodayCars(@Param("driverId") String driverId);
 
+        List<CarEntity> findByIsAuditAndIsDelete(Boolean isAudit, Boolean isDelete);
+
 }
