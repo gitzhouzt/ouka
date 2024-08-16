@@ -3,6 +3,7 @@
 		<n-space :vertical="true">
 			<n-space>
 				<n-form :inline="!isMobile && !isWrap" :label-width="100" label-placement="left">
+					<n-form :inline="!isMobile" :label-width="100" label-placement="left">
 					<n-form-item label="キーワード">
 						<n-input v-model:value="searchParams.keyword" style="min-width: 30%" type="text" placeholder="番号/連絡先/ワード"
 							clearable />
@@ -11,6 +12,8 @@
 						<n-input v-model:value="searchParams.orderSource" placeholder="クリック分類を選択" readonly
 							@click="showDict('order_source')" />
 					</n-form-item>
+				</n-form>
+				<n-form :inline="!isMobile" :label-width="100" label-placement="left">
 					<n-form-item label="ドライバー" path="driverName">
 						<n-input-group>
 							<n-input v-model:value="searchParams.driverName" readonly placeholder="クリックドライバーを選択"
@@ -23,6 +26,7 @@
 								@click="showCar()"></n-input>
 						</n-input-group>
 					</n-form-item>
+				</n-form>
 					<!-- <n-form-item label="サービス時間" path="selTime">
             <n-date-picker v-model:value="searchParams.selTime" type="daterange" clearable @update:value="onUpdate" />
           </n-form-item> -->

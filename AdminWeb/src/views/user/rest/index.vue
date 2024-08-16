@@ -3,18 +3,20 @@
 		<n-space :vertical="true">
 			<n-space>
 				<n-form :inline="!isMobile && !isWrap" :label-width="100" label-placement="left">
+					<n-form :inline="!isMobile" :label-width="100" label-placement="left">
 					<n-form-item label="キーワード">
 						<n-input v-model:value="searchParams.keyword" style="min-width: 30%" type="text" placeholder="スタッフ番号/名前/備考"
 							clearable />
 					</n-form-item>
 					<n-form-item label="役職">
-						<n-select v-model:value="searchParams.userRole" :options="userRoleOptions" :consistent-menu-width="true"
+						<n-select v-model:value="searchParams.userRole" :options="userRoleOptions" :consistent-menu-width="false"
 							style="min-width: 30%" />
 					</n-form-item>
 					<n-form-item label="休暇タイプ">
 						<n-input v-model:value="searchParams.restType" placeholder="クリックタイプを選択" readonly
 							@click="showDict('user_rest_type')" />
 					</n-form-item>
+				</n-form>
 					<n-form-item>
 						<n-button type="primary" @click="() => {
 								searchQuery();
