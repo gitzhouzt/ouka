@@ -82,8 +82,8 @@ const sys: AuthRoute.Route = {
       }
     },
     {
-      name: 'finance_accident',
-      path: '/finance/accident',
+      name: 'finance_motone',
+      path: '/finance/motone',
       component: 'self',
       meta: {
         title: '原価精算',

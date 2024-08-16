@@ -19,8 +19,7 @@
 					</n-form-item>
 					<n-form-item label="車両" path="carName">
 						<n-input-group>
-							<n-input v-model:value="searchParams.carNo" readonly placeholder="クリック車両を選択"
-								@click="showCar()"></n-input>
+							<n-input v-model:value="searchParams.carNo" readonly placeholder="クリック車両を選択" @click="showCar()"></n-input>
 						</n-input-group>
 					</n-form-item>
 					<n-form-item label="サービス時間" path="selTime">
@@ -127,6 +126,9 @@ const urls = {
 	send: `/order/send`
 };
 const handleSend = () => {
+	if (dataSource.value.length === 0) {
+		return;
+	}
 	loading.value = true;
 	const promise = request.post(`${urls.send}`);
 	promise
