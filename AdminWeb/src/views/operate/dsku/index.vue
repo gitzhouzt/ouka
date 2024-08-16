@@ -270,7 +270,8 @@ function afterFun() {
 }
 
 const onReset = () => {
-	datePicker.value.date = new Date().valueOf();
+	// datePicker.value.date = new Date().valueOf();
+	datePicker.value.date = null;
 	searchReset();
 };
 

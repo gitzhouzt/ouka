@@ -219,7 +219,8 @@ const onUpdate = (value: string | number | boolean) => {
 };
 
 const onReset = () => {
-	datePicker.value.date = new Date().valueOf();
+	// datePicker.value.date = new Date().valueOf();
+	datePicker.value.date = null;
 	searchReset();
 };
 

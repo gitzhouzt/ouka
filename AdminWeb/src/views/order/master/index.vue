@@ -2,7 +2,8 @@
 	<div class="h-max">
 		<n-space :vertical="true">
 			<n-space>
-				<n-form :inline="!isMobile && !isWrap" :label-width="100" label-placement="left">
+				<n-form :inline="!isMobile && !isWrap" label-placement="left">
+				<n-form :inline="!isMobile" :label-width="100" label-placement="left">
 					<n-form-item label="キーワード">
 						<n-input v-model:value="searchParams.keyword" style="min-width: 30%" type="text" placeholder="注文番号/連絡先"
 							clearable />
@@ -11,6 +12,8 @@
 						<n-input v-model:value="searchParams.orderSource" placeholder="クリック注文元を選択" readonly
 							@click="showDict('order_source')" />
 					</n-form-item>
+				</n-form>
+				<n-form :inline="!isMobile" :label-width="100" label-placement="left">
 					<n-form-item label="注文内容">
 						<n-select v-model:value="searchParams.orderType" class="w-50" :options="orderTypeOptions"
 							:consistent-menu-width="false" />
@@ -19,6 +22,7 @@
 						<n-date-picker v-model:value="searchParams.selTime" type="datetimerange" format="yyyy/MM/dd HH:mm:ss"
 							clearable @update:value="onUpdate" />
 					</n-form-item>
+				</n-form>
 					<n-form-item>
 						<n-button type="primary" @click="() => {
 								searchQuery();
@@ -26,7 +30,8 @@
 							">検索</n-button>
 						<n-button class="ml-2" @click="handleReset">リセット</n-button>
 					</n-form-item>
-				</n-form>
+				
+			</n-form>
 			</n-space>
 			<n-space justify="space-between">
 				<div>

@@ -3,6 +3,7 @@
 		<n-space :vertical="true">
 			<n-space>
 				<n-form :inline="!isMobile && !isWrap" :label-width="100" label-placement="left">
+					<n-form :inline="!isMobile" :label-width="100" label-placement="left">
 					<n-form-item label="キーワード">
 						<n-input v-model:value="searchParams.keyword" style="min-width: 30%" type="text" placeholder="車両番号/事故者/確認者"
 							clearable />
@@ -11,6 +12,7 @@
 						<n-input v-model:value="searchParams.accidentType" placeholder="クリック性質を選択" readonly
 							@click="showDict('operate_accident_type')" />
 					</n-form-item>
+				</n-form>
 					<n-form-item>
 						<n-button type="primary" @click="() => {
 								searchQuery();

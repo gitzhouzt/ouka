@@ -3,6 +3,7 @@
 		<n-space :vertical="true">
 			<n-space>
 				<n-form :inline="!isMobile && !isWrap" :label-width="100" label-placement="left">
+					<n-form :inline="!isMobile" :label-width="100" label-placement="left">
 					<n-form-item label="キーワード">
 						<n-input v-model:value="searchParams.keyword" style="min-width: 30%" type="text" placeholder="注文番号"
 							clearable />
@@ -15,6 +16,8 @@
 						<n-input v-model:value="searchParams.payMethod" placeholder="クリック方法を選択" readonly
 							@click="showDict('pay_method')" />
 					</n-form-item>
+				</n-form>
+				<n-form :inline="!isMobile" :label-width="100" label-placement="left">
 					<n-form-item label="責任人" path="sellerName">
 						<n-input-group>
 							<n-input v-model:value="searchParams.sellerName" readonly placeholder="クリックド責任人を選択"
@@ -30,6 +33,7 @@
 					<n-form-item label="ツアー日" path="selTime">
 						<n-date-picker v-model:value="searchParams.selTime" type="daterange" clearable @update:value="onUpdate" />
 					</n-form-item>
+				</n-form>
 					<n-form-item>
 						<n-button type="primary" @click="() => {
 								searchQuery();

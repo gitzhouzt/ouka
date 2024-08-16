@@ -2,7 +2,8 @@
 	<div class="h-max">
 		<n-space :vertical="true">
 			<n-space>
-				<n-form :inline="!isMobile && !isWrap" :label-width="100" label-placement="left">
+				<n-form :inline="!isMobile && !isWrap" label-placement="left">
+				<n-form :inline="!isMobile" :label-width="100" label-placement="left">
 					<n-form-item label="キーワード">
 						<n-input v-model:value="searchParams.keyword" style="min-width: 30%" type="text" placeholder="注文番号/連絡先"
 							clearable />
@@ -17,6 +18,8 @@
 								@click="showDriver()"></n-input>
 						</n-input-group>
 					</n-form-item>
+				</n-form>
+				<n-form :inline="!isMobile" :label-width="100" label-placement="left">
 					<n-form-item label="車両" path="carName">
 						<n-input-group>
 							<n-input v-model:value="searchParams.carNo" readonly placeholder="クリック車両を選択" @click="showCar()"></n-input>
@@ -26,6 +29,7 @@
 						<n-date-picker v-model:value="searchParams.selTime" type="datetimerange" format="yyyy/MM/dd HH:mm:ss"
 							clearable @update:value="onUpdate" />
 					</n-form-item>
+				</n-form>
 					<n-form-item>
 						<n-button type="primary" @click="() => {
 								searchQuery();
@@ -33,7 +37,7 @@
 							">検索</n-button>
 						<n-button class="ml-2" @click="searchReset">リセット</n-button>
 					</n-form-item>
-				</n-form>
+			</n-form>
 			</n-space>
 			<n-space justify="space-between">
 				<div>

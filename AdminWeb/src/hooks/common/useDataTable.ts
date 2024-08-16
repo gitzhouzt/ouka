@@ -111,6 +111,9 @@ export default function useDataTable<T = MyModel.Root>(module: string, modulePar
 
   function searchReset() {
     resetParams();
+    searchParamsReactive.orderType = null;
+    searchParamsReactive.selTime = null;
+    searchParamsReactive.keyword = null;
     searchParamsReactive.page = 1;
     searchQuery();
   }
