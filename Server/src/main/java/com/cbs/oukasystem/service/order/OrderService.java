@@ -262,7 +262,7 @@ public class OrderService {
                 }
 
                 listAnd.add(cb.equal(root.get("isAudit"), true));
-                listAnd.add(cb.notEqual(root.get("isDelete"), false));
+                listAnd.add(cb.notEqual(root.get("isDelete"), true));
 
                 List<Predicate> listOr = new ArrayList<>();
                 if (null != qVo.getStartBeginTime() && null != qVo.getStartEndTime()) {
@@ -275,11 +275,15 @@ public class OrderService {
                             cb.between(root.get("startTime").as(LocalDate.class), startTime, endTime)));
                 }
 
-                Predicate[] arrayAnd = new Predicate[listAnd.size()];
-                Predicate PreAnd = cb.and(listAnd.toArray(arrayAnd));
-                Predicate[] arrayOr = new Predicate[listOr.size()];
-                Predicate PreOr = cb.or(listOr.toArray(arrayOr));
-                return query.where(PreAnd, PreOr).getRestriction();
+                if (listAnd.size() > 0) {
+                    Predicate[] arrayAnd = new Predicate[listAnd.size()];
+                    query.where(cb.and(listAnd.toArray(arrayAnd)));
+                }
+                if (listOr.size() > 0) {
+                    Predicate[] arrayOr = new Predicate[listOr.size()];
+                    query.where(cb.and(listAnd.toArray(arrayOr)));
+                }
+                return query.getRestriction();
             }
         };
     }
