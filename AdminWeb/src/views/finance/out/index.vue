@@ -60,16 +60,7 @@
 
 <script setup lang="ts">
 import { h, onMounted, ref } from 'vue';
-import {
-	DataTableColumn,
-	DataTableCreateSummary,
-	NButton,
-	NEllipsis,
-	NNumberAnimation,
-	NTag,
-	useMessage,
-	useLoadingBar
-} from 'naive-ui';
+import { DataTableColumn, DataTableCreateSummary, NButton, NEllipsis, NTag, useMessage, useLoadingBar } from 'naive-ui';
 import moment from 'moment';
 import { RowData } from 'naive-ui/es/data-table/src/interface';
 import { EnumOrderType, EnumFinanceType, EnumFinanceStatus } from '@/enum';
@@ -222,7 +213,7 @@ const columns: DataTableColumn<MyModel.PayRecord>[] = [
 		}
 	},
 	{
-		title: '团号',
+		title: '注文番号',
 		key: 'orderNo',
 		align: 'center',
 		sorter: true,
@@ -271,7 +262,7 @@ const columns: DataTableColumn<MyModel.PayRecord>[] = [
 		align: 'center',
 		width: 150,
 		render(row) {
-			return [h('div', { style: 'text-align:right' }, { default: () => `¥${addSeparator(row.currencyAmount ?? 0)}` })];
+			return [h('div', { class: 'text-right' }, { default: () => `¥${addSeparator(row.currencyAmount ?? 0)}` })];
 		}
 	},
 	{
@@ -280,7 +271,7 @@ const columns: DataTableColumn<MyModel.PayRecord>[] = [
 		align: 'center',
 		width: 100,
 		render(row) {
-			return [h('div', { style: 'text-align:right' }, { default: () => `¥${addSeparator(row.amount ?? 0)}` })];
+			return [h('div', { class: 'text-right' }, { default: () => `¥${addSeparator(row.amount ?? 0)}` })];
 		}
 	},
 	{

@@ -58,33 +58,18 @@
 		<driver-select-modal ref="driverModal" @click="selectDriver" />
 		<staff-select-modal ref="staffModal" @click="selectStaff" />
 		<dict-select-modal ref="dictModal" @click="selectDict" />
-		<finance-action ref="financeModal" @close="() => {
-				checkedRowKeys = [];
-				searchQuery();
-			}
-			" />
 	</div>
 </template>
 
 <script setup lang="ts">
 import { h, onMounted, ref } from 'vue';
-import {
-	DataTableColumn,
-	DataTableCreateSummary,
-	NButton,
-	NEllipsis,
-	NNumberAnimation,
-	NTag,
-	useMessage,
-	useLoadingBar
-} from 'naive-ui';
+import { DataTableColumn, DataTableCreateSummary, NButton, NEllipsis, NTag, useMessage, useLoadingBar } from 'naive-ui';
 import moment from 'moment';
 import { RowData } from 'naive-ui/es/data-table/src/interface';
-import { EnumStatus, EnumOrderType, EnumFinanceType } from '@/enum';
+import { EnumOrderType, EnumFinanceType, EnumFinanceStatus } from '@/enum';
 import { useMyTags, useMyCommon, useMyOptions } from '@/composables';
 import { useDataTable } from '@/hooks';
 import { request } from '@/service/request';
-import { FinanceAction } from './components';
 
 const { orderTypeOptions } = useMyOptions();
 
@@ -117,17 +102,12 @@ const {
 } = useDataTable<MyModel.PayRecord>(module, moduleParams);
 resetParams();
 
-const { statusTagType } = useMyTags();
+const { financeStatusTagType } = useMyTags();
 const { isMobile, isWrap, addSeparator } = useMyCommon();
 const message = useMessage();
 const rowKey = (row: RowData) => row.id;
 const checkedRowKeys = ref<Array<string | number>>([]);
 const loadingBar = useLoadingBar();
-const financeModal = ref<any>(null);
-const handleFinance = (title: string, ids: Array<string | number>) => {
-	financeModal.value.setTitle(title);
-	financeModal.value.showModal(ids);
-};
 
 const urls = {
 	cashPaid: `/order/cashPaid`,
@@ -220,7 +200,7 @@ const columns: DataTableColumn<MyModel.PayRecord>[] = [
 	{
 		type: 'selection',
 		disabled(row) {
-			return EnumStatus[row.status ?? 'Waiting'] === EnumStatus.Completed;
+			return EnumFinanceStatus[row.status ?? 'Waiting'] === EnumFinanceStatus.Completed;
 		}
 	},
 	{
@@ -254,7 +234,7 @@ const columns: DataTableColumn<MyModel.PayRecord>[] = [
 		}
 	},
 	{
-		title: '团号',
+		title: '注文番号',
 		key: 'orderNo',
 		align: 'center',
 		sorter: true,
@@ -356,8 +336,8 @@ const columns: DataTableColumn<MyModel.PayRecord>[] = [
 		key: 'status',
 		align: 'center',
 		render(row) {
-			const status = row?.status as MyEnumType.EnumStatusKey;
-			const tagType = statusTagType(status);
+			const status = row?.status as MyEnumType.EnumFinanceStatusKey;
+			const tagType = financeStatusTagType(status);
 			return h(
 				NTag,
 				{
@@ -365,7 +345,7 @@ const columns: DataTableColumn<MyModel.PayRecord>[] = [
 					round: true
 				},
 				{
-					default: () => EnumStatus[status]
+					default: () => row.statusName
 				}
 			);
 		}
@@ -382,7 +362,7 @@ const columns: DataTableColumn<MyModel.PayRecord>[] = [
 					quaternary: true,
 					size: 'small',
 					type: 'info',
-					onClick: () => handlePaid(`出金確認 - ${row.orderVO?.orderNo}`, [row.id])
+					onClick: () => handelPaid([row.id])
 				},
 				{ default: () => '確認' }
 			);

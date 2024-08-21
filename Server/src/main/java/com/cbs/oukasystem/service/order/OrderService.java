@@ -1116,8 +1116,8 @@ public class OrderService {
     /*
      * 财务現金確認済
      */
-    public Boolean cashPaid(List<String> ids) {
-        payRecordService.cashPaid(ids);
+    public Boolean cashPaid(SettlementVO settlementVO) {
+        payRecordService.cashPaid(settlementVO.getIds());
         return true;
     }
 

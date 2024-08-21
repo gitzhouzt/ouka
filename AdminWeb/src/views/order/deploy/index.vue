@@ -8,7 +8,7 @@
 							<n-input v-model:value="searchParams.keyword" style="min-width: 30%" type="text" placeholder="注文番号/連絡先"
 								clearable />
 						</n-form-item>
-						<n-form-item label="注文内容">
+						<n-form-item label="運行内容">
 							<n-select v-model:value="searchParams.orderType" class="w-50" :options="orderTypeOptions"
 								:consistent-menu-width="false" />
 						</n-form-item>
@@ -290,12 +290,29 @@ const columns: DataTableColumn<MyModel.Order>[] = [
 		}
 	},
 	{
-		title: '備考',
+		title: 'お客様要望',
 		key: 'customerRemark',
 		align: 'center',
 		width: 150,
 		render(row) {
-			return [h(NEllipsis, { lineClamp: 1, tooltip: true }, { default: () => (row.customerRemark ? row.customerRemark : '-') })];
+			return [
+				h(
+					NEllipsis,
+					{ lineClamp: 1, tooltip: true },
+					{ default: () => (row.customerRemark ? row.customerRemark : '-') }
+				)
+			];
+		}
+	},
+	{
+		title: '備考',
+		key: 'companyRemark',
+		align: 'center',
+		width: 150,
+		render(row) {
+			return [
+				h(NEllipsis, { lineClamp: 1, tooltip: true }, { default: () => (row.companyRemark ? row.companyRemark : '-') })
+			];
 		}
 	},
 	{
@@ -381,7 +398,6 @@ const columns: DataTableColumn<MyModel.Order>[] = [
 		}
 	},
 
-	
 	{
 		title: '注文日時',
 		key: 'createTime',

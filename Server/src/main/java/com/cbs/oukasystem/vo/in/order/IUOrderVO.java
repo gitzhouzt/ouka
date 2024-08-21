@@ -39,14 +39,14 @@ public class IUOrderVO extends NormalVO {
     private String orderTypeName;
 
     @Schema(name = "orderPrice", description = "基础价格")
-    private int orderPrice;
+    private Integer orderPrice;
 
     @JsonFormat(pattern = "yyyy/MM/dd HH:mm:ss", timezone = "GMT+9")
     @Schema(name = "startTime", description = "開始日付")
     private Date startTime;
 
     @Schema(name = "orderDays", description = "旅行日数")
-    private float orderDays = 0;
+    private float orderDays;
 
     @JsonFormat(pattern = "yyyy/MM/dd HH:mm:ss", timezone = "GMT+9")
     @Schema(name = "endTime", description = "完了日付 根据选的天数 自动生成")
@@ -88,7 +88,7 @@ public class IUOrderVO extends NormalVO {
     private Boolean isOutTimeCash;
 
     @Schema(name = "outTimeAmount", description = "超时收现金额，每30分钟")
-    private int outTimeAmount;
+    private Integer outTimeAmount;
 
     @Schema(name = "isLodgingTips", description = "是否住宿提醒")
     private Boolean isLodgingTips;
@@ -115,7 +115,7 @@ public class IUOrderVO extends NormalVO {
     private String specifyCarType;
 
     @Schema(name = "carSeat")
-    private int carSeat = 0;
+    private Integer carSeat;
 
     /*
      * 運転者情報
@@ -146,13 +146,13 @@ public class IUOrderVO extends NormalVO {
      */
 
     @Schema(name = "adultNum", description = "大人人数")
-    private int adultNum = 0;
+    private Integer adultNum;
 
     @Schema(name = "childrenNum", description = "小孩人数")
-    private int childrenNum = 0;
+    private Integer childrenNum;
 
     @Schema(name = "luggageNum", description = "荷物数")
-    private int luggageNum = 0;
+    private Integer luggageNum;
 
     @Schema(name = "customerName", description = "お客さん")
     private String customerName;

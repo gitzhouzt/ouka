@@ -172,14 +172,21 @@ public class OrderController {
     }
 
     @ResponseBody
-    @Operation(summary = "paid 料金記録支払い済")
+    @Operation(summary = "paid 财务確認済")
     @PostMapping("/paid")
     public ResultVO<Boolean> paid(@RequestBody SettlementVO settlementVO) {
         return ResultVO.success(service.paid(settlementVO));
     }
 
     @ResponseBody
-    @Operation(summary = "settlement 料金記録決算")
+    @Operation(summary = "cashPaid 财务現金確認済")
+    @PostMapping("/cashPaid")
+    public ResultVO<Boolean> cashPaid(@RequestBody SettlementVO settlementVO) {
+        return ResultVO.success(service.cashPaid(settlementVO));
+    }
+
+    @ResponseBody
+    @Operation(summary = "settlement 财务決算済")
     @PostMapping("/settlement")
     public ResultVO<Boolean> settlement(@RequestBody SettlementVO settlementVO) {
         return ResultVO.success(service.settlement(settlementVO));

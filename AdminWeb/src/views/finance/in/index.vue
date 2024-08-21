@@ -7,7 +7,7 @@
 						<n-input v-model:value="searchParams.keyword" style="min-width: 30%" type="text"
 							placeholder="注文番号" clearable />
 					</n-form-item>
-					<n-form-item label="注文内容">
+					<n-form-item label="運行内容">
 						<n-input v-model:value="searchParams.orderType" placeholder="クリック内容を選択" readonly
 							@click="showDict('order_type')" />
 					</n-form-item>
@@ -209,7 +209,7 @@ const columns: DataTableColumn<MyModel.PayRecord>[] = [
 		}
 	},
 	{
-		title: '团号',
+		title: '注文番号',
 		key: 'orderNo',
 		align: 'center',
 		sorter: true,

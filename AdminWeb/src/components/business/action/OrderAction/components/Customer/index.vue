@@ -151,7 +151,7 @@ const rules = {
 	orderKey: {
 		required: false,
 		trigger: 'input',
-		message: '1-100文字まで入力してください',
+		message: '1~100文字まで入力してください',
 		max: 100
 	},
 	sellerName: {
@@ -163,7 +163,7 @@ const rules = {
 	customerName: {
 		required: true,
 		trigger: 'input',
-		message: '100文字まで入力してください',
+		message: '1~100文字まで入力してください',
 		max: 100
 	},
 	contactMethod1: {
@@ -208,6 +208,7 @@ const save = () => {
 		sellerName: formValue.value.sellerName,
 		sellerPhoto: formValue.value.sellerPhoto
 	};
+
 	const promise = request.post<MyModel.Order>(`${urls.setCustomer}`, params);
 	loadingBar.start();
 	loading.value = true;

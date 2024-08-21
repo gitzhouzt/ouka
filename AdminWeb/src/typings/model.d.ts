@@ -113,14 +113,14 @@ declare namespace MyModel {
     city?: string;
     orderType?: MyEnumType.EnumOrderTypeKey;
     airportType?: MyEnumType.EnumAirportTypeKey;
-    orderDays?: number;
+    orderDays?: number | null;
     startTime?: Date | number | string;
     endTime?: Date | number | string;
-    adultNum?: number;
-    childrenNum?: number;
-    luggageNum?: number;
+    adultNum?: number | null;
+    childrenNum?: number | null;
+    luggageNum?: string | number | null;
     orderStatus?: MyEnumType.EnumOrderStatusKey;
-    orderPrice?: number;
+    orderPrice?: number | null;
     orderFrom?: string;
     orderTo?: string;
     orderFromDetails?: string;
@@ -131,7 +131,7 @@ declare namespace MyModel {
     feeType?: string;
     isCash?: boolean | string;
     isOutTimeCash?: boolean | string;
-    outTimeAmount?: number;
+    outTimeAmount?: number | null;
     isLodgingTips?: boolean | string;
 
     /*

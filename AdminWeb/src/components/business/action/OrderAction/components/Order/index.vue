@@ -138,6 +138,12 @@
 								minRows: 3,
 								maxRows: 3
 							}" placeholder="お客様の要望を入力してください" /></n-form-item></n-gi>
+					<n-gi :span="2">
+						<n-form-item label="備考" path="companyRemark">
+							<n-input v-model:value="formValue.companyRemark" type="textarea" :autosize="{
+								minRows: 3,
+								maxRows: 3
+							}" placeholder="備考を入力してください" /></n-form-item></n-gi>
 				</n-grid>
 				<dict-select-modal ref="dictModal" @click="selectDict" />
 				<car-select-modal ref="carModal" @click="selectCar" />
@@ -181,25 +187,26 @@ const formValue = ref<MyModel.Order>({
 	orderNo: props.model?.orderNo,
 	orderType: props.model?.orderType,
 	airportType: props.model?.airportType,
-	orderDays: props.model?.orderDays ?? null,
+	orderDays: props.model?.orderDays,
 	startTime: new Date(props.model?.startTime ?? new Date()).getTime(),
 	endTime: new Date(props.model?.endTime ?? new Date()).getTime(),
-	adultNum: props.model?.adultNum ?? null,
-	childrenNum: props.model?.childrenNum ?? null,
-	luggageNum: props.model?.luggageNum ?? null,
-	orderPrice: props.model?.orderPrice ?? null,
+	adultNum: props.model?.adultNum,
+	childrenNum: props.model?.childrenNum,
+	luggageNum: props.model?.luggageNum,
+	orderPrice: props.model?.orderPrice,
 	orderFrom: props.model?.orderFrom,
 	orderTo: props.model?.orderTo,
 	orderFromDetails: props.model?.orderFromDetails,
 	orderToDetails: props.model?.orderToDetails,
 	customerRemark: props.model?.customerRemark,
+	companyRemark: props.model?.companyRemark,
 	flightNo: props.model?.flightNo,
 	airport: props.model?.airport,
 
 	feeType: props.model?.feeType ?? '全包',
 	isCash: props.model?.isCash === true ? 'true' : 'false',
 	isOutTimeCash: props.model?.isOutTimeCash === true ? 'true' : 'false',
-	outTimeAmount: props.model?.outTimeAmount ?? null,
+	outTimeAmount: props.model?.outTimeAmount,
 
 	carId: props.model?.carId,
 	carNo: props.model?.carNo,
@@ -281,6 +288,12 @@ const rules = {
 		trigger: 'input',
 		message: '2000文字まで入力してください',
 		max: 2000
+	},
+	companyRemark: {
+		required: false,
+		trigger: 'input',
+		message: '2000文字まで入力してください',
+		max: 2000
 	}
 };
 
@@ -291,8 +304,6 @@ const urls = {
 };
 
 const save = () => {
-	console.log(formValue.value.endTime);
-
 	const params: MyModel.Order = {
 		id: formValue.value.id,
 		orderNo: formValue.value.orderNo,
@@ -310,6 +321,7 @@ const save = () => {
 		orderFromDetails: formValue.value.orderFromDetails,
 		orderToDetails: formValue.value.orderToDetails,
 		customerRemark: formValue.value?.customerRemark,
+		companyRemark: formValue.value?.companyRemark,
 		flightNo: formValue.value?.flightNo,
 		airport: formValue.value?.airport,
 
