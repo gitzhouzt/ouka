@@ -231,7 +231,7 @@ const columns: DataTableColumn<MyModel.Order>[] = [
 		key: 'orderNo',
 		align: 'center',
 		sorter: true,
-		width: 100,
+		width: 80,
 		resizable: true,
 		render(row) {
 			const newRow = {
@@ -309,7 +309,7 @@ const columns: DataTableColumn<MyModel.Order>[] = [
 		key: 'sellerName',
 		align: 'center',
 		sorter: true,
-		width: 60,
+		width: 50,
 		resizable: true,
 		render(row) {
 			return [
@@ -329,7 +329,7 @@ const columns: DataTableColumn<MyModel.Order>[] = [
 		key: 'orderSource',
 		sorter: true,
 		align: 'center',
-		width: 100,
+		width: 80,
 		resizable: true,
 		render(row) {
 			return [
@@ -362,7 +362,7 @@ const columns: DataTableColumn<MyModel.Order>[] = [
 		}
 	},
 	{
-		title: '内容',
+		title: '運行内容',
 		key: 'orderType',
 		align: 'center',
 		width: 60,
@@ -391,7 +391,7 @@ const columns: DataTableColumn<MyModel.Order>[] = [
 		title: 'お客様',
 		key: 'customerName',
 		align: 'center',
-		width: 80,
+		width: 100,
 		resizable: true,
 		render(row) {
 			return [
@@ -409,7 +409,7 @@ const columns: DataTableColumn<MyModel.Order>[] = [
 		title: '連絡方法①',
 		key: 'contactMethod1',
 		align: 'center',
-		width: 100,
+		width: 80,
 		resizable: true,
 		render(row) {
 			return h(
@@ -425,7 +425,7 @@ const columns: DataTableColumn<MyModel.Order>[] = [
 		title: '連絡方法②',
 		key: 'contactMethod2',
 		align: 'center',
-		width: 100,
+		width: 80,
 		resizable: true,
 		render(row) {
 			return [
@@ -443,7 +443,7 @@ const columns: DataTableColumn<MyModel.Order>[] = [
 		title: '連絡方法③',
 		key: 'contactMethod3',
 		align: 'center',
-		width: 100,
+		width: 80,
 		resizable: true,
 		render(row) {
 			return [
@@ -461,7 +461,7 @@ const columns: DataTableColumn<MyModel.Order>[] = [
 		title: '大人数',
 		key: 'adultNum',
 		align: 'center',
-		width: 40,
+		width: 30,
 		resizable: true,
 		render(row) {
 			return [
@@ -479,7 +479,7 @@ const columns: DataTableColumn<MyModel.Order>[] = [
 		title: '子供数',
 		key: 'childrenNum',
 		align: 'center',
-		width: 40,
+		width: 30,
 		resizable: true,
 		render(row) {
 			return [
@@ -497,7 +497,7 @@ const columns: DataTableColumn<MyModel.Order>[] = [
 		title: '荷物数',
 		key: 'luggageNum',
 		align: 'center',
-		width: 40,
+		width: 30,
 		resizable: true,
 		render(row) {
 			return [
@@ -515,7 +515,7 @@ const columns: DataTableColumn<MyModel.Order>[] = [
 		title: '希望車両',
 		key: 'specifyCarType',
 		align: 'center',
-		width: 70,
+		width: 60,
 		resizable: true,
 		render(row) {
 			return [
@@ -554,7 +554,7 @@ const columns: DataTableColumn<MyModel.Order>[] = [
 		key: 'carName',
 		align: 'center',
 		sorter: true,
-		width: 40,
+		width: 30,
 		resizable: true,
 		render(row) {
 			return [
@@ -685,7 +685,7 @@ const columns: DataTableColumn<MyModel.Order>[] = [
 		key: 'startTime',
 		align: 'center',
 		sorter: true,
-		width: 80,
+		width: 60,
 		resizable: true,
 		render(row) {
 			return [
@@ -703,7 +703,7 @@ const columns: DataTableColumn<MyModel.Order>[] = [
 		title: 'ツアー終了日',
 		key: 'endTime',
 		align: 'center',
-		width: 80,
+		width: 60,
 		resizable: true,
 		render(row) {
 			return [
@@ -722,7 +722,7 @@ const columns: DataTableColumn<MyModel.Order>[] = [
 		key: 'createTime',
 		sorter: true,
 		align: 'center',
-		width: 80,
+		width: 60,
 		resizable: true,
 		render(row) {
 			return [
@@ -740,7 +740,7 @@ const columns: DataTableColumn<MyModel.Order>[] = [
 		title: 'ステータス',
 		key: 'orderStatus',
 		align: 'center',
-		width: 60,
+		width: 30,
 		render(row) {
 			const orderStatus = row.orderStatus as MyEnumType.EnumOrderStatusKey;
 			const status = EnumOrderStatus[orderStatus];
@@ -760,7 +760,7 @@ const columns: DataTableColumn<MyModel.Order>[] = [
 	{
 		title: '接机牌',
 		key: 'placard',
-		width: 40,
+		width: 30,
 		align: 'center',
 		render(row) {
 			const option = h(
@@ -783,7 +783,7 @@ const columns: DataTableColumn<MyModel.Order>[] = [
 	{
 		title: '備品明細',
 		key: 'goods',
-		width: 40,
+		width: 30,
 		align: 'center',
 		render(row) {
 			const option = h(
@@ -821,7 +821,7 @@ const columns: DataTableColumn<MyModel.Order>[] = [
 	{
 		title: '料金記録',
 		key: 'price',
-		width: 40,
+		width: 30,
 		align: 'center',
 		render(row) {
 			const option = h(
@@ -840,7 +840,7 @@ const columns: DataTableColumn<MyModel.Order>[] = [
 	{
 		title: '添付資料',
 		key: 'files',
-		width: 40,
+		width: 30,
 		align: 'center',
 		render(row) {
 			const option = h(
@@ -860,7 +860,7 @@ const columns: DataTableColumn<MyModel.Order>[] = [
 	{
 		title: '編集',
 		key: 'edit',
-		width: 30,
+		width: 20,
 		align: 'center',
 		render(row) {
 			const option = h(
@@ -879,7 +879,7 @@ const columns: DataTableColumn<MyModel.Order>[] = [
 	{
 		title: '操作',
 		key: 'actions',
-		width: 40,
+		width: 30,
 		align: 'center',
 		render(row) {
 			const orderStatus = row.orderStatus as MyEnumType.EnumOrderStatusKey;
@@ -938,7 +938,7 @@ const columns: DataTableColumn<MyModel.Order>[] = [
 ];
 
 const cols = ref<any>(columns);
-const scrollX = ref<number>(6000);
+const scrollX = ref<number>(5000);
 const colsModal = ref<any>(null);
 const handleCols = () => {
 	colsModal.value?.setTitle('表示項目設定');
@@ -946,7 +946,7 @@ const handleCols = () => {
 };
 const setCols = (c: any) => {
 	cols.value = c;
-	const x = c.length === columns.length ? 6000 : 6000 - (columns.length - c.length) * 250;
+	const x = c.length === columns.length ? 5000 : 5000 - (columns.length - c.length) * 250;
 	scrollX.value = x;
 };
 
