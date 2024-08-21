@@ -151,8 +151,8 @@ const rules = {
 	orderKey: {
 		required: false,
 		trigger: 'input',
-		message: '1-20文字まで入力してください',
-		max: 20
+		message: '1-100文字まで入力してください',
+		max: 100
 	},
 	sellerName: {
 		required: true,
@@ -163,8 +163,8 @@ const rules = {
 	customerName: {
 		required: true,
 		trigger: 'input',
-		message: '20文字まで入力してください',
-		max: 20
+		message: '100文字まで入力してください',
+		max: 100
 	},
 	contactMethod1: {
 		required: true,
