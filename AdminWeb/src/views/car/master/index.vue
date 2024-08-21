@@ -33,6 +33,7 @@
 		<add-or-edit ref="aoeModal" @close="searchQuery" />
 		<del-action ref="delModal" @close="searchQuery" />
 		<dict-select-modal ref="dictModal" @click="selectDict" />
+		<show-action ref="showModal" />
 	</div>
 </template>
 
@@ -43,8 +44,7 @@ import { Icon } from '@iconify/vue';
 import { useMyCommon, useMyTags } from '@/composables';
 import { useDataTable } from '@/hooks';
 import { EnumCarStatus } from '@/enum/business';
-import { AddOrEdit, DelAction } from './components';
-import { getEnvConfig } from '~/.env-config';
+import { AddOrEdit, DelAction, ShowAction } from './components';
 
 const module = 'car';
 const moduleParams: MySearch.CarSearchParams = {
@@ -74,7 +74,12 @@ const {
 resetParams();
 const { carStatusTagType } = useMyTags();
 const { isMobile } = useMyCommon();
-const envConfig = getEnvConfig(import.meta.env);
+
+const showModal = ref<any>(null);
+const handleShowImages = (title: string, images: string) => {
+	showModal.value.setTitle(title);
+	showModal.value.showModal(images);
+};
 
 const columns: DataTableColumn<MyModel.Car>[] = [
 	{
@@ -90,18 +95,17 @@ const columns: DataTableColumn<MyModel.Car>[] = [
 		align: 'center',
 		width: 100,
 		render(row) {
-			return h(
-				NImage,
+			const showOption = h(
+				NButton,
 				{
-					width: 80,
-					src: `${envConfig.static}${row.carPhoto}`
+					quaternary: true,
+					size: 'small',
+					type: 'info',
+					onClick: () => handleShowImages('写真詳細', row.images ?? '')
 				},
-				{
-					default: () => {
-						//
-					}
-				}
+				{ default: () => '詳細' }
 			);
+			return showOption;
 		}
 	},
 	{

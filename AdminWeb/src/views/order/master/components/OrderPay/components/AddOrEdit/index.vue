@@ -1,73 +1,44 @@
 <template>
   <div>
-    <n-modal
-      v-model:show="showModalRef"
-      :style="bodyStyleRef"
-      transform-origin="center"
-      :mask-closable="false"
-      preset="card"
-      :title="titleRef"
-      closable
-      @update-show="onUpdateShow"
-    >
+    <n-modal v-model:show="showModalRef" :style="bodyStyleRef" transform-origin="center" :mask-closable="false"
+      preset="card" :title="titleRef" closable @update-show="onUpdateShow">
       <n-spin :show="loading">
         <n-form ref="formRef" label-placement="left" :label-width="100" :model="formValue" :rules="rules" :size="size">
           <n-grid :cols="2">
             <n-gi>
-              <n-form-item label="精算タイプ" path="financeType">
-                <n-select
-                  v-model:value="formValue.financeType"
-                  :options="selectFinanceTypeOptions"
-                  :consistent-menu-width="false"
-                  @update:value="onSelect"
-                />
+              <n-form-item label="決算タイプ" path="financeType">
+                <n-select v-model:value="formValue.financeType" :options="selectFinanceTypeOptions"
+                  :consistent-menu-width="false" @update:value="onSelect" />
               </n-form-item>
             </n-gi>
             <n-gi v-if="EnumFinanceType[formValue.financeType ?? ''] !== '前受金'">
-              <n-form-item label="精算名目" path="payItem">
-                <n-input
-                  v-model:value="formValue.payItem"
-                  placeholder="クリック名目を選択"
-                  readonly
-                  @click="showDict(payItemCode)"
-                />
+              <n-form-item label="決算名目" path="payItem">
+                <n-input v-model:value="formValue.payItem" placeholder="クリック名目を選択" readonly
+                  @click="showDict(payItemCode)" />
               </n-form-item>
             </n-gi>
             <n-gi>
               <n-form-item label="通貨" path="currency">
-                <n-input
-                  v-model:value="formValue.currency"
-                  placeholder="クリック通貨を選択"
-                  readonly
-                  @click="showDict('pay_currency')"
-                /> </n-form-item></n-gi
-            ><n-gi>
+                <n-input v-model:value="formValue.currency" placeholder="クリック通貨を選択" readonly
+                  @click="showDict('pay_currency')" /> </n-form-item></n-gi><n-gi>
               <n-form-item label="通貨金額" path="currencyAmount">
                 <n-input-number v-model:value="formValue.currencyAmount" :min="0" :precision="0" :show-button="false">
                   <template #prefix> {{ formValue.currencyCode === 'usd' ? '$' : '￥' }} </template>
                 </n-input-number>
-              </n-form-item></n-gi
-            >
+              </n-form-item></n-gi>
             <n-gi>
               <n-form-item label="是否收现">
                 <n-radio-group v-model:value="isCash" name="radCash">
                   <n-radio-button key="是" :value="true" label="是" />
                   <n-radio-button key="否" :value="false" label="否" />
-                </n-radio-group> </n-form-item
-            ></n-gi>
+                </n-radio-group> </n-form-item></n-gi>
             <n-gi :span="2">
               <n-form-item label="備考" path="remark">
-                <n-input
-                  v-model:value="formValue.remark"
-                  type="textarea"
-                  :autosize="{
-                    minRows: 2,
-                    maxRows: 2
-                  }"
-                  placeholder="備考を入力してください"
-                />
-              </n-form-item> </n-gi
-          ></n-grid>
+                <n-input v-model:value="formValue.remark" type="textarea" :autosize="{
+                  minRows: 2,
+                  maxRows: 2
+                }" placeholder="備考を入力してください" />
+              </n-form-item> </n-gi></n-grid>
         </n-form>
         <n-divider />
         <n-space justify="center">

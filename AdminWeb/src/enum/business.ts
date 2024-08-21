@@ -70,17 +70,17 @@ export enum EnumOrderStatus {
 }
 
 /**
- * 精算 ステータス
+ * 決算 ステータス
  */
 export enum EnumFinanceStatus {
   '' = '選択してください',
-  'Waiting' = '精算待ち',
-  'Paid' = '精算済',
+  'Waiting' = '確認待ち',
+  'Paid' = '確認済',
   'Completed' = '決算済'
 }
 
 /**
- * 精算 タイプ
+ * 決算 タイプ
  */
 export enum EnumFinanceType {
   '' = '選択してください',
@@ -169,7 +169,7 @@ export enum EnumDeployStepModule {
 
 export enum EnumAccidentStepModule {
   'action-accident' = '事故情報入力',
-  'action-finance' = '精算情報入力',
+  'action-finance' = '決算情報入力',
   'action-confirmed' = '情報確認',
   'action-success' = '保存済'
 }

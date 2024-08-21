@@ -3,29 +3,33 @@
 		<n-space :vertical="true">
 			<n-space>
 				<n-form :inline="!isMobile && !isWrap" :label-width="100" label-placement="left">
-					<n-form-item label="キーワード">
-						<n-input v-model:value="searchParams.keyword" style="min-width: 30%" type="text" placeholder="注文番号"
-							clearable />
-					</n-form-item>
-					<n-form-item label="注文内容">
-						<n-input v-model:value="searchParams.orderType" placeholder="クリック内容を選択" readonly
-							@click="showDict('order_type')" />
-					</n-form-item>
-					<n-form-item label="責任人" path="sellerName">
-						<n-input-group>
-							<n-input v-model:value="searchParams.sellerName" readonly placeholder="クリックド責任人を選択"
-								@click="showStaff()"></n-input>
-						</n-input-group>
-					</n-form-item>
-					<n-form-item label="ドライバー" path="driverName">
-						<n-input-group>
-							<n-input v-model:value="searchParams.driverName" readonly placeholder="クリックドライバーを選択"
-								@click="showDriver()"></n-input>
-						</n-input-group>
-					</n-form-item>
-					<n-form-item label="ツアー日" path="selTime">
-						<n-date-picker v-model:value="searchParams.selTime" type="daterange" clearable @update:value="onUpdate" />
-					</n-form-item>
+					<n-form :inline="!isMobile" :label-width="100" label-placement="left">
+						<n-form-item label="キーワード">
+							<n-input v-model:value="searchParams.keyword" style="min-width: 30%" type="text" placeholder="注文番号"
+								clearable />
+						</n-form-item>
+						<n-form-item label="運行内容">
+							<n-select v-model:value="searchParams.orderType" :options="orderTypeOptions"
+								:consistent-menu-width="false" />
+						</n-form-item>
+						<n-form-item label="責任人" path="sellerName">
+							<n-input-group>
+								<n-input v-model:value="searchParams.sellerName" readonly placeholder="クリックド責任人を選択"
+									@click="showStaff()"></n-input>
+							</n-input-group>
+						</n-form-item>
+					</n-form>
+					<n-form :inline="!isMobile" :label-width="100" label-placement="left">
+						<n-form-item label="ドライバー" path="driverName">
+							<n-input-group>
+								<n-input v-model:value="searchParams.driverName" readonly placeholder="クリックドライバーを選択"
+									@click="showDriver()"></n-input>
+							</n-input-group>
+						</n-form-item>
+						<n-form-item label="ツアー日" path="selTime">
+							<n-date-picker v-model:value="searchParams.selTime" type="daterange" clearable @update:value="onUpdate" />
+						</n-form-item>
+					</n-form>
 					<n-form-item>
 						<n-button type="primary" @click="() => {
 								searchQuery();
@@ -35,10 +39,11 @@
 					</n-form-item>
 				</n-form>
 			</n-space>
-			<!-- <n-space>
-        <n-button type="primary" @click="handleBatchFinance">一括精算</n-button>
-        <n-button type="primary" @click="handleExport">ダウンロード</n-button>
-      </n-space> -->
+			<n-space>
+				<n-button type="primary" @click="handleBatchFinance(0)">一括確認</n-button>
+				<n-button type="primary" @click="handleBatchFinance(1)">一括決算</n-button>
+				<n-button type="primary" @click="handleExport">ダウンロード</n-button>
+			</n-space>
 			<loading-empty-wrapper :style="{ height: hightRef + 'px' }" :loading="loading" :empty="empty">
 				<n-data-table :row-key="rowKey" :summary="summary" remote bordered :v-model:checked-row-keys="checkedRowKeys"
 					:columns="columns" :data="dataSource" :pagination="pagination" :scroll-x="2000" :single-line="false"
@@ -62,22 +67,25 @@ import {
 	NEllipsis,
 	NNumberAnimation,
 	NTag,
-	useMessage
+	useMessage,
+	useLoadingBar
 } from 'naive-ui';
 import moment from 'moment';
 import { RowData } from 'naive-ui/es/data-table/src/interface';
 import { EnumOrderType, EnumFinanceType, EnumFinanceStatus } from '@/enum';
-import { useMyTags, useMyCommon } from '@/composables';
+import { useMyTags, useMyCommon, useMyOptions } from '@/composables';
 import { useDataTable } from '@/hooks';
+import { request } from '@/service/request';
 import { PaidAction, SettlementAction } from './components';
 
-const module = 'finance/payRecord';
+const module = 'finance/payRecord/out';
 const moduleParams: MySearch.PaySearchParams = {
 	keyword: '',
 	financeType: ['InAdvance', 'OutAdvance'],
 	payItem: '',
 	driverName: '',
 	sellerName: '',
+	orderType: '',
 	selTime: [Date.now(), Date.now()],
 	startBeginTime: Date.now(),
 	startEndTime: Date.now(),
@@ -88,9 +96,9 @@ const {
 	searchQuery,
 	searchReset,
 	handlePageChange,
+	handleUpdatePageSize,
 	resetParams,
 	handleExport,
-	handleUpdatePageSize,
 	handleSorter,
 	searchParams,
 	pagination,
@@ -100,24 +108,54 @@ const {
 } = useDataTable<MyModel.PayRecord>(module, moduleParams);
 resetParams();
 
+const { orderTypeOptions } = useMyOptions();
 const { financeStatusTagType } = useMyTags();
 const { isMobile, isWrap } = useMyCommon();
 const message = useMessage();
 const rowKey = (row: RowData) => row.id;
 const checkedRowKeys = ref<Array<string | number>>([]);
+const loadingBar = useLoadingBar();
 
+const urls = {
+	settlement: `/order/settlement`
+};
 const paidModal = ref<any>(null);
 const handlePaid = (title: string, ids: Array<string | number>) => {
 	paidModal.value.setTitle(title);
 	paidModal.value.showModal(ids);
 };
-const handleBatchFinance = () => {
+const handleSettlement = (ids: Array<string | number>) => {
+	const params = {
+		ids
+	};
+	const promise = request.post<Boolean>(`${urls.settlement}`, params);
+	loading.value = true;
+	promise
+		.then(res => {
+			if (res.data) {
+				message.success('決算しました');
+				checkedRowKeys.value = [];
+				searchReset();
+			}
+		})
+		.catch(err => {
+			message.warning(err);
+		})
+		.finally(() => {
+			loading.value = false;
+			loadingBar.finish();
+		});
+};
+const handleBatchFinance = (flag: number) => {
 	if (checkedRowKeys.value.length === 0) {
 		message.warning('データ選択してください');
 		return;
 	}
-	paidModal.value.setTitle('入金精算 - 一括精算');
-	paidModal.value.showModal(checkedRowKeys.value);
+	if (flag === 0) {
+		handlePaid('一括確認', checkedRowKeys.value);
+	} else if (flag === 1) {
+		handleSettlement(checkedRowKeys.value);
+	}
 };
 
 const handleChecked = (
@@ -333,7 +371,7 @@ const columns: DataTableColumn<MyModel.PayRecord>[] = [
 					round: true
 				},
 				{
-					default: () => EnumFinanceStatus[status]
+					default: () => row.statusName
 				}
 			);
 		}
@@ -350,7 +388,7 @@ const columns: DataTableColumn<MyModel.PayRecord>[] = [
 					quaternary: true,
 					size: 'small',
 					type: 'info',
-					onClick: () => handlePaid(`入金確認 - ${row.orderVO?.orderNo}`, [row.id])
+					onClick: () => handlePaid(`出金確認 - ${row.orderVO?.orderNo}`, [row.id])
 				},
 				{ default: () => '確認' }
 			);
@@ -360,7 +398,7 @@ const columns: DataTableColumn<MyModel.PayRecord>[] = [
 					quaternary: true,
 					size: 'small',
 					type: 'info',
-					onClick: () => handlePaid(`入金決算 - ${row.orderVO?.orderNo}`, [row.id])
+					onClick: () => handleSettlement([row.id])
 				},
 				{ default: () => '決算' }
 			);

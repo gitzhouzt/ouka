@@ -29,12 +29,6 @@ export async function createDynamicRouteGuard(
 
 		await route.initAuthRoute();
 
-		if (to.fullPath.indexOf('support?id=') > 0) {
-			const id = to.fullPath.split('support?id=')[1];
-			next({ name: routeName('staff_support'), query: { id } });
-			return false;
-		}
-
 		if (to.name === routeName('not-found-page')) {
 			// The dynamic route is not loaded and is captured by the not-found-page route,
 			// wait for the permission route to be loaded, and return to the previous route

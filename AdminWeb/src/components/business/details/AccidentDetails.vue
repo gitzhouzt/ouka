@@ -14,7 +14,7 @@
       <n-space>
         <n-tag :bordered="false" :type="statusTagType(props.model?.status ?? 'Filling')">{{
           EnumStatus[props.model?.status ?? 'Filling']
-        }}</n-tag>
+          }}</n-tag>
       </n-space>
     </n-descriptions-item>
     <n-descriptions-item label="事故者">
@@ -41,75 +41,62 @@
     <n-descriptions-item label="事故詳細" :span="3">
       <n-space>
         <span>{{ props.model?.details }}</span>
-      </n-space></n-descriptions-item
-    >
+      </n-space></n-descriptions-item>
 
     <n-descriptions-item label="責任側">
       <n-space>
         <span> {{ props.model?.responsible }}</span>
-      </n-space></n-descriptions-item
-    >
+      </n-space></n-descriptions-item>
 
     <n-descriptions-item label="事故比例">
       <n-space>
         <span> {{ props.model?.proportion }}</span>
-      </n-space></n-descriptions-item
-    >
+      </n-space></n-descriptions-item>
 
     <n-descriptions-item label="確認者">
       <n-space>
         <span> {{ props.model?.confirmBy }}</span>
-      </n-space></n-descriptions-item
-    >
+      </n-space></n-descriptions-item>
 
     <n-descriptions-item label="修理業者">
       <n-space>
         <span> {{ props.model?.repairBy }}</span>
-      </n-space></n-descriptions-item
-    >
+      </n-space></n-descriptions-item>
 
     <n-descriptions-item label="修理終了日時">
       <n-space>
         <span> {{ props.model?.repairTime }}</span>
-      </n-space></n-descriptions-item
-    >
+      </n-space></n-descriptions-item>
 
     <n-descriptions-item label="総額">
       <n-space>
         <span> {{ props.model?.amount }}</span>
-      </n-space></n-descriptions-item
-    >
+      </n-space></n-descriptions-item>
     <n-descriptions-item label="会社負担">
       <n-space>
         <span> {{ props.model?.companyAmount }}</span>
-      </n-space></n-descriptions-item
-    >
+      </n-space></n-descriptions-item>
 
     <n-descriptions-item label="保険負担">
       <n-space>
         <span> {{ props.model?.insuranceAmount }}</span>
-      </n-space></n-descriptions-item
-    >
+      </n-space></n-descriptions-item>
     <n-descriptions-item label="個人負担">
       <n-space>
         <span> {{ props.model?.driverAmount }}</span>
-      </n-space></n-descriptions-item
-    >
+      </n-space></n-descriptions-item>
     <n-descriptions-item label="経理通知日時">
       <n-space>
         <span> {{ props.model?.financeNoticeTime }}</span>
-      </n-space></n-descriptions-item
-    >
-    <n-descriptions-item label="精算日時">
+      </n-space></n-descriptions-item>
+    <n-descriptions-item label="決算日時">
       <n-space>
         <span> {{ props.model?.financeTime ?? '-' }}</span>
-      </n-space></n-descriptions-item
-    >
-    <n-descriptions-item label="精算者">
+      </n-space></n-descriptions-item>
+    <n-descriptions-item label="決算者">
       <n-space>
         <span> {{ props.model?.financeByName ?? '-' }}</span>
-      </n-space></n-descriptions-item
-    >
+      </n-space></n-descriptions-item>
     <n-descriptions-item label="備考" :span="3">
       <n-space>
         <div class="flex items-center">

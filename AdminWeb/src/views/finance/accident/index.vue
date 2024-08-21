@@ -4,8 +4,8 @@
 			<n-space>
 				<n-form :inline="!isMobile && !isWrap" :label-width="100" label-placement="left">
 					<n-form-item label="キーワード">
-						<n-input v-model:value="searchParams.keyword" style="min-width: 30%" type="text" placeholder="車両番号/事故者/確認者"
-							clearable />
+						<n-input v-model:value="searchParams.keyword" style="min-width: 30%" type="text"
+							placeholder="車両番号/事故者/確認者" clearable />
 					</n-form-item>
 					<n-form-item label="事故原因">
 						<n-input v-model:value="searchParams.accidentType" placeholder="クリック性質を選択" readonly
@@ -13,8 +13,8 @@
 					</n-form-item>
 					<n-form-item>
 						<n-button type="primary" @click="() => {
-								searchQuery();
-							}
+							searchQuery();
+						}
 							">検索</n-button>
 						<n-button class="ml-2" @click="searchReset">リセット</n-button>
 					</n-form-item>
@@ -24,9 +24,9 @@
 				<n-button type="primary" class="ml-2" @click="handleExport">ダウンロード</n-button>
 			</n-space>
 			<loading-empty-wrapper :style="{ height: hightRef + 'px' }" :loading="loading" :empty="empty">
-				<n-data-table remote bordered :columns="columns" :data="dataSource" :pagination="pagination" :scroll-x="2000"
-					:single-line="false" :flex-height="true" :style="{ height: hightRef + 'px' }" @update:page="handlePageChange"
-					@update:page-size="handleUpdatePageSize" />
+				<n-data-table remote bordered :columns="columns" :data="dataSource" :pagination="pagination"
+					:scroll-x="2000" :single-line="false" :flex-height="true" :style="{ height: hightRef + 'px' }"
+					@update:page="handlePageChange" @update:page-size="handleUpdatePageSize" />
 			</loading-empty-wrapper>
 		</n-space>
 		<dict-select-modal ref="dictModal" @click="selectDict" />
@@ -230,7 +230,7 @@ const columns: DataTableColumn<MyModel.Accident>[] = [
 		}
 	},
 	{
-		title: '精算日時',
+		title: '決算日時',
 		key: 'financeTime',
 		width: 120,
 		align: 'center',
@@ -239,7 +239,7 @@ const columns: DataTableColumn<MyModel.Accident>[] = [
 		}
 	},
 	{
-		title: '精算者',
+		title: '決算者',
 		key: 'financeByName',
 		width: 120,
 		align: 'center',

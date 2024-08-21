@@ -67,6 +67,7 @@ declare namespace MySearch {
   interface PaySearchParams extends SearchParams {
     orderId?: '';
     financeType?: MyEnumType.EnumFinanceTypeKey[];
+    orderType: '';
     payItem?: string;
     payMethod?: string[];
     driverName?: string;

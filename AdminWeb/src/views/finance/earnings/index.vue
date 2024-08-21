@@ -4,29 +4,32 @@
 			<n-space>
 				<n-form :inline="!isMobile && !isWrap" :label-width="100" label-placement="left">
 					<n-form :inline="!isMobile" :label-width="100" label-placement="left">
-					<n-form-item label="キーワード">
-						<n-input v-model:value="searchParams.keyword" style="min-width: 30%" type="text" placeholder="番号/連絡先/ワード"
-							clearable />
-					</n-form-item>
-					<n-form-item label="订单来源">
-						<n-input v-model:value="searchParams.orderSource" placeholder="クリック分類を選択" readonly
-							@click="showDict('order_source')" />
-					</n-form-item>
-				</n-form>
-				<n-form :inline="!isMobile" :label-width="100" label-placement="left">
-					<n-form-item label="ドライバー" path="driverName">
-						<n-input-group>
-							<n-input v-model:value="searchParams.driverName" readonly placeholder="クリックドライバーを選択"
-								@click="showDriver()"></n-input>
-						</n-input-group>
-					</n-form-item>
-					<n-form-item label="車両" path="carName">
-						<n-input-group>
-							<n-input v-model:value="searchParams.carName" readonly placeholder="クリック車両を選択"
-								@click="showCar()"></n-input>
-						</n-input-group>
-					</n-form-item>
-				</n-form>
+						<n-form-item label="キーワード">
+							<n-input v-model:value="searchParams.keyword" style="min-width: 30%" type="text" placeholder="番号/連絡先/ワード"
+								clearable />
+						</n-form-item>
+						<n-form-item label="订单来源">
+							<n-input v-model:value="searchParams.orderSource" placeholder="クリック来源を選択" readonly
+								@click="showDict('order_source')" />
+						</n-form-item>
+						<n-form-item label="責任人">
+							<n-input v-model:value="searchParams.sellerName" placeholder="クリック責任人を選択" readonly @click="showStaff()" />
+						</n-form-item>
+					</n-form>
+					<n-form :inline="!isMobile" :label-width="100" label-placement="left">
+						<n-form-item label="ドライバー" path="driverName">
+							<n-input-group>
+								<n-input v-model:value="searchParams.driverName" readonly placeholder="クリックドライバーを選択"
+									@click="showDriver()"></n-input>
+							</n-input-group>
+						</n-form-item>
+						<n-form-item label="車両" path="carName">
+							<n-input-group>
+								<n-input v-model:value="searchParams.carName" readonly placeholder="クリック車両を選択"
+									@click="showCar()"></n-input>
+							</n-input-group>
+						</n-form-item>
+					</n-form>
 					<!-- <n-form-item label="サービス時間" path="selTime">
             <n-date-picker v-model:value="searchParams.selTime" type="daterange" clearable @update:value="onUpdate" />
           </n-form-item> -->
@@ -39,10 +42,10 @@
 					</n-form-item>
 				</n-form>
 			</n-space>
-			<!-- <n-space>
-        <n-button type="primary" @click="temp">一括決算</n-button>
-        <n-button type="primary" @click="tempE">ダウンロード</n-button>
-      </n-space> -->
+			<n-space>
+				<!-- <n-button type="primary" @click="temp">一括決算</n-button> -->
+				<n-button type="primary" @click="tempE">ダウンロード</n-button>
+			</n-space>
 			<loading-empty-wrapper :style="{ height: hightRef + 'px' }" :loading="loading" :empty="empty">
 				<n-data-table :row-key="rowKey" remote bordered :v-model:checked-row-keys="checkedRowKeys" :columns="columns"
 					:data="dataSource" :pagination="pagination" :scroll-x="4000" :single-line="false" :flex-height="true"
@@ -53,6 +56,7 @@
 		<dict-select-modal ref="dictModal" @click="selectDict" />
 		<driver-select-modal ref="driverModal" @click="selectDriver" />
 		<car-select-modal ref="carModal" @click="selectCar" />
+		<staff-select-modal ref="staffModal" @click="selectStaff" />
 	</div>
 </template>
 
@@ -72,7 +76,7 @@ const moduleParams: MySearch.OrderSearchParams = {
 	keyword: '',
 	orderSource: '',
 	driverName: '',
-	carName: '',
+	sellerName: '',
 	selTime: [Date.now(), Date.now()],
 	startBeginTime: Date.now(),
 	startEndTime: Date.now(),
@@ -96,7 +100,7 @@ resetParams();
 
 const envConfig = getEnvConfig(import.meta.env);
 const { financeStatusTagType } = useMyTags();
-const { isMobile, isWrap } = useMyCommon();
+const { isMobile, isWrap, addSeparator } = useMyCommon();
 
 const urls = {
 	finance: `/order/finance`,
@@ -151,7 +155,7 @@ const columns: DataTableColumn<MyModel.Earnings>[] = [
 		key: 'orderSource',
 		align: 'center',
 		sorter: true,
-		width: 150,
+		width: 100,
 		render(row) {
 			return h(
 				'span',
@@ -166,15 +170,9 @@ const columns: DataTableColumn<MyModel.Earnings>[] = [
 		title: '基本料金',
 		key: 'orderPrice',
 		align: 'center',
-		width: 150,
+		width: 100,
 		render(row) {
-			return h(
-				'span',
-				{},
-				{
-					default: () => row.orderVO?.orderPrice
-				}
-			);
+			return [h('div', { class: 'text-right' }, { default: () => `¥${addSeparator(row.orderPrice ?? 0)}` })];
 		}
 	},
 	{
@@ -228,140 +226,58 @@ const columns: DataTableColumn<MyModel.Earnings>[] = [
 			];
 		}
 	},
-	// {
-	//   title: '币种',
-	//   key: '币种',
-	//   align: 'center',
-	//   sorter: true,
-	//   width: 80,
-	//   render(row) {
-	//     return h(
-	//       'span',
-	//       {},
-	//       {
-	//         default: () => row.orderVO?.c
-	//       }
-	//     );
-	//   }
-	// },
 	{
 		title: '手续费',
 		key: 'handlingFee',
 		align: 'center',
-		width: 120,
+		width: 100,
 		render(row) {
-			const numberOption = h(
-				NNumberAnimation,
-				{
-					showSeparator: true,
-					from: row.handlingFee,
-					to: row.handlingFee,
-					precision: 0,
-					active: false
-				},
-				{}
-			);
-			return [h('span', {}, { default: () => '¥' }), numberOption];
+			return [h('div', { class: 'text-right' }, { default: () => `¥${addSeparator(row.handlingFee ?? 0)}` })];
 		}
 	},
 	{
 		title: '油费',
 		key: 'oilFee',
 		align: 'center',
-		width: 120,
+		width: 100,
 		render(row) {
-			const numberOption = h(
-				NNumberAnimation,
-				{
-					showSeparator: true,
-					from: row.oilFee,
-					to: row.oilFee,
-					precision: 0,
-					active: false
-				},
-				{}
-			);
-			return [h('span', {}, { default: () => '¥' }), numberOption];
+			return [h('div', { class: 'text-right' }, { default: () => `¥${addSeparator(row.oilFee ?? 0)}` })];
 		}
 	},
 	{
 		title: 'ETC',
 		key: 'etc',
 		align: 'center',
-		width: 120,
+		width: 100,
 		render(row) {
-			const numberOption = h(
-				NNumberAnimation,
-				{
-					showSeparator: true,
-					from: row.etc,
-					to: row.etc,
-					precision: 0,
-					active: false
-				},
-				{}
-			);
-			return [h('span', {}, { default: () => '¥' }), numberOption];
+			return [h('div', { class: 'text-right' }, { default: () => `¥${addSeparator(row.etc ?? 0)}` })];
 		}
 	},
 	{
 		title: '司机工资(委托)',
 		key: 'entrustSalary',
 		align: 'center',
-		width: 120,
+		width: 100,
 		render(row) {
-			const numberOption = h(
-				NNumberAnimation,
-				{
-					showSeparator: true,
-					from: row.entrustSalary,
-					to: row.entrustSalary,
-					precision: 0,
-					active: false
-				},
-				{}
-			);
-			return [h('span', {}, { default: () => '¥' }), numberOption];
+			return [h('div', { class: 'text-right' }, { default: () => `¥${addSeparator(row.entrustSalary ?? 0)}` })];
 		}
 	},
 	{
 		title: '司机工资',
 		key: 'salary',
 		align: 'center',
-		width: 120,
+		width: 100,
 		render(row) {
-			const numberOption = h(
-				NNumberAnimation,
-				{
-					showSeparator: true,
-					from: row.salary,
-					to: row.salary,
-					precision: 0,
-					active: false
-				},
-				{}
-			);
-			return [h('span', {}, { default: () => '¥' }), numberOption];
+			return [h('div', { class: 'text-right' }, { default: () => `¥${addSeparator(row.salary ?? 0)}` })];
 		}
 	},
 	{
 		title: '外派金额',
 		key: 'entrust',
 		align: 'center',
-		width: 120,
+		width: 100,
 		render(row) {
-			const numberOption = h(
-				NNumberAnimation,
-				{
-					showSeparator: true,
-					from: row.entrust,
-					to: row.entrust,
-					precision: 0,
-					active: false
-				},
-				{}
-			);
-			return [h('span', {}, { default: () => '¥' }), numberOption];
+			return [h('div', { class: 'text-right' }, { default: () => `¥${addSeparator(row.entrust ?? 0)}` })];
 		}
 	},
 	{
@@ -370,107 +286,25 @@ const columns: DataTableColumn<MyModel.Earnings>[] = [
 		align: 'center',
 		width: 100,
 		render(row) {
-			const numberOption = h(
-				NNumberAnimation,
-				{
-					showSeparator: true,
-					from: row.parking,
-					to: row.parking,
-					precision: 0,
-					active: false
-				},
-				{}
-			);
-			return [h('span', {}, { default: () => '¥' }), numberOption];
+			return [h('div', { class: 'text-right' }, { default: () => `¥${addSeparator(row.parking ?? 0)}` })];
 		}
 	},
-	// {
-	//   title: '垫付款',
-	//   key: 'mealAmount',
-	//   align: 'center',
-	//   width: 120,
-	//   render(row) {
-	//     const numberOption = h(
-	//       NNumberAnimation,
-	//       {
-	//         showSeparator: true,
-	//         from: row.admissionAmount,
-	//         to: row.admissionAmount,
-	//         precision: 0,
-	//         active: false
-	//       },
-	//       {}
-	//     );
-	//     return [h('span', {}, { default: () => '¥' }), numberOption];
-	//   }
-	// },
-	// {
-	//   title: '加班费',
-	//   key: 'parkingAmount',
-	//   align: 'center',
-	//   width: 100,
-	//   render(row) {
-	//     const numberOption = h(
-	//       NNumberAnimation,
-	//       {
-	//         showSeparator: true,
-	//         from: row.parkingAmount,
-	//         to: row.parkingAmount,
-	//         precision: 0,
-	//         active: false
-	//       },
-	//       {}
-	//     );
-	//     return [h('span', {}, { default: () => '¥' }), numberOption];
-	//   }
-	// },
-	// {
-	//   title: '外宿',
-	//   key: 'mealAmount',
-	//   align: 'center',
-	//   width: 120,
-	//   render(row) {
-	//     const numberOption = h(
-	//       NNumberAnimation,
-	//       {
-	//         showSeparator: true,
-	//         from: row.parkingAmount,
-	//         to: row.parkingAmount,
-	//         precision: 0,
-	//         active: false
-	//       },
-	//       {}
-	//     );
-	//     return [h('span', {}, { default: () => '¥' }), numberOption];
-	//   }
-	// },
 	{
 		title: '粗利润',
 		key: 'profit',
 		align: 'center',
 		width: 100,
 		render(row) {
-			const numberOption = h(
-				NNumberAnimation,
-				{
-					showSeparator: true,
-					from: row.profit,
-					to: row.profit,
-					precision: 0,
-					active: false
-				},
-				{}
-			);
-			return [h('span', {}, { default: () => '¥' }), numberOption];
+			return [h('div', { class: 'text-right' }, { default: () => `¥${addSeparator(row.profit ?? 0)}` })];
 		}
 	},
 	{
 		title: '粗利润率',
 		key: 'profitRate',
 		align: 'center',
-		width: 120,
+		width: 100,
 		render(row) {
-			return `${row.profitRate / 100}%`;
+			return [h('div', { class: 'text-right' }, { default: () => `${row.profitRate / 100}%` })];
 		}
 	},
 	{
@@ -509,6 +343,18 @@ const selectDict = (result: any) => {
 			break;
 	}
 };
+
+const staffModal = ref<any>(null);
+const showStaff = () => {
+	staffModal.value?.showModal();
+};
+const selectStaff = (result: any) => {
+	searchParams.sellerId = result.id;
+	searchParams.sellerName = result.userName;
+	searchParams.sellerNo = result.userNo;
+	searchParams.sellerPhoto = result.userAvatar;
+};
+
 const driverModal = ref<any>(null);
 const showDriver = () => {
 	// const params = {

@@ -287,7 +287,7 @@ const columns: DataTableColumn<MyModel.CarCheck>[] = [
 ];
 
 const onUpdate = (value: string | number | boolean) => {
-	searchParams.trainYear = `${moment(datePicker.value.date).format('yyyy')}`;
+	searchParams.year = `${moment(datePicker.value.date).format('yyyy')}`;
 };
 
 const onReset = () => {

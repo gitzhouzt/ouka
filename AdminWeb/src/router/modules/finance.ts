@@ -64,7 +64,7 @@ const sys: AuthRoute.Route = {
       path: '/finance/advance',
       component: 'self',
       meta: {
-        title: '立替精算',
+        title: '立替決算',
         permissions: ['Super', 'Admin', 'Accounting', 'Seller'],
         requiresAuth: true,
         icon: 'icon-park-outline:finance'
@@ -75,23 +75,23 @@ const sys: AuthRoute.Route = {
       path: '/finance/earnings',
       component: 'self',
       meta: {
-        title: '営業額',
+        title: '原価決算',
         permissions: ['Super', 'Admin', 'Accounting'],
         requiresAuth: true,
         icon: 'icon-park-outline:finance'
       }
     },
-    {
-      name: 'finance_motone',
-      path: '/finance/motone',
-      component: 'self',
-      meta: {
-        title: '原価精算',
-        permissions: ['Super', 'Admin', 'Accounting'],
-        requiresAuth: true,
-        icon: 'icon-park-outline:finance'
-      }
-    },
+    // {
+    //   name: 'finance_motone',
+    //   path: '/finance/motone',
+    //   component: 'self',
+    //   meta: {
+    //     title: '原価決算',
+    //     permissions: ['Super', 'Admin', 'Accounting'],
+    //     requiresAuth: true,
+    //     icon: 'icon-park-outline:finance'
+    //   }
+    // },
     // {
     //   name: 'finance_accident',
     //   path: '/finance/accident',

@@ -4,29 +4,32 @@
 			<n-space>
 				<n-form :inline="!isMobile && !isWrap" :label-width="100" label-placement="left">
 					<n-form :inline="!isMobile" :label-width="100" label-placement="left">
-					<n-form-item label="キーワード">
-						<n-input v-model:value="searchParams.keyword" style="min-width: 30%" type="text" placeholder="番号/連絡先/ワード"
-							clearable />
-					</n-form-item>
-					<n-form-item label="订单来源">
-						<n-input v-model:value="searchParams.orderSource" placeholder="クリック分類を選択" readonly
-							@click="showDict('order_source')" />
-					</n-form-item>
-				</n-form>
-				<n-form :inline="!isMobile" :label-width="100" label-placement="left">
-					<n-form-item label="ドライバー" path="driverName">
-						<n-input-group>
-							<n-input v-model:value="searchParams.driverName" readonly placeholder="クリックドライバーを選択"
-								@click="showDriver()"></n-input>
-						</n-input-group>
-					</n-form-item>
-					<n-form-item label="車両" path="carName">
-						<n-input-group>
-							<n-input v-model:value="searchParams.carName" readonly placeholder="クリック車両を選択"
-								@click="showCar()"></n-input>
-						</n-input-group>
-					</n-form-item>
-				</n-form>
+						<n-form-item label="キーワード">
+							<n-input v-model:value="searchParams.keyword" style="min-width: 30%" type="text" placeholder="番号/連絡先/ワード"
+								clearable />
+						</n-form-item>
+						<n-form-item label="订单来源">
+							<n-input v-model:value="searchParams.orderSource" placeholder="クリック来源を選択" readonly
+								@click="showDict('order_source')" />
+						</n-form-item>
+						<n-form-item label="責任人">
+							<n-input v-model:value="searchParams.sellerName" placeholder="クリック責任人を選択" readonly @click="showStaff()" />
+						</n-form-item>
+					</n-form>
+					<n-form :inline="!isMobile" :label-width="100" label-placement="left">
+						<n-form-item label="ドライバー" path="driverName">
+							<n-input-group>
+								<n-input v-model:value="searchParams.driverName" readonly placeholder="クリックドライバーを選択"
+									@click="showDriver()"></n-input>
+							</n-input-group>
+						</n-form-item>
+						<n-form-item label="車両" path="carName">
+							<n-input-group>
+								<n-input v-model:value="searchParams.carName" readonly placeholder="クリック車両を選択"
+									@click="showCar()"></n-input>
+							</n-input-group>
+						</n-form-item>
+					</n-form>
 					<!-- <n-form-item label="サービス時間" path="selTime">
             <n-date-picker v-model:value="searchParams.selTime" type="daterange" clearable @update:value="onUpdate" />
           </n-form-item> -->
@@ -40,8 +43,8 @@
 				</n-form>
 			</n-space>
 			<n-space>
-				<n-button type="primary" @click="handleConfirm">一括決算</n-button>
-				<!-- <n-button type="primary" @click="handleExport">ダウンロード</n-button> -->
+				<n-button type="primary" @click="handleBatchFinance(1)">一括決算</n-button>
+				<n-button type="primary" @click="handleExport">ダウンロード</n-button>
 			</n-space>
 			<loading-empty-wrapper :style="{ height: hightRef + 'px' }" :loading="loading" :empty="empty">
 				<n-data-table :row-key="rowKey" remote bordered :v-model:checked-row-keys="checkedRowKeys" :columns="columns"
@@ -52,6 +55,7 @@
 		</n-space>
 		<dict-select-modal ref="dictModal" @click="selectDict" />
 		<driver-select-modal ref="driverModal" @click="selectDriver" />
+		<staff-select-modal ref="staffModal" @click="selectStaff" />
 		<car-select-modal ref="carModal" @click="selectCar" />
 	</div>
 </template>
@@ -72,7 +76,8 @@ const moduleParams: MySearch.OrderSearchParams = {
 	keyword: '',
 	orderSource: '',
 	driverName: '',
-	carName: '',
+	sellerName: '',
+	carNo: '',
 	selTime: [Date.now(), Date.now()],
 	startBeginTime: Date.now(),
 	startEndTime: Date.now(),
@@ -96,10 +101,10 @@ resetParams();
 
 const envConfig = getEnvConfig(import.meta.env);
 const { financeStatusTagType } = useMyTags();
-const { isMobile, isWrap } = useMyCommon();
+const { isMobile, isWrap, addSeparator } = useMyCommon();
 
 const urls = {
-	finance: `/finance/advance/`,
+	finance: `/finance/advance/settlement`,
 	defaultPlacard: `/order/defaultPlacard`
 };
 const rowKey = (row: RowData) => row.id;
@@ -107,13 +112,18 @@ const checkedRowKeys = ref<Array<string | number>>([]);
 const message = useMessage();
 const loadingBar = useLoadingBar();
 
-const handleConfirm = (row: MyModel.Advance) => {
-	const promise = request.put<Boolean>(`${urls.finance}/${row.id}`);
+const handleSettlement = (ids: Array<string | number>) => {
+	const params = {
+		ids
+	};
+	const promise = request.post<Boolean>(urls.finance, params);
 	loading.value = true;
 	promise
 		.then(res => {
 			if (res.data) {
 				message.success('決済しました');
+				checkedRowKeys.value = [];
+				searchReset();
 			}
 		})
 		.catch(err => {
@@ -126,8 +136,16 @@ const handleConfirm = (row: MyModel.Advance) => {
 		});
 };
 
-const temp = () => {
-	//
+const handleBatchFinance = (flag: number) => {
+	if (checkedRowKeys.value.length === 0) {
+		message.warning('データ選択してください');
+		return;
+	}
+	if (flag === 0) {
+		// handelPaid(checkedRowKeys.value);
+	} else if (flag === 1) {
+		handleSettlement(checkedRowKeys.value);
+	}
 };
 
 const tempE = () => {
@@ -271,18 +289,7 @@ const columns: DataTableColumn<MyModel.Advance>[] = [
 		align: 'center',
 		width: 120,
 		render(row) {
-			const numberOption = h(
-				NNumberAnimation,
-				{
-					showSeparator: true,
-					from: row.profitAmount,
-					to: row.profitAmount,
-					precision: 0,
-					active: false
-				},
-				{}
-			);
-			return [h('span', {}, { default: () => '¥' }), numberOption];
+			return [h('div', { class: 'text-right' }, { default: () => `¥${addSeparator(row.profitAmount ?? 0)}` })];
 		}
 	},
 	{
@@ -291,18 +298,7 @@ const columns: DataTableColumn<MyModel.Advance>[] = [
 		align: 'center',
 		width: 120,
 		render(row) {
-			const numberOption = h(
-				NNumberAnimation,
-				{
-					showSeparator: true,
-					from: row.advanceAmount,
-					to: row.advanceAmount,
-					precision: 0,
-					active: false
-				},
-				{}
-			);
-			return [h('span', {}, { default: () => '¥' }), numberOption];
+			return [h('div', { class: 'text-right' }, { default: () => `¥${addSeparator(row.advanceAmount ?? 0)}` })];
 		}
 	},
 	{
@@ -311,18 +307,7 @@ const columns: DataTableColumn<MyModel.Advance>[] = [
 		align: 'center',
 		width: 120,
 		render(row) {
-			const numberOption = h(
-				NNumberAnimation,
-				{
-					showSeparator: true,
-					from: row.inAmount,
-					to: row.inAmount,
-					precision: 0,
-					active: false
-				},
-				{}
-			);
-			return [h('span', {}, { default: () => '¥' }), numberOption];
+			return [h('div', { class: 'text-right' }, { default: () => `¥${addSeparator(row.inAmount ?? 0)}` })];
 		}
 	},
 	{
@@ -331,18 +316,7 @@ const columns: DataTableColumn<MyModel.Advance>[] = [
 		align: 'center',
 		width: 120,
 		render(row) {
-			const numberOption = h(
-				NNumberAnimation,
-				{
-					showSeparator: true,
-					from: row.mealAmount,
-					to: row.mealAmount,
-					precision: 0,
-					active: false
-				},
-				{}
-			);
-			return [h('span', {}, { default: () => '¥' }), numberOption];
+			return [h('div', { class: 'text-right' }, { default: () => `¥${addSeparator(row.mealAmount ?? 0)}` })];
 		}
 	},
 	{
@@ -351,18 +325,7 @@ const columns: DataTableColumn<MyModel.Advance>[] = [
 		align: 'center',
 		width: 120,
 		render(row) {
-			const numberOption = h(
-				NNumberAnimation,
-				{
-					showSeparator: true,
-					from: row.hotelAmount,
-					to: row.hotelAmount,
-					precision: 0,
-					active: false
-				},
-				{}
-			);
-			return [h('span', {}, { default: () => '¥' }), numberOption];
+			return [h('div', { class: 'text-right' }, { default: () => `¥${addSeparator(row.hotelAmount ?? 0)}` })];
 		}
 	},
 	{
@@ -371,18 +334,7 @@ const columns: DataTableColumn<MyModel.Advance>[] = [
 		align: 'center',
 		width: 100,
 		render(row) {
-			const numberOption = h(
-				NNumberAnimation,
-				{
-					showSeparator: true,
-					from: row.admissionAmount,
-					to: row.admissionAmount,
-					precision: 0,
-					active: false
-				},
-				{}
-			);
-			return [h('span', {}, { default: () => '¥' }), numberOption];
+			return [h('div', { class: 'text-right' }, { default: () => `¥${addSeparator(row.admissionAmount ?? 0)}` })];
 		}
 	},
 	{
@@ -391,18 +343,7 @@ const columns: DataTableColumn<MyModel.Advance>[] = [
 		align: 'center',
 		width: 100,
 		render(row) {
-			const numberOption = h(
-				NNumberAnimation,
-				{
-					showSeparator: true,
-					from: row.parkingAmount,
-					to: row.parkingAmount,
-					precision: 0,
-					active: false
-				},
-				{}
-			);
-			return [h('span', {}, { default: () => '¥' }), numberOption];
+			return [h('div', { class: 'text-right' }, { default: () => `¥${addSeparator(row.parkingAmount ?? 0)}` })];
 		}
 	},
 	{
@@ -411,18 +352,7 @@ const columns: DataTableColumn<MyModel.Advance>[] = [
 		align: 'center',
 		width: 100,
 		render(row) {
-			const numberOption = h(
-				NNumberAnimation,
-				{
-					showSeparator: true,
-					from: row.etcAmount,
-					to: row.etcAmount,
-					precision: 0,
-					active: false
-				},
-				{}
-			);
-			return [h('span', {}, { default: () => '¥' }), numberOption];
+			return [h('div', { class: 'text-right' }, { default: () => `¥${addSeparator(row.etcAmount ?? 0)}` })];
 		}
 	},
 	{
@@ -432,18 +362,7 @@ const columns: DataTableColumn<MyModel.Advance>[] = [
 		sorter: true,
 		width: 120,
 		render(row) {
-			const numberOption = h(
-				NNumberAnimation,
-				{
-					showSeparator: true,
-					from: row.roadAmount,
-					to: row.roadAmount,
-					precision: 0,
-					active: false
-				},
-				{}
-			);
-			return [h('span', {}, { default: () => '¥' }), numberOption];
+			return [h('div', { class: 'text-right' }, { default: () => `¥${addSeparator(row.roadAmount ?? 0)}` })];
 		}
 	},
 	{
@@ -453,18 +372,7 @@ const columns: DataTableColumn<MyModel.Advance>[] = [
 		sorter: true,
 		width: 120,
 		render(row) {
-			const numberOption = h(
-				NNumberAnimation,
-				{
-					showSeparator: true,
-					from: row.ticketAmount,
-					to: row.ticketAmount,
-					precision: 0,
-					active: false
-				},
-				{}
-			);
-			return [h('span', {}, { default: () => '¥' }), numberOption];
+			return [h('div', { class: 'text-right' }, { default: () => `¥${addSeparator(row.ticketAmount ?? 0)}` })];
 		}
 	},
 	{
@@ -474,39 +382,17 @@ const columns: DataTableColumn<MyModel.Advance>[] = [
 		sorter: true,
 		width: 100,
 		render(row) {
-			const numberOption = h(
-				NNumberAnimation,
-				{
-					showSeparator: true,
-					from: row.waterAmount,
-					to: row.waterAmount,
-					precision: 0,
-					active: false
-				},
-				{}
-			);
-			return [h('span', {}, { default: () => '¥' }), numberOption];
+			return [h('div', { class: 'text-right' }, { default: () => `¥${addSeparator(row.waterAmount ?? 0)}` })];
 		}
 	},
 	{
-		title: '残業代',
+		title: '超時料金',
 		key: 'overtimeAmount',
 		align: 'center',
 		sorter: true,
 		width: 100,
 		render(row) {
-			const numberOption = h(
-				NNumberAnimation,
-				{
-					showSeparator: true,
-					from: row.overtimeAmount,
-					to: row.overtimeAmount,
-					precision: 0,
-					active: false
-				},
-				{}
-			);
-			return [h('span', {}, { default: () => '¥' }), numberOption];
+			return [h('div', { class: 'text-right' }, { default: () => `¥${addSeparator(row.overtimeAmount ?? 0)}` })];
 		}
 	},
 	{
@@ -516,18 +402,7 @@ const columns: DataTableColumn<MyModel.Advance>[] = [
 		sorter: true,
 		width: 100,
 		render(row) {
-			const numberOption = h(
-				NNumberAnimation,
-				{
-					showSeparator: true,
-					from: row.otherAmount,
-					to: row.otherAmount,
-					precision: 0,
-					active: false
-				},
-				{}
-			);
-			return [h('span', {}, { default: () => '¥' }), numberOption];
+			return [h('div', { class: 'text-right' }, { default: () => `¥${addSeparator(row.otherAmount ?? 0)}` })];
 		}
 	},
 	{
@@ -551,7 +426,7 @@ const columns: DataTableColumn<MyModel.Advance>[] = [
 		}
 	},
 	{
-		title: '決算',
+		title: '操作',
 		key: 'actions',
 		width: 80,
 		align: 'center',
@@ -562,9 +437,9 @@ const columns: DataTableColumn<MyModel.Advance>[] = [
 					quaternary: true,
 					size: 'small',
 					type: 'info',
-					onClick: () => handleConfirm(row)
+					onClick: () => handleSettlement([row.id])
 				},
-				{ default: () => '精算' }
+				{ default: () => '決算' }
 			);
 			return EnumFinanceStatus[row.status ?? 'Waiting'] !== EnumFinanceStatus.Completed ? confirmOption : '決算済';
 		}
@@ -607,6 +482,18 @@ const selectDict = (result: any) => {
 			break;
 	}
 };
+
+const staffModal = ref<any>(null);
+const showStaff = () => {
+	staffModal.value?.showModal();
+};
+const selectStaff = (result: any) => {
+	searchParams.sellerId = result.id;
+	searchParams.sellerName = result.userName;
+	searchParams.sellerNo = result.userNo;
+	searchParams.sellerPhoto = result.userAvatar;
+};
+
 const driverModal = ref<any>(null);
 const showDriver = () => {
 	// const params = {

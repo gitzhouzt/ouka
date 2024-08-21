@@ -3,33 +3,34 @@
 		<n-space :vertical="true">
 			<n-space>
 				<n-form :inline="!isMobile && !isWrap" label-placement="left">
-				<n-form :inline="!isMobile" :label-width="100" label-placement="left">
-					<n-form-item label="キーワード">
-						<n-input v-model:value="searchParams.keyword" style="min-width: 30%" type="text" placeholder="注文番号/連絡先"
-							clearable />
-					</n-form-item>
-					<n-form-item label="注文内容">
-						<n-select v-model:value="searchParams.orderType" class="w-50" :options="orderTypeOptions"
-							:consistent-menu-width="false" />
-					</n-form-item>
-					<n-form-item label="ドライバー" path="driverName">
-						<n-input-group>
-							<n-input v-model:value="searchParams.driverName" readonly placeholder="クリックドライバーを選択"
-								@click="showDriver()"></n-input>
-						</n-input-group>
-					</n-form-item>
-				</n-form>
-				<n-form :inline="!isMobile" :label-width="100" label-placement="left">
-					<n-form-item label="車両" path="carName">
-						<n-input-group>
-							<n-input v-model:value="searchParams.carNo" readonly placeholder="クリック車両を選択" @click="showCar()"></n-input>
-						</n-input-group>
-					</n-form-item>
-					<n-form-item label="サービス時間" path="selTime">
-						<n-date-picker v-model:value="searchParams.selTime" type="datetimerange" format="yyyy/MM/dd HH:mm:ss"
-							clearable @update:value="onUpdate" />
-					</n-form-item>
-				</n-form>
+					<n-form :inline="!isMobile" :label-width="100" label-placement="left">
+						<n-form-item label="キーワード">
+							<n-input v-model:value="searchParams.keyword" style="min-width: 30%" type="text" placeholder="注文番号/連絡先"
+								clearable />
+						</n-form-item>
+						<n-form-item label="注文内容">
+							<n-select v-model:value="searchParams.orderType" class="w-50" :options="orderTypeOptions"
+								:consistent-menu-width="false" />
+						</n-form-item>
+						<n-form-item label="ドライバー" path="driverName">
+							<n-input-group>
+								<n-input v-model:value="searchParams.driverName" readonly placeholder="クリックドライバーを選択"
+									@click="showDriver()"></n-input>
+							</n-input-group>
+						</n-form-item>
+					</n-form>
+					<n-form :inline="!isMobile" :label-width="100" label-placement="left">
+						<n-form-item label="車両" path="carName">
+							<n-input-group>
+								<n-input v-model:value="searchParams.carNo" readonly placeholder="クリック車両を選択"
+									@click="showCar()"></n-input>
+							</n-input-group>
+						</n-form-item>
+						<n-form-item label="サービス時間" path="selTime">
+							<n-date-picker v-model:value="searchParams.selTime" type="datetimerange" format="yyyy/MM/dd HH:mm:ss"
+								clearable @update:value="onUpdate" />
+						</n-form-item>
+					</n-form>
 					<n-form-item>
 						<n-button type="primary" @click="() => {
 								searchQuery();
@@ -37,7 +38,7 @@
 							">検索</n-button>
 						<n-button class="ml-2" @click="searchReset">リセット</n-button>
 					</n-form-item>
-			</n-form>
+				</n-form>
 			</n-space>
 			<n-space justify="space-between">
 				<div>
@@ -196,19 +197,52 @@ const columns: DataTableColumn<MyModel.Order>[] = [
 		title: '大人数',
 		key: 'adultNum',
 		align: 'center',
-		width: 80
+		width: 80,
+		render(row) {
+			return [
+				h(
+					'div',
+					{
+						style: { textAlign: 'right' }
+					},
+					{ default: () => (row.adultNum ? row.adultNum : '-') }
+				)
+			];
+		}
 	},
 	{
 		title: '子供数',
 		key: 'childrenNum',
 		align: 'center',
-		width: 80
+		width: 80,
+		render(row) {
+			return [
+				h(
+					'div',
+					{
+						style: { textAlign: 'right' }
+					},
+					{ default: () => (row.childrenNum ? row.childrenNum : '-') }
+				)
+			];
+		}
 	},
 	{
 		title: '荷物数',
 		key: 'luggageNum',
 		align: 'center',
-		width: 80
+		width: 80,
+		render(row) {
+			return [
+				h(
+					'div',
+					{
+						style: { textAlign: 'right' }
+					},
+					{ default: () => (row.luggageNum ? row.luggageNum : '-') }
+				)
+			];
+		}
 	},
 	{
 		title: '希望車両',
@@ -278,7 +312,7 @@ const columns: DataTableColumn<MyModel.Order>[] = [
 		align: 'center',
 		width: 80,
 		render(row) {
-			return [h('div', {}, { default: () => row.carSeat ?? '-' })];
+			return [h('div', {}, { default: () => (row.carSeat ? `${row.carSeat}座` : '-') })];
 		}
 	},
 	{

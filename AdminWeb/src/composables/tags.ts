@@ -43,6 +43,7 @@ export function useMyTags() {
       case EnumUserRole.Seller:
       case EnumUserRole.Operator:
       case EnumUserRole.OperationManager:
+      case EnumUserRole.Accounting:
         tagType = 'info';
         break;
       default:
@@ -127,6 +128,9 @@ export function useMyTags() {
         break;
       case EnumFinanceStatus.Waiting:
         tagType = 'warning';
+        break;
+      case EnumFinanceStatus.Paid:
+        tagType = 'primary';
         break;
       default:
         tagType = 'default';

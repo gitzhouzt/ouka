@@ -1,36 +1,20 @@
 <template>
   <div>
-    <n-modal
-      v-model:show="showModalRef"
-      :style="bodyStyleRef"
-      transform-origin="center"
-      :mask-closable="false"
-      preset="card"
-      :title="titleRef"
-      closable
-      @update-show="onUpdateShow"
-    >
+    <n-modal v-model:show="showModalRef" :style="bodyStyleRef" transform-origin="center" :mask-closable="false"
+      preset="card" :title="titleRef" closable @update-show="onUpdateShow">
       <n-spin :show="loading">
         <n-form ref="formRef" label-placement="left" :label-width="80" :model="formValue" :rules="rules" :size="size">
           <n-grid :cols="2">
             <n-gi :span="2">
               <n-form-item label="支払方法" path="payMethod">
-                <n-input
-                  v-model:value="formValue.payMethod"
-                  placeholder="クリック方法を選択"
-                  readonly
-                  @click="showDict('pay_method')"
-                />
+                <n-input v-model:value="formValue.payMethod" placeholder="クリック方法を選択" readonly
+                  @click="showDict('pay_method')" />
               </n-form-item>
             </n-gi>
             <n-gi v-if="formValue.payMethod.indexOf('口座') >= 0" :span="2">
               <n-form-item label="金融機関" path="bank">
-                <n-input
-                  v-model:value="formValue.bank"
-                  placeholder="クリック機関を選択"
-                  readonly
-                  @click="showDict('pay_bank')"
-              /></n-form-item>
+                <n-input v-model:value="formValue.bank" placeholder="クリック機関を選択" readonly
+                  @click="showDict('pay_bank')" /></n-form-item>
             </n-gi>
           </n-grid>
         </n-form>
@@ -105,7 +89,7 @@ const handleValidateClick = (e: MouseEvent) => {
       promise
         .then(res => {
           if (res.data) {
-            message.success('精算しました');
+            message.success('決算しました');
             close();
           }
         })

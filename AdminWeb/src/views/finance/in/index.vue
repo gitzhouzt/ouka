@@ -4,8 +4,8 @@
 			<n-space>
 				<n-form :inline="!isMobile && !isWrap" :label-width="100" label-placement="left">
 					<n-form-item label="キーワード">
-						<n-input v-model:value="searchParams.keyword" style="min-width: 30%" type="text" placeholder="注文番号"
-							clearable />
+						<n-input v-model:value="searchParams.keyword" style="min-width: 30%" type="text"
+							placeholder="注文番号" clearable />
 					</n-form-item>
 					<n-form-item label="注文内容">
 						<n-input v-model:value="searchParams.orderType" placeholder="クリック内容を選択" readonly
@@ -24,26 +24,29 @@
 						</n-input-group>
 					</n-form-item>
 					<n-form-item label="ツアー日" path="selTime">
-						<n-date-picker v-model:value="searchParams.selTime" type="daterange" clearable @update:value="onUpdate" />
+						<n-date-picker v-model:value="searchParams.selTime" type="daterange" clearable
+							@update:value="onUpdate" />
 					</n-form-item>
 					<n-form-item>
 						<n-button type="primary" @click="() => {
-								searchQuery();
-							}
+							searchQuery();
+						}
 							">検索</n-button>
 						<n-button class="ml-2" @click="searchReset">リセット</n-button>
 					</n-form-item>
 				</n-form>
 			</n-space>
 			<n-space>
-				<n-button type="primary" @click="handleBatchFinance">一括精算</n-button>
+				<n-button type="primary" @click="handleBatchFinance">一括決算</n-button>
 				<n-button type="primary" @click="handleExport">ダウンロード</n-button>
 			</n-space>
 			<loading-empty-wrapper :style="{ height: hightRef + 'px' }" :loading="loading" :empty="empty">
-				<n-data-table :row-key="rowKey" :summary="summary" remote bordered :v-model:checked-row-keys="checkedRowKeys"
-					:columns="columns" :data="dataSource" :pagination="pagination" :scroll-x="2000" :single-line="false"
-					:flex-height="true" :style="{ height: hightRef + 'px' }" @update:checked-row-keys="handleChecked"
-					@update:page="handlePageChange" @update:sorter="handleSorter" @update:page-size="handleUpdatePageSize" />
+				<n-data-table :row-key="rowKey" :summary="summary" remote bordered
+					:v-model:checked-row-keys="checkedRowKeys" :columns="columns" :data="dataSource"
+					:pagination="pagination" :scroll-x="2000" :single-line="false" :flex-height="true"
+					:style="{ height: hightRef + 'px' }" @update:checked-row-keys="handleChecked"
+					@update:page="handlePageChange" @update:sorter="handleSorter"
+					@update:page-size="handleUpdatePageSize" />
 			</loading-empty-wrapper>
 		</n-space>
 		<driver-select-modal ref="driverModal" @click="selectDriver" />
@@ -116,7 +119,7 @@ const handleBatchFinance = () => {
 		message.warning('データ選択してください');
 		return;
 	}
-	paidModal.value.setTitle('入金精算 - 一括精算');
+	paidModal.value.setTitle('入金決算 - 一括決算');
 	paidModal.value.showModal(checkedRowKeys.value);
 };
 

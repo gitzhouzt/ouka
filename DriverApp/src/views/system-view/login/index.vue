@@ -25,7 +25,7 @@ import { useAuthStore } from '@/store';
 const auth = useAuthStore();
 const { login } = useAuthStore();
 const model = reactive({
-	loginName: import.meta.env.DEV ? 'huang@cbsdata.co.jp' : '',
+	loginName: import.meta.env.DEV ? 'hcc.saki@gmail.com' : '',
 	loginPass: import.meta.env.DEV ? 'abcd@6789' : '',
 });
 

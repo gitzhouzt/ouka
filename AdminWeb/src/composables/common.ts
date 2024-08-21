@@ -19,9 +19,14 @@ export function useMyCommon() {
     }
     return tmp;
   }
+
+  function addSeparator(number: number) {
+    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  }
   return {
     isMobile: isMobile(),
     isWrap: isWrap(),
+    addSeparator,
     toCDB
   };
 }

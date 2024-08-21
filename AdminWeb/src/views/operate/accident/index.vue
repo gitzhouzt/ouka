@@ -4,15 +4,15 @@
 			<n-space>
 				<n-form :inline="!isMobile && !isWrap" :label-width="100" label-placement="left">
 					<n-form :inline="!isMobile" :label-width="100" label-placement="left">
-					<n-form-item label="キーワード">
-						<n-input v-model:value="searchParams.keyword" style="min-width: 30%" type="text" placeholder="車両番号/事故者/確認者"
-							clearable />
-					</n-form-item>
-					<n-form-item label="事故原因">
-						<n-input v-model:value="searchParams.accidentType" placeholder="クリック性質を選択" readonly
-							@click="showDict('operate_accident_type')" />
-					</n-form-item>
-				</n-form>
+						<n-form-item label="キーワード">
+							<n-input v-model:value="searchParams.keyword" style="min-width: 30%" type="text"
+								placeholder="車両番号/事故者/確認者" clearable />
+						</n-form-item>
+						<n-form-item label="事故原因">
+							<n-input v-model:value="searchParams.accidentType" placeholder="クリック性質を選択" readonly
+								@click="showDict('operate_accident_type')" />
+						</n-form-item>
+					</n-form>
 					<n-form-item>
 						<n-button type="primary" @click="() => {
 								searchQuery();
@@ -75,7 +75,7 @@ const {
 resetParams();
 
 const { statusTagType } = useMyTags();
-const { isMobile, isWrap } = useMyCommon();
+const { isMobile, isWrap, addSeparator } = useMyCommon();
 
 const showModal = ref<any>(null);
 const handleShowImages = (title: string, images: string) => {
@@ -189,20 +189,7 @@ const columns: DataTableColumn<MyModel.Accident>[] = [
 		key: 'amount',
 		align: 'center',
 		render(row) {
-			const numberOption = h(
-				NNumberAnimation,
-				{
-					showSeparator: true,
-					from: row.amount,
-					to: row.amount,
-					precision: 0,
-					active: false
-				},
-				{
-					default: () => row.amount
-				}
-			);
-			return [h('span', {}, { default: () => '¥' }), numberOption];
+			return [h('div', { style: 'text-align:right' }, { default: () => `¥${addSeparator(row.amount ?? 0)}` })];
 		}
 	},
 	{
@@ -211,18 +198,7 @@ const columns: DataTableColumn<MyModel.Accident>[] = [
 		key: 'companyAmount',
 		align: 'center',
 		render(row) {
-			const numberOption = h(
-				NNumberAnimation,
-				{
-					showSeparator: true,
-					from: row.companyAmount,
-					to: row.companyAmount,
-					precision: 0,
-					active: false
-				},
-				{}
-			);
-			return [h('span', {}, { default: () => '¥' }), numberOption];
+			return [h('div', { class: 'text-right' }, { default: () => `¥${addSeparator(row.companyAmount ?? 0)}` })];
 		}
 	},
 	{
@@ -231,18 +207,7 @@ const columns: DataTableColumn<MyModel.Accident>[] = [
 		width: 150,
 		align: 'center',
 		render(row) {
-			const numberOption = h(
-				NNumberAnimation,
-				{
-					showSeparator: true,
-					from: row.insuranceAmount,
-					to: row.insuranceAmount,
-					precision: 0,
-					active: false
-				},
-				{}
-			);
-			return [h('span', {}, { default: () => '¥' }), numberOption];
+			return [h('div', { class: 'text-right' }, { default: () => `¥${addSeparator(row.insuranceAmount ?? 0)}` })];
 		}
 	},
 	{
@@ -251,18 +216,7 @@ const columns: DataTableColumn<MyModel.Accident>[] = [
 		key: 'driverAmount',
 		align: 'center',
 		render(row) {
-			const numberOption = h(
-				NNumberAnimation,
-				{
-					showSeparator: true,
-					from: row.driverAmount,
-					to: row.driverAmount,
-					precision: 0,
-					active: false
-				},
-				{}
-			);
-			return [h('span', {}, { default: () => '¥' }), numberOption];
+			return [h('div', { class: 'text-right' }, { default: () => `¥${addSeparator(row.driverAmount ?? 0)}` })];
 		}
 	},
 	{
@@ -284,7 +238,7 @@ const columns: DataTableColumn<MyModel.Accident>[] = [
 		}
 	},
 	{
-		title: '精算日時',
+		title: '決算日時',
 		key: 'financeTime',
 		width: 120,
 		align: 'center',
@@ -293,7 +247,7 @@ const columns: DataTableColumn<MyModel.Accident>[] = [
 		}
 	},
 	{
-		title: '精算者',
+		title: '決算者',
 		key: 'financeByName',
 		width: 120,
 		align: 'center',

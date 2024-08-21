@@ -190,6 +190,7 @@ declare namespace MyModel {
     currencyCode?: string;
     sellerName?: string;
     status?: MyEnumType.EnumFinanceStatusKey;
+    statusName?: string;
     remark?: string;
   }
 
@@ -218,6 +219,7 @@ declare namespace MyModel {
     orderId?: string;
     orderVO?: Order;
     orderNo?: string;
+    orderPrice: number;
     handlingFee: number;
     oilFee: number;
     etc: number;
@@ -308,7 +310,7 @@ declare namespace MyModel {
   interface Car extends Root {
     carNo?: string;
     carName: string;
-    carPhoto?: string;
+    images?: string;
     carType?: string;
     carSeat?: number;
     plateNum?: string;
