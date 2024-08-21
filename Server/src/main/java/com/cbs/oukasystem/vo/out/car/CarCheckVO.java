@@ -62,11 +62,11 @@ public class CarCheckVO extends NormalVO {
     private EnumStatus checkStatus4 = EnumStatus.Waiting;
 
     @JsonFormat(pattern = "yyyy/MM/dd HH:mm:ss", timezone = "GMT+9")
-    @Schema(name = "lastYearCheck", description = "上年度年检")
-    private Date lastYearCheck;
+    @Schema(name = "lastYearCheckDate", description = "上年度年检")
+    private Date lastYearCheckDate;
 
     @JsonFormat(pattern = "yyyy/MM/dd HH:mm:ss", timezone = "GMT+9")
-    @Schema(name = "lastMonthCheck", description = "上年度最后一次点检")
-    private Date lastMonthCheck;
+    @Schema(name = "lastMonthCheckDate", description = "上年度最后一次点检")
+    private Date lastMonthCheckDate;
 
 }

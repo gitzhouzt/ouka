@@ -70,7 +70,7 @@ public class AdvanceEntity extends OperatorEntity {
     @Schema(name = "waterAmount", description = "水代")
     private Double waterAmount = 0.0;
 
-    @Schema(name = "overtimeAmount", description = "タイムアウト")
+    @Schema(name = "overtimeAmount", description = "超時料金")
     private Double overtimeAmount = 0.0;
 
     @Schema(name = "otherAmount", description = "その他立替")
@@ -80,7 +80,7 @@ public class AdvanceEntity extends OperatorEntity {
     private String billingAddress;
 
     @Schema(name = "financeByName")
-    private Date financeByName;
+    private String financeByName;
 
     @Schema(name = "status")
     private EnumFinanceStatus status;

@@ -21,25 +21,20 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import com.cbs.oukasystem.common.LoginUtils;
+import com.cbs.oukasystem.common.BusinessEnum.EnumFinanceStatus;
+import com.cbs.oukasystem.common.CsvUtils;
 import com.cbs.oukasystem.common.MessageEnum.EnumDataCheck;
 import com.cbs.oukasystem.common.MessageEnum.EnumDeleteCheck;
 import com.cbs.oukasystem.common.MessageEnum.EnumIOUCheck;
 import com.cbs.oukasystem.config.BaseException;
 import com.cbs.oukasystem.entity.finance.AdvanceEntity;
-import com.cbs.oukasystem.entity.finance.PayRecordEntity;
 import com.cbs.oukasystem.mapstruct.finance.AdvanceVOEntityMapStruct;
-import com.cbs.oukasystem.mapstruct.finance.PayRecordVOEntityMapStruct;
 import com.cbs.oukasystem.repository.finance.AdvanceRepository;
-import com.cbs.oukasystem.service.car.CarService;
-import com.cbs.oukasystem.service.user.UserService;
 import com.cbs.oukasystem.vo.ListVO;
-import com.cbs.oukasystem.vo.in.base.QueryDictItemVO;
 import com.cbs.oukasystem.vo.in.finance.IUAdvanceVO;
-import com.cbs.oukasystem.vo.in.finance.IUPayRecordVO;
 import com.cbs.oukasystem.vo.in.finance.QueryAdvanceVO;
-import com.cbs.oukasystem.vo.out.base.DictItemVO;
 import com.cbs.oukasystem.vo.out.finance.AdvanceVO;
-import com.cbs.oukasystem.vo.out.finance.PayRecordVO;
+import com.cbs.oukasystem.vo.out.finance.SettlementVO;
 
 @Service
 @Transactional
@@ -49,12 +44,6 @@ public class AdvanceService {
 
     @Autowired
     private AdvanceRepository repository;
-
-    @Autowired
-    private UserService userService;
-
-    @Autowired
-    private CarService carService;
 
     // region Advance
 
@@ -120,6 +109,12 @@ public class AdvanceService {
                 if (null != qVo.getStatus()) {
                     predicate.add(cb.equal(root.get("status"), qVo.getStatus()));
                 }
+                if (null != qVo.getSellerName() && !qVo.getSellerName().isEmpty()) {
+                    predicate.add(cb.equal(root.get("order").get("sellerName"), qVo.getSellerName()));
+                }
+                if (null != qVo.getOrderSource() && !qVo.getOrderSource().isEmpty()) {
+                    predicate.add(cb.equal(root.get("order").get("orderSource"), qVo.getOrderSource()));
+                }
                 Calendar calendar = Calendar.getInstance();
                 if (null != qVo.getBeginTime() && null != qVo.getEndTime()) {
                     calendar.setTime(qVo.getBeginTime());
@@ -142,6 +137,48 @@ public class AdvanceService {
                 return query.where(predicate.toArray(pre)).getRestriction();
             }
         };
+    }
+
+    /**
+     * export
+     * 
+     * @param qVo QueryOrderVO
+     */
+    public void export(QueryAdvanceVO qVo) {
+        String screenName = "立替記録";
+        String[][] dataMap = new String[][] {
+                { "番号", "index" },
+                { "責任人", "sellerName" },
+                { "注文番号", "orderNo" },
+                { "ツアー開始日", "startTime" },
+                { "ツアー終了日", "endTime" },
+                { "ツアー内容", "orderTypeName" },
+                { "ドライバー", "driverName" },
+                { "車両", "carNo" },
+                { "売上総金額", "profitAmount" },
+                { "別請求総金額", "advanceAmount" },
+                { "入金総金額", "inAmount" },
+                { "立替食事代", "mealAmount" },
+                { "立替ホテル代", "hotelAmount" },
+                { "入湯税", "bathTaxAmount" },
+                { "駐車代", "parkingAmount" },
+                { "ETC料金", "etcAmount" },
+                { "有料道路料金", "roadAmount" },
+                { "入門料チケット", "ticketAmount" },
+                { "水代", "waterAmount" },
+                { "超時料金", "overtimeAmount" },
+                { "その他立替", "otherAmount" },
+                { "請求先", "billingAddress" },
+                { "ステータス", "statusName" },
+                { "備考", "remark" },
+        };
+
+        Specification<AdvanceEntity> specification = Search(qVo);
+        Sort sort = Sort.by(Sort.Direction.DESC, "updateTime");
+        List<AdvanceEntity> list = repository.findAll(specification, sort);
+
+        CsvUtils.downLoadCsvFile(screenName, dataMap,
+                AdvanceVOEntityMapStruct.INSTANCE.toVOs(list));
     }
 
     // endregion
@@ -175,6 +212,15 @@ public class AdvanceService {
         } catch (Exception e) {
             throw new BaseException(EnumIOUCheck.ERROR, KEY + ":" + e.getMessage());
         }
+        return true;
+    }
+
+    /*
+     * 财务決算済
+     */
+    public Boolean settlement(SettlementVO settlementVO) {
+        repository.settlementByIds(settlementVO.getIds(), 2,
+                EnumFinanceStatus.Completed.getMessage());
         return true;
     }
 

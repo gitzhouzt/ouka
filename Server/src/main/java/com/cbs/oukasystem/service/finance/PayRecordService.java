@@ -19,13 +19,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
 import com.cbs.oukasystem.common.LoginUtils;
 import com.cbs.oukasystem.common.BusinessEnum.EnumFinanceStatus;
 import com.cbs.oukasystem.common.BusinessEnum.EnumFinanceType;
-import com.cbs.oukasystem.common.CommonEnum.EnumStatus;
 import com.cbs.oukasystem.common.CsvUtils;
 import com.cbs.oukasystem.common.MessageEnum.EnumDataCheck;
 import com.cbs.oukasystem.common.MessageEnum.EnumDeleteCheck;
@@ -35,7 +33,6 @@ import com.cbs.oukasystem.entity.finance.PayRecordEntity;
 import com.cbs.oukasystem.mapstruct.finance.PayRecordVOEntityMapStruct;
 import com.cbs.oukasystem.repository.finance.PayRecordRepository;
 import com.cbs.oukasystem.service.base.DictItemService;
-import com.cbs.oukasystem.service.common.CommonService;
 import com.cbs.oukasystem.vo.ListVO;
 import com.cbs.oukasystem.vo.in.base.QueryDictItemVO;
 import com.cbs.oukasystem.vo.in.finance.IUPayRecordVO;
@@ -194,22 +191,71 @@ public class PayRecordService {
      * 
      * @param qVo QueryOrderVO
      */
-    public void export(QueryPayRecordVO qVo) {
-        String screenName = "料金記録";
+    public void exportCashIn(QueryPayRecordVO qVo) {
+        String screenName = "現金入金記録";
         String[][] dataMap = new String[][] {
                 { "番号", "index" },
                 { "タイプ", "financeTypeName" },
-                { "ツアー開始日", "startTime" },
-                { "ツアー終了日", "endTime" },
+                { "ツアー日", "startTime" },
                 { "責任人", "sellerName" },
                 { "团号", "orderNo" },
                 { "ツアー内容", "orderTypeName" },
                 { "ドライバー", "driverName" },
-                { "車両", "carNo" },
+                { "名目", "payItem" },
                 { "通貨", "currency" },
-                { "金額", "currencyAmount" },
-                { "日元金额", "expectedAmount" },
-                { "已收金额", "amount" },
+                { "通貨金额", "currencyAmount" },
+                { "换算日元", "amount" },
+                { "支払方法", "payMethod" },
+                { "備考", "remark" },
+        };
+
+        Specification<PayRecordEntity> specification = Search(qVo);
+        Sort sort = Sort.by(Sort.Direction.DESC, "updateTime");
+        List<PayRecordEntity> list = repository.findAll(specification, sort);
+
+        CsvUtils.downLoadCsvFile(screenName, dataMap,
+                PayRecordVOEntityMapStruct.INSTANCE.toVOs(list));
+    }
+
+    public void exportOut(QueryPayRecordVO qVo) {
+        String screenName = "出金記録";
+        String[][] dataMap = new String[][] {
+                { "番号", "index" },
+                { "タイプ", "financeTypeName" },
+                { "ツアー日", "startTime" },
+                { "責任人", "sellerName" },
+                { "团号", "orderNo" },
+                { "ツアー内容", "orderTypeName" },
+                { "ドライバー", "driverName" },
+                { "通貨", "currency" },
+                { "通貨金额", "currencyAmount" },
+                { "换算日元", "expectedAmount" },
+                { "支払方法", "payMethod" },
+                { "金融機関", "bank" },
+                { "備考", "remark" },
+        };
+
+        Specification<PayRecordEntity> specification = Search(qVo);
+        Sort sort = Sort.by(Sort.Direction.DESC, "updateTime");
+        List<PayRecordEntity> list = repository.findAll(specification, sort);
+
+        CsvUtils.downLoadCsvFile(screenName, dataMap,
+                PayRecordVOEntityMapStruct.INSTANCE.toVOs(list));
+    }
+
+    public void exportMae(QueryPayRecordVO qVo) {
+        String screenName = "前受金記録";
+        String[][] dataMap = new String[][] {
+                { "番号", "index" },
+                { "タイプ", "financeTypeName" },
+                { "ツアー日", "startTime" },
+                { "責任人", "sellerName" },
+                { "团号", "orderNo" },
+                { "ツアー内容", "orderTypeName" },
+                { "ドライバー", "driverName" },
+                { "通貨", "currency" },
+                { "通貨金额", "currencyAmount" },
+                { "换算日元", "expectedAmount" },
                 { "支払方法", "payMethod" },
                 { "金融機関", "bank" },
                 { "備考", "remark" },
@@ -273,7 +319,7 @@ public class PayRecordService {
     }
 
     /*
-     * 精算済
+     * 確認済
      */
     public Boolean paid(List<String> ids, String payMethod, String payMethodCode, String bank) {
         repository.paidByIds(ids, payMethod, payMethodCode, bank, 1, EnumFinanceStatus.Paid.getMessage());
@@ -299,7 +345,7 @@ public class PayRecordService {
     /*
      * ステータス の 変更
      */
-    public Boolean resetStatus(String id, EnumStatus status) {
+    public Boolean resetStatus(String id, EnumFinanceStatus status) {
         PayRecordEntity entity = getEntity(id);
         entity.setStatus(status);
         entity.setStatusName(status.getMessage());

@@ -2,7 +2,10 @@ package com.cbs.oukasystem.service.order;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -32,8 +35,8 @@ import com.cbs.oukasystem.common.BusinessEnum.EnumCarStatus;
 import com.cbs.oukasystem.common.BusinessEnum.EnumFinanceStatus;
 import com.cbs.oukasystem.common.BusinessEnum.EnumFinanceType;
 import com.cbs.oukasystem.common.BusinessEnum.EnumOrderStatus;
+import com.cbs.oukasystem.common.BusinessEnum.EnumOrderType;
 import com.cbs.oukasystem.common.BusinessEnum.EnumTargetType;
-import com.cbs.oukasystem.common.CommonEnum.EnumStatus;
 import com.cbs.oukasystem.common.CommonEnum.EnumUserStatus;
 import com.cbs.oukasystem.common.CommonUtils;
 import com.cbs.oukasystem.common.EmailUtils;
@@ -50,9 +53,11 @@ import com.cbs.oukasystem.entity.user.UserEntity;
 import com.cbs.oukasystem.entity.car.CarEntity;
 import com.cbs.oukasystem.entity.finance.AdvanceEntity;
 import com.cbs.oukasystem.entity.finance.EarningsEntity;
+import com.cbs.oukasystem.entity.finance.PayRecordEntity;
 import com.cbs.oukasystem.entity.operate.ScheduleEntity;
 import com.cbs.oukasystem.entity.order.DeployRecordEntity;
 import com.cbs.oukasystem.entity.order.OrderEntity;
+import com.cbs.oukasystem.mapstruct.finance.PayRecordVOEntityMapStruct;
 import com.cbs.oukasystem.mapstruct.order.OrderVOEntityMapStruct;
 import com.cbs.oukasystem.repository.order.OrderRepository;
 import com.cbs.oukasystem.service.car.CarService;
@@ -255,25 +260,30 @@ public class OrderService {
                 }
 
                 if (null != qVo.getBeginTime() && null != qVo.getEndTime()) {
-                    LocalDate startTime = LocalDate.parse(CommonUtils.getFormatDate(qVo.getBeginTime(), "yyyy-MM-dd"));
-                    LocalDate endTime = LocalDate.parse(CommonUtils.getFormatDate(qVo.getEndTime(), "yyyy-MM-dd"));
-                    listAnd.add(cb.between(root.get("createTime").as(LocalDate.class), startTime,
+
+                    Instant instant = qVo.getBeginTime().toInstant();
+                    LocalDateTime startTime = instant.atZone(ZoneId.systemDefault()).toLocalDateTime();
+                    instant = qVo.getEndTime().toInstant();
+                    LocalDateTime endTime = instant.atZone(ZoneId.systemDefault()).toLocalDateTime();
+                    listAnd.add(cb.between(root.get("createTime").as(LocalDateTime.class), startTime,
+                            endTime));
+                }
+                List<Predicate> listOr = new ArrayList<>();
+
+                // 配車が明日のデータだけを表示 明日㍘～あさって3点
+                if (null != qVo.getStartBeginTime() && null != qVo.getStartEndTime()) {
+
+                    Instant instant = qVo.getStartBeginTime().toInstant();
+                    LocalDateTime startTime = instant.atZone(ZoneId.systemDefault()).toLocalDateTime();
+                    instant = qVo.getStartEndTime().toInstant();
+                    LocalDateTime endTime = instant.atZone(ZoneId.systemDefault()).toLocalDateTime();
+
+                    listAnd.add(cb.between(root.get("startTime").as(LocalDateTime.class), startTime,
                             endTime));
                 }
 
                 listAnd.add(cb.equal(root.get("isAudit"), true));
                 listAnd.add(cb.notEqual(root.get("isDelete"), true));
-
-                List<Predicate> listOr = new ArrayList<>();
-                if (null != qVo.getStartBeginTime() && null != qVo.getStartEndTime()) {
-                    LocalDate startTime = LocalDate
-                            .parse(CommonUtils.getFormatDate(qVo.getStartBeginTime(), "yyyy-MM-dd"));
-                    LocalDate endTime = LocalDate.parse(CommonUtils.getFormatDate(qVo.getStartEndTime(), "yyyy-MM-dd"));
-
-                    // 此处必须加上记入中的，不然类似单子查不出来了
-                    listOr.add(cb.or(cb.isNull(root.get("startTime")),
-                            cb.between(root.get("startTime").as(LocalDate.class), startTime, endTime)));
-                }
 
                 if (listAnd.size() > 0) {
                     Predicate[] arrayAnd = new Predicate[listAnd.size()];
@@ -370,6 +380,7 @@ public class OrderService {
                 // 客人 订单来源等
                 entity.setOrderNo(iuVo.getOrderNo());
                 entity.setOrderSource(iuVo.getOrderSource());
+                entity.setOrderSourceCode(iuVo.getOrderSourceCode());
                 entity.setOrderKey(iuVo.getOrderKey());
                 entity.setCity(iuVo.getCity());
                 entity.setCustomerName(iuVo.getCustomerName());
@@ -393,9 +404,16 @@ public class OrderService {
                 entity = OrderVOEntityMapStruct.INSTANCE.toEntity(iuVo);
                 if (null == entity.getOrderNo() || entity.getOrderNo().isEmpty()
                         || entity.getOrderNo().equals(iuVo.getOrderSourceCode())) {
-                    String orderNo = CommonUtils.getNewDateEquipmentNo(iuVo.getOrderSourceCode(),
-                            repository.count());
+                    String type = "";
+                    if (iuVo.getOrderType().equals(EnumOrderType.Airport_S)) {
+                        type = "S";
+                    } else if (iuVo.getOrderType().equals(EnumOrderType.Airport_Y)) {
+                        type = "Y";
+                    }
+                    String orderNo = CommonUtils.getNewOrderNo(iuVo.getOrderSourceCode(), type,
+                            repository.countByToday());
                     entity.setOrderNo(orderNo);
+                    entity.setIsLodgingTips(true);
                 }
                 entity.setOrderStatus(EnumOrderStatus.Filling);
                 entity.setOrderStatusName(EnumOrderStatus.Filling.getMessage());
@@ -423,6 +441,7 @@ public class OrderService {
                 // 客人 订单来源等
                 entity.setOrderNo(iuVo.getOrderNo());
                 entity.setOrderSource(iuVo.getOrderSource());
+                entity.setOrderSourceCode(iuVo.getOrderSourceCode());
                 entity.setOrderKey(iuVo.getOrderKey());
                 entity.setCity(iuVo.getCity());
                 entity.setCustomerName(iuVo.getCustomerName());
@@ -444,13 +463,6 @@ public class OrderService {
             } else {
                 // 追加
                 entity = OrderVOEntityMapStruct.INSTANCE.toEntity(iuVo);
-                if (null == entity.getOrderNo() || entity.getOrderNo().isEmpty()
-                        || entity.getOrderNo().equals(iuVo.getOrderSourceCode())) {
-                    String orderNo = CommonUtils.getNewDateEquipmentNo(iuVo.getOrderSourceCode(),
-                            repository.count());
-                    entity.setOrderNo(orderNo);
-                    entity.setIsLodgingTips(true);
-                }
                 entity.setOrderStatus(EnumOrderStatus.Filling);
                 entity.setOrderStatusName(EnumOrderStatus.Filling.getMessage());
             }
@@ -476,6 +488,20 @@ public class OrderService {
             entity = getEntity(iuVo.getId());
 
             // 订单情报
+            if (null == entity.getOrderNo() || entity.getOrderNo().isEmpty()
+                    || entity.getOrderNo().equals(entity.getOrderSourceCode())) {
+                String type = "";
+                if (iuVo.getOrderType().equals(EnumOrderType.Airport_S)) {
+                    type = "S";
+                } else if (iuVo.getOrderType().equals(EnumOrderType.Airport_Y)) {
+                    type = "Y";
+                }
+                String orderNo = CommonUtils.getNewOrderNo(entity.getOrderSourceCode(), type,
+                        repository.countByToday());
+                entity.setOrderNo(orderNo);
+                entity.setIsLodgingTips(true);
+            }
+
             entity.setOrderType(iuVo.getOrderType());
             entity.setOrderTypeName(iuVo.getOrderType().getMessage());
             entity.setOrderDays(iuVo.getOrderDays());
@@ -929,123 +955,158 @@ public class OrderService {
         OrderEntity entity = getEntity(iuVo.getOrderId());
         PayRecordVO payRecordVO = new PayRecordVO();
         if (null != iuVo.getId() && !iuVo.getId().isEmpty()) {
-            iuVo.setStatus(EnumStatus.Waiting);
-            iuVo.setStatusName(EnumStatus.Waiting.getMessage());
+            iuVo.setStatus(EnumFinanceStatus.Waiting);
+            iuVo.setStatusName(EnumFinanceStatus.Waiting.getMessage());
             payRecordVO = payRecordService.addOrEdit(iuVo);
         } else {
             iuVo.setOrder(entity);
             UserEntity userEntity = userService.getEntity(LoginUtils.getLoginUserId());
             iuVo.setCreateByName(userEntity.getUserName());
             iuVo.setAuditByName(entity.getSellerName());
-            iuVo.setStatus(EnumStatus.Waiting);
-            iuVo.setStatusName(EnumStatus.Waiting.getMessage());
+            iuVo.setStatus(EnumFinanceStatus.Waiting);
+            iuVo.setStatusName(EnumFinanceStatus.Waiting.getMessage());
             payRecordVO = payRecordService.addOrEdit(iuVo);
         }
 
         // 立替表
-        List<AdvanceEntity> advanceEntities = advanceService.getByOrderNo(entity.getOrderNo());
-        if (advanceEntities.size() > 0) {
-            AdvanceEntity advanceEntity = advanceEntities.get(0);
-            String code = iuVo.getPayItemCode();
-            if (iuVo.getFinanceType() == EnumFinanceType.InAdvance) {
-                advanceEntity.setInAmount(advanceEntity.getInAmount() + iuVo.getAmount());
-            } else if (iuVo.getFinanceType() == EnumFinanceType.OutAdvance) {
-                switch (code) {
-                    case "駐車代":
-                        advanceEntity.setParkingAmount(advanceEntity.getParkingAmount() + iuVo.getAmount());
-                        break;
-                    case "食事代":
-                        advanceEntity.setMealAmount(advanceEntity.getMealAmount() + iuVo.getAmount());
-                        break;
-                    case "超時代":
-                        advanceEntity.setOtherAmount(advanceEntity.getOtherAmount() + iuVo.getAmount());
-                        break;
-                    case "水代":
-                        advanceEntity.setWaterAmount(advanceEntity.getWaterAmount() + iuVo.getAmount());
-                        break;
-                    case "有料道路":
-                        advanceEntity.setRoadAmount(advanceEntity.getRoadAmount() + iuVo.getAmount());
-                        break;
-                    case "入門料":
-                        advanceEntity.setTicketAmount(advanceEntity.getTicketAmount() + iuVo.getAmount());
-                        break;
-                    case "入湯税":
-                        advanceEntity.setBathTaxAmount(advanceEntity.getBathTaxAmount() + iuVo.getAmount());
-                        break;
-                    case "ホテル代":
-                        advanceEntity.setHotelAmount(advanceEntity.getHotelAmount() + iuVo.getAmount());
-                        break;
-                    case "その他":
-                        advanceEntity.setOtherAmount(advanceEntity.getOtherAmount() + iuVo.getAmount());
-                        break;
-                    case "ETC料金":
-                        advanceEntity.setEtcAmount(advanceEntity.getEtcAmount() + iuVo.getAmount());
-                        break;
-                    default:
-                        advanceEntity.setOtherAmount(advanceEntity.getOtherAmount() + iuVo.getAmount());
-                        break;
-                }
-            } else if (iuVo.getFinanceType() == EnumFinanceType.InEarnings) {
-                advanceEntity.setProfitAmount(advanceEntity.getProfitAmount() + iuVo.getAmount());
-            } else if (iuVo.getFinanceType() == EnumFinanceType.InTemp) {
-                advanceEntity.setInAmount(advanceEntity.getInAmount() + iuVo.getAmount());
-            }
-            advanceEntity.setAdvanceAmount(advanceEntity.getBathTaxAmount() + advanceEntity.getEtcAmount()
-                    + advanceEntity.getHotelAmount() + advanceEntity.getMealAmount() + advanceEntity.getParkingAmount()
-                    + advanceEntity.getRoadAmount() + advanceEntity.getTicketAmount() + advanceEntity.getWaterAmount()
-                    + advanceEntity.getOvertimeAmount() + advanceEntity.getOtherAmount());
-            advanceService.addOrEdit(advanceEntity);
-        }
-        // 利润表
-        List<EarningsEntity> earningsEntities = earningsService.getByOrderNo(entity.getOrderNo());
-        if (earningsEntities.size() > 0) {
-            EarningsEntity earningsEntity = earningsEntities.get(0);
-            String code = iuVo.getPayItemCode();
+        addAdvance(entity, iuVo);
 
-            if (iuVo.getFinanceType() == EnumFinanceType.OutCost) {
-                switch (code) {
-                    case "handlingFee":
-                        earningsEntity.setHandlingFee(earningsEntity.getHandlingFee() + iuVo.getAmount());
-                        break;
-                    case "oilFee":
-                        earningsEntity.setOilFee(earningsEntity.getOilFee());
-                        break;
-                    case "etc":
-                        earningsEntity.setEtc(earningsEntity.getEtc() + iuVo.getAmount());
-                        break;
-                    case "entrustSalary":
-                        earningsEntity.setEntrustSalary(earningsEntity.getEntrustSalary() + iuVo.getAmount());
-                        break;
-                    case "salary":
-                        earningsEntity.setSalary(earningsEntity.getSalary() + iuVo.getAmount());
-                        break;
-                    case "entrust":
-                        earningsEntity.setEntrust(earningsEntity.getEntrust() + iuVo.getAmount());
-                        break;
-                    case "parking":
-                        earningsEntity.setParking(earningsEntity.getParking() + iuVo.getAmount());
-                        break;
-                    default:
-                        break;
-                }
-            }
-            int price = entity.getOrderPrice() <= 0 ? 1 : entity.getOrderPrice();
-            earningsEntity
-                    .setProfit(entity.getOrderPrice() - (earningsEntity.getHandlingFee() + earningsEntity.getOilFee()
-                            + earningsEntity.getEtc() + earningsEntity.getEntrustSalary() + earningsEntity.getSalary()
-                            + earningsEntity.getEntrust() + earningsEntity.getParking()));
-            earningsEntity.setProfitRate(earningsEntity.getProfit() / price);
-            earningsService.addOrEdit(earningsEntity);
-        }
         return payRecordVO;
     }
 
+    // 立替表追加
+    public void addAdvance(OrderEntity entity, IUPayRecordVO iuVo) {
+        try {
+            List<AdvanceEntity> advanceEntities = advanceService.getByOrderNo(entity.getOrderNo());
+            if (advanceEntities.size() > 0) {
+                AdvanceEntity advanceEntity = advanceEntities.get(0);
+                String code = iuVo.getPayItemCode();
+                if (iuVo.getFinanceType() == EnumFinanceType.InAdvance) {
+                    advanceEntity.setInAmount(advanceEntity.getInAmount() + iuVo.getAmount());
+                } else if (iuVo.getFinanceType() == EnumFinanceType.OutAdvance) {
+                    switch (code) {
+                        case "advance_park":
+                            advanceEntity.setParkingAmount(advanceEntity.getParkingAmount() + iuVo.getAmount());
+                            break;
+                        case "advance_meal":
+                            advanceEntity.setMealAmount(advanceEntity.getMealAmount() + iuVo.getAmount());
+                            break;
+                        case "advance_overtime":
+                            advanceEntity.setOtherAmount(advanceEntity.getOtherAmount() + iuVo.getAmount());
+                            break;
+                        case "advance_water":
+                            advanceEntity.setWaterAmount(advanceEntity.getWaterAmount() + iuVo.getAmount());
+                            break;
+                        case "advance_road":
+                            advanceEntity.setRoadAmount(advanceEntity.getRoadAmount() + iuVo.getAmount());
+                            break;
+                        case "advance_ticket":
+                            advanceEntity.setTicketAmount(advanceEntity.getTicketAmount() + iuVo.getAmount());
+                            break;
+                        case "advance_bath":
+                            advanceEntity.setBathTaxAmount(advanceEntity.getBathTaxAmount() + iuVo.getAmount());
+                            break;
+                        case "advance_hotel":
+                            advanceEntity.setHotelAmount(advanceEntity.getHotelAmount() + iuVo.getAmount());
+                            break;
+                        case "advance_other1":
+                        case "advance_other2":
+                            advanceEntity.setOtherAmount(advanceEntity.getOtherAmount() + iuVo.getAmount());
+                            break;
+                        case "advance_etc":
+                            advanceEntity.setEtcAmount(advanceEntity.getEtcAmount() + iuVo.getAmount());
+                            break;
+                        default:
+                            advanceEntity.setOtherAmount(advanceEntity.getOtherAmount() + iuVo.getAmount());
+                            break;
+                    }
+                } else if (iuVo.getFinanceType() == EnumFinanceType.InEarnings) {
+                    advanceEntity.setProfitAmount(advanceEntity.getProfitAmount() + iuVo.getAmount());
+                } else if (iuVo.getFinanceType() == EnumFinanceType.InTemp) {
+                    advanceEntity.setInAmount(advanceEntity.getInAmount() + iuVo.getAmount());
+                }
+                advanceEntity.setAdvanceAmount(advanceEntity.getBathTaxAmount() + advanceEntity.getEtcAmount()
+                        + advanceEntity.getHotelAmount() + advanceEntity.getMealAmount()
+                        + advanceEntity.getParkingAmount()
+                        + advanceEntity.getRoadAmount() + advanceEntity.getTicketAmount()
+                        + advanceEntity.getWaterAmount()
+                        + advanceEntity.getOvertimeAmount() + advanceEntity.getOtherAmount());
+                advanceEntity.setBillingAddress(entity.getBillingAddress());
+                advanceService.addOrEdit(advanceEntity);
+            }
+        } catch (Exception e) {
+            throw new BaseException(EnumIOUCheck.ERROR, KEY + ":" + e.getMessage());
+        }
+    }
+
+    // 利润表追加
+    public void addEarnings(OrderEntity entity, IUPayRecordVO iuVo) {
+        try {
+            List<EarningsEntity> earningsEntities = earningsService.getByOrderNo(entity.getOrderNo());
+            if (earningsEntities.size() > 0) {
+                EarningsEntity earningsEntity = earningsEntities.get(0);
+                String code = iuVo.getPayItemCode();
+
+                if (iuVo.getFinanceType() == EnumFinanceType.OutCost) {
+                    switch (code) {
+                        case "handlingFee":
+                            earningsEntity.setHandlingFee(earningsEntity.getHandlingFee() + iuVo.getAmount());
+                            break;
+                        case "oilFee":
+                            earningsEntity.setOilFee(earningsEntity.getOilFee());
+                            break;
+                        case "etc":
+                            earningsEntity.setEtc(earningsEntity.getEtc() + iuVo.getAmount());
+                            break;
+                        case "entrustSalary":
+                            earningsEntity.setEntrustSalary(earningsEntity.getEntrustSalary() + iuVo.getAmount());
+                            break;
+                        case "salary":
+                            earningsEntity.setSalary(earningsEntity.getSalary() + iuVo.getAmount());
+                            break;
+                        case "entrust":
+                            earningsEntity.setEntrust(earningsEntity.getEntrust() + iuVo.getAmount());
+                            break;
+                        case "parking":
+                            earningsEntity.setParking(earningsEntity.getParking() + iuVo.getAmount());
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                int price = entity.getOrderPrice() <= 0 ? 1 : entity.getOrderPrice();
+                earningsEntity
+                        .setProfit(
+                                entity.getOrderPrice() - (earningsEntity.getHandlingFee() + earningsEntity.getOilFee()
+                                        + earningsEntity.getEtc() + earningsEntity.getEntrustSalary()
+                                        + earningsEntity.getSalary()
+                                        + earningsEntity.getEntrust() + earningsEntity.getParking()));
+                earningsEntity.setProfitRate(earningsEntity.getProfit() / price);
+                earningsService.addOrEdit(earningsEntity);
+            }
+        } catch (Exception e) {
+            throw new BaseException(EnumIOUCheck.ERROR, KEY + ":" + e.getMessage());
+        }
+    }
+
+    // 営業確認済
     public Boolean confirmPay(String payId) {
         UserEntity userEntity = userService.getEntity(LoginUtils.getLoginUserId());
         payRecordService.audit(payId, userEntity.getUserName());
+        PayRecordEntity payRecordEntity = payRecordService.getEntity(payId);
+        OrderEntity entity = getEntity(payRecordEntity.getOrderId());
+        IUPayRecordVO iuVo = PayRecordVOEntityMapStruct.INSTANCE.toIuVO(payRecordEntity);
+
+        if (payRecordEntity.getIsAudit()) {
+            // 立替表
+            addAdvance(entity, iuVo);
+        }
         return true;
     }
 
+    /*
+     * 财务確認済
+     */
     public Boolean paid(SettlementVO settlementVO) {
         payRecordService.paid(settlementVO.getIds(), settlementVO.getPayMethod(), settlementVO.getPayMethodCode(),
                 settlementVO.getBank());
@@ -1053,15 +1114,28 @@ public class OrderService {
     }
 
     /*
-     * 現金精算済
+     * 财务現金確認済
      */
     public Boolean cashPaid(List<String> ids) {
         payRecordService.cashPaid(ids);
         return true;
     }
 
+    /*
+     * 财务決算済
+     */
     public Boolean settlement(SettlementVO settlementVO) {
         payRecordService.settlement(settlementVO.getIds());
+
+        for (String payId : settlementVO.getIds()) {
+            PayRecordEntity payRecordEntity = payRecordService.getEntity(payId);
+            OrderEntity entity = getEntity(payRecordEntity.getOrderId());
+            IUPayRecordVO iuVo = PayRecordVOEntityMapStruct.INSTANCE.toIuVO(payRecordEntity);
+
+            // 利润表
+            addEarnings(entity, iuVo);
+        }
+
         return true;
     }
 

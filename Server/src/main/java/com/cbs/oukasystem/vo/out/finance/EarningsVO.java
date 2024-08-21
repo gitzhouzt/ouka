@@ -33,6 +33,9 @@ public class EarningsVO extends OperatorVO {
     @Schema(name = "orderNo", description = "orderNo")
     private String orderNo;
 
+    @Schema(name = "orderPrice", description = "基本料金")
+    private int orderPrice;
+
     @Schema(name = "orderTypeName", description = "注文タイプ")
     private String orderTypeName;
 

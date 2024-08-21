@@ -26,8 +26,9 @@ public class CarEntity extends OperatorEntity {
     @Schema(name = "carName", description = "車両名", example = "車両名")
     private String carName;
 
-    @Schema(name = "carPhoto", description = "車両写真")
-    private String carPhoto;
+    @Column(columnDefinition = "text")
+    @Schema(name = "images", description = "車両写真 複数")
+    private String images;
 
     @Schema(name = "carType")
     private String carType;

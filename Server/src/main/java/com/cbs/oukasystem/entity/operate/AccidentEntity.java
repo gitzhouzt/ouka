@@ -75,7 +75,7 @@ public class AccidentEntity extends OperatorEntity {
     @Schema(name = "noticeTime", description = "事故通知日")
     private Date noticeTime;
 
-    @Column(length = 1000)
+    @Column(columnDefinition = "text")
     @Schema(name = "images")
     private String images;
 

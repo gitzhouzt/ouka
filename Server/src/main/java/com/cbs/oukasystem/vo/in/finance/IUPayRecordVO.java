@@ -1,7 +1,7 @@
 package com.cbs.oukasystem.vo.in.finance;
 
 import com.cbs.oukasystem.common.CommonEnum.EnumStatus;
-
+import com.cbs.oukasystem.common.BusinessEnum.EnumFinanceStatus;
 import com.cbs.oukasystem.common.BusinessEnum.EnumFinanceType;
 import com.cbs.oukasystem.entity.order.OrderEntity;
 import com.cbs.oukasystem.vo.NormalVO;
@@ -72,7 +72,7 @@ public class IUPayRecordVO extends NormalVO {
     private String images;
 
     @Schema(name = "status", description = "ステータス")
-    private EnumStatus status;
+    private EnumFinanceStatus status;
 
     @Schema(name = "statusName", description = "ステータス")
     private String statusName;

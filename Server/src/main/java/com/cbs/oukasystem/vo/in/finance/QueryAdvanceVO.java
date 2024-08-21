@@ -15,4 +15,11 @@ public class QueryAdvanceVO extends QueryVO {
 
     @Schema(name = "orderId")
     private String orderId;
+
+    @Schema(name = "sellerName")
+    private String sellerName;
+
+    @Schema(name = "orderSource")
+    private String orderSource;
+
 }

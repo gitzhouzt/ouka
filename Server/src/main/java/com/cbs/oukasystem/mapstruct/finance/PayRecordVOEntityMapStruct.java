@@ -28,6 +28,8 @@ public interface PayRecordVOEntityMapStruct {
 
     PayRecordEntity toEntity(IUPayRecordVO iVo);
 
+    IUPayRecordVO toIuVO(PayRecordEntity entity);
+
     @Mapping(target = "orderVO", source = "order")
     @Mapping(target = "orderNo", source = "order.orderNo")
     @Mapping(target = "orderTypeName", source = "order.orderTypeName")

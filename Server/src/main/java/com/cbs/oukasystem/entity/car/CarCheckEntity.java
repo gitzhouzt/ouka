@@ -53,10 +53,10 @@ public class CarCheckEntity extends NormalEntity {
     @Schema(name = "checkStatus3", description = "点检3状态")
     private Boolean checkStatus3;
 
-    @Schema(name = "lastYearCheck", description = "上年度年检")
-    private Date lastYearCheck;
+    @Schema(name = "lastYearCheckDate", description = "上年度年检")
+    private Date lastYearCheckDate;
 
-    @Schema(name = "lastMonthCheck", description = "上年度最后一次点检")
-    private Date lastMonthCheck;
+    @Schema(name = "lastMonthCheckDate", description = "上年度最后一次点检")
+    private Date lastMonthCheckDate;
 
 }

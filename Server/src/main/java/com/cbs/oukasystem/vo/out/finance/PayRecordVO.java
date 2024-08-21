@@ -4,6 +4,7 @@ import com.cbs.oukasystem.common.CommonEnum.EnumStatus;
 
 import java.util.Date;
 
+import com.cbs.oukasystem.common.BusinessEnum.EnumFinanceStatus;
 import com.cbs.oukasystem.common.BusinessEnum.EnumFinanceType;
 import com.cbs.oukasystem.vo.OperatorVO;
 import com.cbs.oukasystem.vo.out.order.OrderVO;
@@ -95,7 +96,7 @@ public class PayRecordVO extends OperatorVO {
     private String remark;
 
     @Schema(name = "status", description = "ステータス")
-    private EnumStatus status;
+    private EnumFinanceStatus status;
 
     @Schema(name = "statusName", description = "ステータス")
     private String statusName;

@@ -23,6 +23,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import com.cbs.oukasystem.common.LoginUtils;
+import com.cbs.oukasystem.common.BusinessEnum.EnumFinanceStatus;
 import com.cbs.oukasystem.common.BusinessEnum.EnumFinanceType;
 import com.cbs.oukasystem.common.BusinessEnum.EnumOrderStatus;
 import com.cbs.oukasystem.common.CommonEnum.EnumStatus;
@@ -117,6 +118,7 @@ public class DriverOrderService {
     public Boolean confirm(String id) {
         OrderEntity entity = getEntity(id);
         entity.setOrderStatus(EnumOrderStatus.Booked);
+        entity.setOrderStatusName(EnumOrderStatus.Booked.getMessage());
         repository.save(entity);
         return true;
     }
@@ -124,6 +126,7 @@ public class DriverOrderService {
     public Boolean work(String id) {
         OrderEntity entity = getEntity(id);
         entity.setOrderStatus(EnumOrderStatus.Working);
+        entity.setOrderStatusName(EnumOrderStatus.Working.getMessage());
         repository.save(entity);
         return true;
     }
@@ -131,6 +134,7 @@ public class DriverOrderService {
     public Boolean complete(String id) {
         OrderEntity entity = getEntity(id);
         entity.setOrderStatus(EnumOrderStatus.Completed);
+        entity.setOrderStatusName(EnumOrderStatus.Completed.getMessage());
         repository.save(entity);
         return true;
     }
@@ -140,8 +144,8 @@ public class DriverOrderService {
         if (null != iuVo.getId() && !iuVo.getId().isEmpty()) {
             iuVo.setAuditByName(null);
             iuVo.setIsAudit(false);
-            iuVo.setStatus(EnumStatus.Waiting);
-            iuVo.setStatusName(EnumStatus.Waiting.getMessage());
+            iuVo.setStatus(EnumFinanceStatus.Waiting);
+            iuVo.setStatusName(EnumFinanceStatus.Waiting.getMessage());
             payRecordVO = payRecordService.addOrEdit(iuVo);
         } else {
             OrderEntity entity = getEntity(iuVo.getOrderId());
@@ -150,8 +154,8 @@ public class DriverOrderService {
             iuVo.setCreateByName(userEntity.getUserName());
             iuVo.setAuditByName(null);
             iuVo.setIsAudit(false);
-            iuVo.setStatus(EnumStatus.Waiting);
-            iuVo.setStatusName(EnumStatus.Waiting.getMessage());
+            iuVo.setStatus(EnumFinanceStatus.Waiting);
+            iuVo.setStatusName(EnumFinanceStatus.Waiting.getMessage());
             payRecordVO = payRecordService.addOrEdit(iuVo);
         }
         return payRecordVO;

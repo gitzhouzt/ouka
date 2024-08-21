@@ -24,8 +24,8 @@ public class CarVO extends OperatorVO {
     @Schema(name = "carName", description = "車両名", example = "車両名")
     private String carName;
 
-    @Schema(name = "carPhoto", description = "車両写真")
-    private String carPhoto;
+    @Schema(name = "images", description = "車両写真")
+    private String images;
 
     @Schema(name = "carType")
     private String carType;

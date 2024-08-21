@@ -183,4 +183,19 @@ public class CommonUtils {
         return newEquipmentNo;
     }
 
+    /**
+     * @param equipmentType
+     * @param equipmentNo
+     * @return no
+     */
+    public static String getNewOrderNo(String equipmentType, String type, Long equipmentNo) {
+        String newEquipmentNo = Constants.DEFAULT_NUMBER;
+        if (equipmentNo != null) {
+            Long newEquipment = equipmentNo + 1;
+            Date date = new Date();
+            newEquipmentNo = String.format(equipmentType + "%1$ty%1$tm%1$td" + type + "%2$03d", date, newEquipment);
+        }
+        return newEquipmentNo;
+    }
+
 }

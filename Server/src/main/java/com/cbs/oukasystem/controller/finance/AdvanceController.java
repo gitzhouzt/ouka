@@ -21,6 +21,7 @@ import com.cbs.oukasystem.vo.ResultVO;
 import com.cbs.oukasystem.vo.in.finance.IUAdvanceVO;
 import com.cbs.oukasystem.vo.in.finance.QueryAdvanceVO;
 import com.cbs.oukasystem.vo.out.finance.AdvanceVO;
+import com.cbs.oukasystem.vo.out.finance.SettlementVO;
 
 import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
@@ -66,6 +67,13 @@ public class AdvanceController {
     }
 
     @ResponseBody
+    @Operation(summary = "settlement 立替決算")
+    @PostMapping("/settlement")
+    public ResultVO<Boolean> settlement(@RequestBody SettlementVO settlementVO) {
+        return ResultVO.success(service.settlement(settlementVO));
+    }
+
+    @ResponseBody
     @Operation(summary = "Delete Advance - 削除立替")
     @DeleteMapping("/delete/{id}")
     public ResultVO<Boolean> delete(@PathVariable String id) {
@@ -84,5 +92,13 @@ public class AdvanceController {
     @PutMapping("/audit/{id}")
     public ResultVO<Boolean> audit(@PathVariable String id) {
         return ResultVO.success(service.audit(id));
+    }
+
+    @ResponseBody
+    @Operation(summary = "Export 立替記録")
+    @PostMapping(value = "/export")
+    @Parameters(@Parameter(name = "queryVO", description = "立替記録", required = true))
+    public void export(@Validated @RequestBody QueryAdvanceVO queryVO) {
+        service.export(queryVO);
     }
 }

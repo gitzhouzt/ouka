@@ -1,7 +1,5 @@
 package com.cbs.oukasystem.vo.in.finance;
 
-import java.util.Date;
-
 import com.cbs.oukasystem.common.BusinessEnum.EnumFinanceStatus;
 import com.cbs.oukasystem.entity.order.OrderEntity;
 import com.cbs.oukasystem.vo.NormalVO;
@@ -65,7 +63,7 @@ public class IUAdvanceVO extends NormalVO {
     private String billingAddress;
 
     @Schema(name = "financeByName")
-    private Date financeByName;
+    private String financeByName;
 
     @Schema(name = "status")
     private EnumFinanceStatus status;

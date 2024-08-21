@@ -2,12 +2,7 @@ package com.cbs.oukasystem.vo.out.finance;
 
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-
 import com.cbs.oukasystem.common.BusinessEnum.EnumFinanceStatus;
-import com.cbs.oukasystem.entity.order.OrderEntity;
 import com.cbs.oukasystem.vo.OperatorVO;
 import com.cbs.oukasystem.vo.out.order.OrderVO;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -101,7 +96,7 @@ public class AdvanceVO extends OperatorVO {
     private String billingAddress;
 
     @Schema(name = "financeByName")
-    private Date financeByName;
+    private String financeByName;
 
     @Schema(name = "status")
     private EnumFinanceStatus status;

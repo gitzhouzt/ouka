@@ -1,5 +1,6 @@
 package com.cbs.oukasystem.repository.order;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -33,11 +34,15 @@ public interface OrderRepository
         List<Map<String, String>> queryTodayOrders(@Param("driverId") String driverId);
 
         @Modifying
-        @Query(value = "update OrderEntity set orderStatus = 3 where orderStatus = 2")
+        @Query(value = "update OrderEntity set orderStatus = 3,orderStatusName = 'チェック待ち' where orderStatus = 2")
         void send();
 
         @Modifying
         @Query(value = "update OrderEntity set isLodgingTips = :isLodgingTips where id = :id")
         void isLodgingTips(@Param("id") String id, @Param("isLodgingTips") Boolean isLodgingTips);
+
+        @Query(value = "select count(*) from order_master o " +
+                        " where DATE(create_time) = CURDATE()", nativeQuery = true)
+        Long countByToday();
 
 }

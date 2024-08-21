@@ -21,7 +21,6 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import com.cbs.oukasystem.common.CommonEnum.EnumStatus;
 import com.cbs.oukasystem.common.MessageEnum.EnumDataCheck;
 import com.cbs.oukasystem.common.MessageEnum.EnumDeleteCheck;
 import com.cbs.oukasystem.common.MessageEnum.EnumIOUCheck;
@@ -148,16 +147,16 @@ public class CheckService {
                 entity.setCheckStatus3(iuVo.getCheckStatus3());
 
                 if (iuVo.getYearCheckStatus()) {
-                    entity.setLastYearCheck(entity.getYearCheckDate());
+                    entity.setLastYearCheckDate(entity.getLastYearCheckDate());
                 }
                 if (iuVo.getCheckStatus1()) {
-                    entity.setLastMonthCheck(entity.getMonthCheckDate1());
+                    entity.setLastMonthCheckDate(entity.getMonthCheckDate1());
                 }
                 if (iuVo.getCheckStatus2()) {
-                    entity.setLastMonthCheck(entity.getMonthCheckDate2());
+                    entity.setLastMonthCheckDate(entity.getMonthCheckDate2());
                 }
                 if (iuVo.getCheckStatus3()) {
-                    entity.setLastMonthCheck(entity.getMonthCheckDate3());
+                    entity.setLastMonthCheckDate(entity.getMonthCheckDate3());
                 }
             } else {
                 // 追加
@@ -177,13 +176,13 @@ public class CheckService {
                 throw new BaseException(EnumDataCheck.EMPTY);
             }
             entity = getEntity(iuVo.getId());
-            entity.setLastMonthCheck(iuVo.getLastMonthCheck());
-            entity.setLastYearCheck(iuVo.getLastYearCheck());
+            entity.setLastMonthCheckDate(iuVo.getLastMonthCheckDate());
+            entity.setLastYearCheckDate(iuVo.getLastYearCheckDate());
 
             Calendar calendar = Calendar.getInstance();
 
-            if (null != entity.getLastMonthCheck()) {
-                calendar.setTime(entity.getLastMonthCheck());
+            if (null != entity.getLastMonthCheckDate()) {
+                calendar.setTime(entity.getLastMonthCheckDate());
                 calendar.add(Calendar.MONTH, 3);
                 if (null == entity.getMonthCheckDate1()) {
                     entity.setMonthCheckDate1(calendar.getTime());
@@ -193,8 +192,8 @@ public class CheckService {
                     entity.setMonthCheckDate3(calendar.getTime());
                 }
             }
-            if (null != entity.getLastYearCheck()) {
-                calendar.setTime(entity.getLastYearCheck());
+            if (null != entity.getLastYearCheckDate()) {
+                calendar.setTime(entity.getLastYearCheckDate());
                 calendar.add(Calendar.YEAR, 1);
                 entity.setYearCheckDate(calendar.getTime());
             }

@@ -132,9 +132,9 @@ public final class BusinessEnum {
      * 決算 ステータス
      */
     public enum EnumFinanceStatus {
-        Waiting("Waiting", "精算待ち"),
+        Waiting("Waiting", "確認待ち"),
         Paid("Paid", "確認済"),
-        Completed("Completed", "精算済");
+        Completed("Completed", "決算済");
 
         private String code;
         private String message;

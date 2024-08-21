@@ -23,6 +23,9 @@ public class OrderVO extends OperatorVO {
     @Schema(name = "orderSource", description = "订单来源")
     private String orderSource;
 
+    @Schema(name = "orderSourceCode", description = "订单来源")
+    private String orderSourceCode;
+
     @Schema(name = "orderKey", description = "第三方")
     private String orderKey;
 

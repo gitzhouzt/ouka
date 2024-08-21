@@ -25,18 +25,14 @@ import com.cbs.oukasystem.common.MessageEnum.EnumDataCheck;
 import com.cbs.oukasystem.common.MessageEnum.EnumDeleteCheck;
 import com.cbs.oukasystem.common.MessageEnum.EnumIOUCheck;
 import com.cbs.oukasystem.config.BaseException;
-import com.cbs.oukasystem.entity.finance.AdvanceEntity;
 import com.cbs.oukasystem.entity.finance.EarningsEntity;
-import com.cbs.oukasystem.mapstruct.finance.AdvanceVOEntityMapStruct;
 import com.cbs.oukasystem.mapstruct.finance.EarningsVOEntityMapStruct;
 import com.cbs.oukasystem.repository.finance.EarningsRepository;
 import com.cbs.oukasystem.service.car.CarService;
 import com.cbs.oukasystem.service.user.UserService;
 import com.cbs.oukasystem.vo.ListVO;
-import com.cbs.oukasystem.vo.in.finance.IUAdvanceVO;
 import com.cbs.oukasystem.vo.in.finance.IUEarningsVO;
 import com.cbs.oukasystem.vo.in.finance.QueryEarningsVO;
-import com.cbs.oukasystem.vo.out.finance.AdvanceVO;
 import com.cbs.oukasystem.vo.out.finance.EarningsVO;
 
 @Service
@@ -47,12 +43,6 @@ public class EarningsService {
 
     @Autowired
     private EarningsRepository repository;
-
-    @Autowired
-    private UserService userService;
-
-    @Autowired
-    private CarService carService;
 
     // region Earnings
 
@@ -116,6 +106,12 @@ public class EarningsService {
                 }
                 if (null != qVo.getStatus()) {
                     predicate.add(cb.equal(root.get("status"), qVo.getStatus()));
+                }
+                if (null != qVo.getSellerName() && !qVo.getSellerName().isEmpty()) {
+                    predicate.add(cb.equal(root.get("order").get("sellerName"), qVo.getSellerName()));
+                }
+                if (null != qVo.getOrderSource() && !qVo.getOrderSource().isEmpty()) {
+                    predicate.add(cb.equal(root.get("order").get("orderSource"), qVo.getOrderSource()));
                 }
                 Calendar calendar = Calendar.getInstance();
                 if (null != qVo.getBeginTime() && null != qVo.getEndTime()) {

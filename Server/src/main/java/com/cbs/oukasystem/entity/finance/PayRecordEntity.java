@@ -7,6 +7,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.cbs.oukasystem.common.CommonEnum.EnumStatus;
+import com.cbs.oukasystem.common.BusinessEnum.EnumFinanceStatus;
 import com.cbs.oukasystem.common.BusinessEnum.EnumFinanceType;
 import com.cbs.oukasystem.entity.OperatorEntity;
 import com.cbs.oukasystem.entity.order.OrderEntity;
@@ -83,7 +84,7 @@ public class PayRecordEntity extends OperatorEntity {
     private String images;
 
     @Schema(name = "status", description = "ステータス")
-    private EnumStatus status;
+    private EnumFinanceStatus status;
 
     @Schema(name = "statusName", description = "ステータス")
     private String statusName;

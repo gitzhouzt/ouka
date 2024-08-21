@@ -66,11 +66,41 @@ public class PayRecordController {
     }
 
     @ResponseBody
-    @Operation(summary = "Export 料金記録")
-    @PostMapping(value = "/export")
-    @Parameters(@Parameter(name = "queryVO", description = "料金記録", required = true))
-    public void export(@Validated @RequestBody QueryPayRecordVO queryVO) {
-        service.export(queryVO);
+    @Operation(summary = "Export 現金入金記録")
+    @PostMapping(value = "/cash/export")
+    @Parameters(@Parameter(name = "queryVO", description = "現金入金記録", required = true))
+    public void exportCashIn(@Validated @RequestBody QueryPayRecordVO queryVO) {
+        service.exportCashIn(queryVO);
+    }
+
+    @ResponseBody
+    @Operation(summary = "From Pay Page List -出金記録のリスト")
+    @PostMapping("/out/list")
+    public ResultVO<ListVO<PayRecordVO>> outPages(@RequestBody QueryPayRecordVO queryVO) {
+        return ResultVO.success(service.getPages(queryVO));
+    }
+
+    @ResponseBody
+    @Operation(summary = "Export 出金記録")
+    @PostMapping(value = "/out/export")
+    @Parameters(@Parameter(name = "queryVO", description = "出金記録", required = true))
+    public void exportOut(@Validated @RequestBody QueryPayRecordVO queryVO) {
+        service.exportOut(queryVO);
+    }
+
+    @ResponseBody
+    @Operation(summary = "From Pay Page List -前受金記録のリスト")
+    @PostMapping("/mae/list")
+    public ResultVO<ListVO<PayRecordVO>> maePages(@RequestBody QueryPayRecordVO queryVO) {
+        return ResultVO.success(service.getPages(queryVO));
+    }
+
+    @ResponseBody
+    @Operation(summary = "Export 前受金記録")
+    @PostMapping(value = "/mae/export")
+    @Parameters(@Parameter(name = "queryVO", description = "前受金記録", required = true))
+    public void exportMae(@Validated @RequestBody QueryPayRecordVO queryVO) {
+        service.exportMae(queryVO);
     }
 
     @ResponseBody

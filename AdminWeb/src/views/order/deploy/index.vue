@@ -92,7 +92,7 @@ const moduleParams: MySearch.OrderSearchParams = {
 		moment().add(2, 'd').set('hours', 3).set('minutes', 0).set('seconds', 0).valueOf()
 	],
 	startBeginTime: moment().add(1, 'd').set('hours', 0).set('minutes', 0).set('seconds', 0).valueOf(),
-	startEndTime: moment().add(1, 'd').set('hours', 3).set('minutes', 0).set('seconds', 0).valueOf()
+	startEndTime: moment().add(2, 'd').set('hours', 3).set('minutes', 0).set('seconds', 0).valueOf()
 };
 
 const {
@@ -487,6 +487,8 @@ const onQuery = (params: any) => {
 };
 
 const onUpdate = (value: [number, number] | null, formattedValue: [string, string] | null) => {
+	console.log('111', value);
+
 	searchParams.startBeginTime = value ? value[0] : undefined;
 	searchParams.startEndTime = value ? value[1] : undefined;
 };

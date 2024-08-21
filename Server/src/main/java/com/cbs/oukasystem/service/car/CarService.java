@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
+import java.util.Set;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -12,6 +14,7 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
 
+import org.apache.logging.log4j.message.StringFormattedMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -19,6 +22,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import com.cbs.oukasystem.common.BusinessEnum.EnumCarStatus;
@@ -31,6 +35,7 @@ import com.cbs.oukasystem.common.LoginUtils;
 import com.cbs.oukasystem.common.MessageEnum.EnumDataCheck;
 import com.cbs.oukasystem.common.MessageEnum.EnumDeleteCheck;
 import com.cbs.oukasystem.common.MessageEnum.EnumIOUCheck;
+import com.cbs.oukasystem.common.MessageEnum.EnumMailCheck;
 import com.cbs.oukasystem.config.BaseException;
 import com.cbs.oukasystem.entity.car.CarEntity;
 import com.cbs.oukasystem.entity.order.OrderEntity;
@@ -176,7 +181,7 @@ public class CarService {
                 entity.setCarNo(iuVo.getCarNo());
                 entity.setCarName(iuVo.getCarName());
                 entity.setCarPark(iuVo.getCarPark());
-                entity.setCarPhoto(iuVo.getCarPhoto());
+                entity.setImages(iuVo.getImages());
                 entity.setCarSeat(iuVo.getCarSeat());
                 entity.setCarType(iuVo.getCarType());
                 entity.setParkingFee(iuVo.getParkingFee());
@@ -197,14 +202,9 @@ public class CarService {
             entity = repository.save(entity);
 
             // 插入点检表
-            List<CarCheckVO> carCheckVOs = checkService.findAllByCarId(entity.getId());
-            if (carCheckVOs.size() <= 0) {
-                IUCarCheckVO iuCarCheckVO = new IUCarCheckVO();
-                iuCarCheckVO.setCarId(entity.getId());
-                iuCarCheckVO.setCarNo(entity.getCarNo());
-                iuCarCheckVO.setYear(CommonUtils.getCurrentDate("yyyy"));
-                checkService.addOrEdit(iuCarCheckVO);
-            }
+            List<CarEntity> list = new ArrayList<>();
+            list.add(entity);
+            addCheck(list);
 
         } catch (Exception e) {
             throw new BaseException(EnumIOUCheck.ERROR, KEY + ":" + e.getMessage());
@@ -288,5 +288,32 @@ public class CarService {
     }
 
     // endregion
+
+    /*
+     * 插入点检表
+     */
+    public void addCheck(List<CarEntity> entities) {
+        for (CarEntity entity : entities) {
+            List<CarCheckVO> carCheckVOs = checkService.findAllByCarId(entity.getId());
+            if (carCheckVOs.size() <= 0) {
+                IUCarCheckVO iuCarCheckVO = new IUCarCheckVO();
+                iuCarCheckVO.setCarId(entity.getId());
+                iuCarCheckVO.setCarNo(entity.getCarNo());
+                iuCarCheckVO.setYear(CommonUtils.getCurrentDate("yyyy"));
+                checkService.addOrEdit(iuCarCheckVO);
+            }
+        }
+    }
+
+    /*
+     * 12月生成新年点检表 Scheduled
+     * s m h day month week year
+     */
+    @Scheduled(cron = "0 0 1 12 * ?")
+    public Boolean month12check() {
+        List<CarEntity> entities = findByIsAuditAndIsDelete(true, false);
+        addCheck(entities);
+        return true;
+    }
 
 }
