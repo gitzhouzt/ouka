@@ -14,7 +14,7 @@
 						</n-form-item>
 					</n-form>
 					<n-form :inline="!isMobile" :label-width="100" label-placement="left">
-						<n-form-item label="注文内容">
+						<n-form-item label="運行内容">
 							<n-select v-model:value="searchParams.orderType" class="w-50" :options="orderTypeOptions"
 								:consistent-menu-width="false" />
 						</n-form-item>
