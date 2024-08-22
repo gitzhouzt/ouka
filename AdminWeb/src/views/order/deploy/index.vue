@@ -211,7 +211,7 @@ const columns: DataTableColumn<MyModel.Order>[] = [
 		key: 'driverName',
 		sorter: true,
 		align: 'center',
-		width: 60,
+		width: 50,
 		render(row) {
 			const deployOption = h(
 				NButton,
@@ -266,7 +266,7 @@ const columns: DataTableColumn<MyModel.Order>[] = [
 		title: '航空便',
 		key: 'flightNo',
 		align: 'center',
-		width: 60,
+		width: 30,
 		render(row) {
 			return [h('div', {}, { default: () => row.flightNo ?? '-' })];
 		}
@@ -275,7 +275,7 @@ const columns: DataTableColumn<MyModel.Order>[] = [
 		title: '出発地',
 		key: 'orderFrom',
 		align: 'center',
-		width: 150,
+		width: 120,
 		render(row) {
 			return [h(NEllipsis, { lineClamp: 1, tooltip: true }, { default: () => (row.orderFrom ? row.orderFrom : '-') })];
 		}
@@ -284,7 +284,7 @@ const columns: DataTableColumn<MyModel.Order>[] = [
 		title: '目的地',
 		key: 'orderTo',
 		align: 'center',
-		width: 150,
+		width: 120,
 		render(row) {
 			return [h(NEllipsis, { lineClamp: 1, tooltip: true }, { default: () => (row.orderTo ? row.orderTo : '-') })];
 		}
@@ -293,7 +293,7 @@ const columns: DataTableColumn<MyModel.Order>[] = [
 		title: 'お客様要望',
 		key: 'customerRemark',
 		align: 'center',
-		width: 150,
+		width: 130,
 		render(row) {
 			return [
 				h(
@@ -308,7 +308,7 @@ const columns: DataTableColumn<MyModel.Order>[] = [
 		title: '備考',
 		key: 'companyRemark',
 		align: 'center',
-		width: 150,
+		width: 130,
 		render(row) {
 			return [
 				h(NEllipsis, { lineClamp: 1, tooltip: true }, { default: () => (row.companyRemark ? row.companyRemark : '-') })
@@ -337,7 +337,7 @@ const columns: DataTableColumn<MyModel.Order>[] = [
 		title: '連絡方法①',
 		key: 'contactMethod1',
 		align: 'center',
-		width: 80,
+		width: 70,
 		resizable: true,
 		render(row) {
 			return h(
@@ -448,7 +448,7 @@ const columns: DataTableColumn<MyModel.Order>[] = [
 ];
 
 const cols = ref<any>(columns);
-const scrollX = ref<number>(5250);
+const scrollX = ref<number>(5000);
 const colsModal = ref<any>(null);
 const handleCols = () => {
 	colsModal.value?.setTitle('表示項目設定');
@@ -456,7 +456,7 @@ const handleCols = () => {
 };
 const setCols = (c: any) => {
 	cols.value = c;
-	const x = c.length === columns.length ? 5250 : 5250 - (columns.length - c.length) * 250;
+	const x = c.length === columns.length ? 5000 : 5000 - (columns.length - c.length) * 250;
 	scrollX.value = x;
 };
 
