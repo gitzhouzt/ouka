@@ -4,8 +4,8 @@
 			<n-steps :current="currentRef">
 				<n-step :title="EnumOrderStepModule['action-customer']" />
 				<n-step :title="EnumOrderStepModule['action-order']" />
+				<n-step :title="EnumOrderStepModule['action-other']" />
 				<n-step :title="EnumOrderStepModule['action-confirmed']" />
-				<n-step :title="EnumOrderStepModule['action-success']" />
 			</n-steps>
 		</n-card>
 		<n-card size="small" class="mt-10px">
@@ -22,7 +22,7 @@
 import type { Component, PropType } from 'vue';
 import { ref, computed } from 'vue';
 import { EnumOrderStepModule } from '@/enum';
-import { Customer, Order, Confirm, Success } from './components';
+import { Customer, Order, Other, Confirm } from './components';
 
 const emits = defineEmits(['close']);
 const props = defineProps({
@@ -52,8 +52,8 @@ interface StepModule {
 const modules: StepModule[] = [
 	{ key: 1, label: EnumOrderStepModule['action-customer'], component: Customer },
 	{ key: 2, label: EnumOrderStepModule['action-order'], component: Order },
-	{ key: 3, label: EnumOrderStepModule['action-confirmed'], component: Confirm },
-	{ key: 4, label: EnumOrderStepModule['action-success'], component: Success }
+	{ key: 3, label: EnumOrderStepModule['action-other'], component: Other },
+	{ key: 4, label: EnumOrderStepModule['action-confirmed'], component: Confirm }
 ];
 
 const activeModule = computed(() => {
@@ -67,23 +67,22 @@ const activeModule = computed(() => {
 
 const close = () => {
 	emits('close');
-	modelRef.value = null;
 };
 const next = (data: any) => {
 	switch (data.key) {
 		case 'customer':
 			currentRef.value = 2;
 			modelRef.value = data.params;
-
 			break;
 		case 'order':
 			currentRef.value = 3;
 			modelRef.value = data.params;
 			break;
-		case 'confirm':
+		case 'other':
 			currentRef.value = 4;
+			modelRef.value = data.params;
 			break;
-		case 'success':
+		case 'confirm':
 			close();
 			break;
 		default:
@@ -95,8 +94,11 @@ const prev = (data: any) => {
 		case 'order':
 			currentRef.value = 1;
 			break;
-		case 'confirm':
+		case 'other':
 			currentRef.value = 2;
+			break;
+		case 'confirm':
+			currentRef.value = 3;
 			break;
 		default:
 			break;

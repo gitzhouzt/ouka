@@ -118,15 +118,21 @@ declare namespace MyModel {
     endTime?: Date | number | string;
     adultNum?: number | null;
     childrenNum?: number | null;
-    luggageNum?: string | number | null;
+    luggageNum?: number | null;
     orderStatus?: MyEnumType.EnumOrderStatusKey;
-    orderPrice?: number | null;
+    amount?: number;
+    currencyAmount?: number;
+    currency?: string;
+    currencyCode?: string;
+
     orderFrom?: string;
     orderTo?: string;
     orderFromDetails?: string;
     orderToDetails?: string;
     flightNo?: string;
-    airport?: MyEnumType.EnumAirportTypeKey;
+    airport?: string;
+    airportCode?: string;
+    terminal?: MyEnumType.EnumTerminalKey;
 
     feeType?: string;
     isCash?: boolean | string;
@@ -287,7 +293,7 @@ declare namespace MyModel {
     orderNo: string;
     fileName: string;
     fileUrl: string;
-    share: Boolean;
+    share: boolean | number | string;
     remark: string;
   }
 

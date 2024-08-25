@@ -8,8 +8,8 @@
 							<n-input v-model:value="searchParams.keyword" style="min-width: 30%" type="text" placeholder="注文番号/連絡先"
 								clearable />
 						</n-form-item>
-						<n-form-item label="注文元">
-							<n-input v-model:value="searchParams.orderSource" placeholder="クリック注文元を選択" readonly
+						<n-form-item label="订单来源">
+							<n-input v-model:value="searchParams.orderSource" placeholder="クリック订单来源を選択" readonly
 								@click="showDict('order_source')" />
 						</n-form-item>
 					</n-form>
@@ -56,19 +56,18 @@
 		<order-goods ref="goodsModal" @close="searchQuery" />
 		<dict-select-modal ref="dictModal" @click="selectDict" />
 		<set-cols-drawer ref="colsModal" @click="setCols" />
-		<query-drawer ref="queryModal" @click="onQuery" @reset="searchReset" />
+		<query-drawer ref="queryModal" @click="onQuery" @reset="handleReset" />
 	</div>
 </template>
 
 <script setup lang="ts">
 import { h, onMounted, ref } from 'vue';
 import { DataTableColumn, NButton, NEllipsis, NPopconfirm, NTag } from 'naive-ui';
-import moment from 'moment';
 import { EnumOrderStatus, EnumOrderType } from '@/enum';
 import { useMyTags, useMyCommon, useMyOptions } from '@/composables';
 import { useDataTable } from '@/hooks';
 import { request } from '@/service/request';
-import { OrderDetails, OrderCancel, OrderPay, OrderAction, OrderFiles, OrderGoods, QueryDrawer } from './components';
+import { OrderDetails, OrderCancel, OrderAction, QueryDrawer } from './components';
 import { getEnvConfig } from '~/.env-config';
 
 const module = 'order';
@@ -106,8 +105,8 @@ const {
 resetParams();
 
 const handleReset = () => {
+	searchParams.orderTime = null;
 	searchParams.orderType = null;
-	searchParams.selTime = null;
 	searchReset();
 };
 
@@ -210,7 +209,7 @@ const columns: DataTableColumn<MyModel.Order>[] = [
 	{
 		title: '詳細',
 		key: 'details',
-		width: 30,
+		width: 20,
 		align: 'center',
 		render(row) {
 			const option = h(
@@ -231,8 +230,7 @@ const columns: DataTableColumn<MyModel.Order>[] = [
 		key: 'orderNo',
 		align: 'center',
 		sorter: true,
-		width: 80,
-		resizable: true,
+		width: 50,
 		render(row) {
 			const newRow = {
 				id: '',
@@ -307,17 +305,18 @@ const columns: DataTableColumn<MyModel.Order>[] = [
 	{
 		title: '責任者',
 		key: 'sellerName',
-		align: 'center',
+		align: 'left',
 		sorter: true,
-		width: 50,
-		resizable: true,
+		width: 30,
+		ellipsis: {
+			tooltip: true
+		},
 		render(row) {
 			return [
 				h(
 					'div',
 					{
-						class: `${row.sellerName ?? 'text-red'} `,
-						style: { textAlign: 'left' }
+						class: `${row.sellerName ?? 'text-red'} `
 					},
 					{ default: () => (row.sellerName ? row.sellerName : '未定') }
 				)
@@ -325,143 +324,114 @@ const columns: DataTableColumn<MyModel.Order>[] = [
 		}
 	},
 	{
-		title: '注文元',
+		title: '订单来源',
 		key: 'orderSource',
 		sorter: true,
-		align: 'center',
-		width: 80,
+		align: 'left',
+		width: 30,
 		resizable: true,
+		ellipsis: {
+			tooltip: true
+		},
 		render(row) {
-			return [
-				h(
-					'div',
-					{
-						style: { textAlign: 'left' }
-					},
-					{ default: () => (row.orderSource ? row.orderSource : '-') }
-				)
-			];
+			return [h('div', {}, { default: () => (row.orderSource ? row.orderSource : '-') })];
 		}
 	},
 	{
 		title: '第三者',
 		key: 'orderKey',
-		align: 'center',
-		width: 100,
+		align: 'left',
 		resizable: true,
+		width: 30,
+		ellipsis: {
+			tooltip: true
+		},
 		render(row) {
-			return [
-				h(
-					'div',
-					{
-						style: { textAlign: 'left' }
-					},
-					{ default: () => (row.orderKey ? row.orderKey : '-') }
-				)
-			];
+			return [h('div', {}, { default: () => (row.orderKey ? row.orderKey : '-') })];
 		}
 	},
 	{
 		title: '運行内容',
 		key: 'orderType',
-		align: 'center',
-		width: 60,
+		align: 'left',
 		resizable: true,
+		width: 30,
+		ellipsis: {
+			tooltip: true
+		},
 		render(row) {
 			const orderType = row.orderType as MyEnumType.EnumOrderTypeKey;
 			const status = EnumOrderType[orderType];
-			return h(
-				'div',
-				{
-					style: { textAlign: 'left' }
-				},
-				[
-					h(
-						'span',
-						{},
-						{
-							default: () => status || '未定'
-						}
-					)
-				]
-			);
+			return h('div', {}, [
+				h(
+					'span',
+					{},
+					{
+						default: () => status || '未定'
+					}
+				)
+			]);
 		}
 	},
 	{
 		title: 'お客様',
 		key: 'customerName',
-		align: 'center',
-		width: 100,
+		align: 'left',
 		resizable: true,
+		width: 30,
+		ellipsis: {
+			tooltip: true
+		},
 		render(row) {
-			return [
-				h(
-					'div',
-					{
-						style: { textAlign: 'left' }
-					},
-					{ default: () => (row.customerName ? row.customerName : '-') }
-				)
-			];
+			return [h('div', {}, { default: () => (row.customerName ? row.customerName : '-') })];
 		}
 	},
 	{
 		title: '連絡方法①',
 		key: 'contactMethod1',
-		align: 'center',
-		width: 80,
+		align: 'left',
 		resizable: true,
+		width: 30,
+		ellipsis: {
+			tooltip: true
+		},
 		render(row) {
-			return h(
-				'div',
-				{
-					style: { textAlign: 'left' }
-				},
-				[h('span', {}, { default: () => `${row.contactMethod1}：${row.contactContent1}` })]
-			);
+			return h('div', {}, [h('span', {}, { default: () => `${row.contactMethod1}：${row.contactContent1}` })]);
 		}
 	},
 	{
 		title: '連絡方法②',
 		key: 'contactMethod2',
-		align: 'center',
-		width: 80,
+		align: 'left',
 		resizable: true,
+		width: 30,
+		ellipsis: {
+			tooltip: true
+		},
 		render(row) {
 			return [
-				h(
-					'div',
-					{
-						style: { textAlign: 'left' }
-					},
-					[h('span', {}, row.contactMethod2 ? `${row.contactMethod2}：${row.contactContent2}` : '-')]
-				)
+				h('div', {}, [h('span', {}, row.contactMethod2 ? `${row.contactMethod2}：${row.contactContent2}` : '-')])
 			];
 		}
 	},
 	{
 		title: '連絡方法③',
 		key: 'contactMethod3',
-		align: 'center',
-		width: 80,
+		align: 'left',
 		resizable: true,
+		width: 30,
+		ellipsis: {
+			tooltip: true
+		},
 		render(row) {
-			return [
-				h(
-					'div',
-					{
-						style: { textAlign: 'left' }
-					},
-					[h('span', {}, row.contactMethod3 ? `${row.contactMethod3}：${row.contactMethod3}` : '-')]
-				)
-			];
+			return [h('div', {}, [h('span', {}, row.contactMethod3 ? `${row.contactMethod3}：${row.contactMethod3}` : '-')])];
 		}
 	},
 	{
 		title: '大人数',
 		key: 'adultNum',
-		align: 'center',
-		width: 30,
+		align: 'left',
+		width: 20,
 		resizable: true,
 		render(row) {
 			return [
@@ -478,8 +448,8 @@ const columns: DataTableColumn<MyModel.Order>[] = [
 	{
 		title: '子供数',
 		key: 'childrenNum',
-		align: 'center',
-		width: 30,
+		align: 'left',
+		width: 20,
 		resizable: true,
 		render(row) {
 			return [
@@ -496,8 +466,8 @@ const columns: DataTableColumn<MyModel.Order>[] = [
 	{
 		title: '荷物数',
 		key: 'luggageNum',
-		align: 'center',
-		width: 30,
+		align: 'left',
+		width: 20,
 		resizable: true,
 		render(row) {
 			return [
@@ -514,9 +484,12 @@ const columns: DataTableColumn<MyModel.Order>[] = [
 	{
 		title: '希望車両',
 		key: 'specifyCarType',
-		align: 'center',
-		width: 60,
+		align: 'left',
 		resizable: true,
+		width: 30,
+		ellipsis: {
+			tooltip: true
+		},
 		render(row) {
 			return [
 				h(
@@ -532,10 +505,13 @@ const columns: DataTableColumn<MyModel.Order>[] = [
 	{
 		title: 'ドライバー',
 		key: 'driverName',
-		align: 'center',
 		sorter: true,
-		width: 60,
+		align: 'left',
 		resizable: true,
+		width: 30,
+		ellipsis: {
+			tooltip: true
+		},
 		render(row) {
 			return [
 				h(
@@ -552,10 +528,13 @@ const columns: DataTableColumn<MyModel.Order>[] = [
 	{
 		title: '車両',
 		key: 'carName',
-		align: 'center',
 		sorter: true,
-		width: 30,
+		align: 'left',
 		resizable: true,
+		width: 30,
+		ellipsis: {
+			tooltip: true
+		},
 		render(row) {
 			return [
 				h(
@@ -569,39 +548,16 @@ const columns: DataTableColumn<MyModel.Order>[] = [
 			];
 		}
 	},
-	// {
-	//   title: '座席数',
-	//   key: 'carSeat',
-	//   align: 'center',
-	//   width: 80,
-	//   render(row) {
-	//     return [h('div', {}, { default: () => (row.carSeat ? `${row.carSeat}座` : '-') })];
-	//   }
-	// },
-	// {
-	//   title: '空港',
-	//   key: 'airport',
-	//   align: 'center',
-	//   width: 100,
-	//   render(row) {
-	//     return [h('div', {}, { default: () => (row.airport ? row.airport : '-') })];
-	//   }
-	// },
-	// {
-	//   title: '航空便',
-	//   key: 'flightNo',
-	//   align: 'center',
-	//   width: 100,
-	//   render(row) {
-	//     return [h('div', {}, { default: () => (row.flightNo ? row.flightNo : '-') })];
-	//   }
-	// },
 	{
 		title: '出発地',
 		key: 'orderFrom',
-		align: 'center',
-		width: 150,
+		sorter: true,
+		align: 'left',
 		resizable: true,
+		width: 30,
+		ellipsis: {
+			tooltip: true
+		},
 		render(row) {
 			return [
 				h(
@@ -609,41 +565,21 @@ const columns: DataTableColumn<MyModel.Order>[] = [
 					{
 						style: { textAlign: 'left' }
 					},
-					[
-						h(
-							NEllipsis,
-							{
-								lineClamp: 1,
-								tooltip: true
-							},
-							{ default: () => (row.orderFrom ? row.orderFrom : '-') }
-						)
-					]
+
+					{ default: () => (row.orderFrom ? row.orderFrom : '-') }
 				)
 			];
 		}
 	},
-	// {
-	//   title: '出発地詳細',
-	//   key: 'orderFromDetails',
-	//   align: 'center',
-	//   width: 300,
-	//   render(row) {
-	//     return [
-	//       h(
-	//         NEllipsis,
-	//         { lineClamp: 1, tooltip: true },
-	//         { default: () => (row.orderFromDetails ? row.orderFromDetails : '-') }
-	//       )
-	//     ];
-	//   }
-	// },
 	{
 		title: '目的地',
 		key: 'orderTo',
-		align: 'center',
-		width: 150,
+		align: 'left',
 		resizable: true,
+		width: 30,
+		ellipsis: {
+			tooltip: true
+		},
 		render(row) {
 			return [
 				h(
@@ -651,42 +587,21 @@ const columns: DataTableColumn<MyModel.Order>[] = [
 					{
 						style: { textAlign: 'left' }
 					},
-					[
-						h(
-							NEllipsis,
-							{
-								lineClamp: 1,
-								tooltip: true
-							},
-							{ default: () => (row.orderTo ? row.orderTo : '-') }
-						)
-					]
+
+					{ default: () => (row.orderTo ? row.orderTo : '-') }
 				)
 			];
 		}
 	},
-	// {
-	//   title: '目的地詳細',
-	//   key: 'orderToDetails',
-	//   align: 'center',
-	//   width: 300,
-	//   render(row) {
-	//     return [
-	//       h(
-	//         NEllipsis,
-	//         { lineClamp: 1, tooltip: true },
-	//         { default: () => (row.orderToDetails ? row.orderToDetails : '-') }
-	//       )
-	//     ];
-	//   }
-	// },
 	{
 		title: 'ツアー開始日',
-		key: 'startTime',
-		align: 'center',
 		sorter: true,
-		width: 60,
-		resizable: true,
+		key: 'startTime',
+		align: 'left',
+		width: 40,
+		ellipsis: {
+			tooltip: true
+		},
 		render(row) {
 			return [
 				h(
@@ -701,10 +616,13 @@ const columns: DataTableColumn<MyModel.Order>[] = [
 	},
 	{
 		title: 'ツアー終了日',
+		sorter: true,
 		key: 'endTime',
-		align: 'center',
-		width: 60,
-		resizable: true,
+		align: 'left',
+		width: 40,
+		ellipsis: {
+			tooltip: true
+		},
 		render(row) {
 			return [
 				h(
@@ -721,9 +639,11 @@ const columns: DataTableColumn<MyModel.Order>[] = [
 		title: '注文日時',
 		key: 'createTime',
 		sorter: true,
-		align: 'center',
-		width: 60,
-		resizable: true,
+		align: 'left',
+		width: 40,
+		ellipsis: {
+			tooltip: true
+		},
 		render(row) {
 			return [
 				h(
@@ -739,7 +659,8 @@ const columns: DataTableColumn<MyModel.Order>[] = [
 	{
 		title: 'ステータス',
 		key: 'orderStatus',
-		align: 'center',
+		sorter: true,
+		align: 'left',
 		width: 30,
 		render(row) {
 			const orderStatus = row.orderStatus as MyEnumType.EnumOrderStatusKey;
@@ -760,8 +681,8 @@ const columns: DataTableColumn<MyModel.Order>[] = [
 	{
 		title: '接机牌',
 		key: 'placard',
-		width: 30,
 		align: 'center',
+		width: 20,
 		render(row) {
 			const option = h(
 				NButton,
@@ -783,8 +704,8 @@ const columns: DataTableColumn<MyModel.Order>[] = [
 	{
 		title: '備品明細',
 		key: 'goods',
-		width: 30,
 		align: 'center',
+		width: 20,
 		render(row) {
 			const option = h(
 				NButton,
@@ -799,30 +720,12 @@ const columns: DataTableColumn<MyModel.Order>[] = [
 			return option;
 		}
 	},
-	// {
-	//   title: '收现名目',
-	//   key: 'cash',
-	//   width: 80,
-	//   align: 'center',
-	//   render(row) {
-	//     const option = h(
-	//       NButton,
-	//       {
-	//         quaternary: true,
-	//         size: 'small',
-	//         type: 'info',
-	//         onClick: () => handleCash('收现名目', row)
-	//       },
-	//       { default: () => '追加' }
-	//     );
-	//     return option;
-	//   }
-	// },
+
 	{
 		title: '料金記録',
 		key: 'price',
-		width: 30,
 		align: 'center',
+		width: 20,
 		render(row) {
 			const option = h(
 				NButton,
@@ -840,8 +743,8 @@ const columns: DataTableColumn<MyModel.Order>[] = [
 	{
 		title: '添付資料',
 		key: 'files',
-		width: 30,
 		align: 'center',
+		width: 20,
 		render(row) {
 			const option = h(
 				NButton,
@@ -879,7 +782,7 @@ const columns: DataTableColumn<MyModel.Order>[] = [
 	{
 		title: '操作',
 		key: 'actions',
-		width: 30,
+		width: 20,
 		align: 'center',
 		render(row) {
 			const orderStatus = row.orderStatus as MyEnumType.EnumOrderStatusKey;
@@ -938,7 +841,7 @@ const columns: DataTableColumn<MyModel.Order>[] = [
 ];
 
 const cols = ref<any>(columns);
-const scrollX = ref<number>(5000);
+const scrollX = ref<number>(3500);
 const colsModal = ref<any>(null);
 const handleCols = () => {
 	colsModal.value?.setTitle('表示項目設定');
@@ -946,7 +849,7 @@ const handleCols = () => {
 };
 const setCols = (c: any) => {
 	cols.value = c;
-	const x = c.length === columns.length ? 5000 : 5000 - (columns.length - c.length) * 250;
+	const x = c.length === columns.length ? 3500 : 3500 - (columns.length - c.length) * 100;
 	scrollX.value = x;
 };
 

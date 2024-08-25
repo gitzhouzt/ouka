@@ -2,8 +2,6 @@ package com.cbs.oukasystem.vo.out.finance;
 
 import java.util.Date;
 
-import com.cbs.oukasystem.common.BusinessEnum.EnumFinanceStatus;
-import com.cbs.oukasystem.entity.order.OrderEntity;
 import com.cbs.oukasystem.vo.OperatorVO;
 import com.cbs.oukasystem.vo.out.order.OrderVO;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -33,8 +31,8 @@ public class EarningsVO extends OperatorVO {
     @Schema(name = "orderNo", description = "orderNo")
     private String orderNo;
 
-    @Schema(name = "orderPrice", description = "基本料金")
-    private int orderPrice;
+    @Schema(name = "amount", description = "基本料金")
+    private Double amount;
 
     @Schema(name = "orderTypeName", description = "注文タイプ")
     private String orderTypeName;

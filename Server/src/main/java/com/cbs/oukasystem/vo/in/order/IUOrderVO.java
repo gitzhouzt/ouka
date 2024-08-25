@@ -38,8 +38,17 @@ public class IUOrderVO extends NormalVO {
     @Schema(name = "orderTypeName", description = "注文タイプ")
     private String orderTypeName;
 
-    @Schema(name = "orderPrice", description = "基础价格")
-    private Integer orderPrice;
+    @Schema(name = "amount", description = "日元金额")
+    private Double amount;
+
+    @Schema(name = "currencyAmount", description = "币种金额")
+    private Double currencyAmount;
+
+    @Schema(name = "currency", description = "币种")
+    private String currency;
+
+    @Schema(name = "currencyCode", description = "币种")
+    private String currencyCode;
 
     @JsonFormat(pattern = "yyyy/MM/dd HH:mm:ss", timezone = "GMT+9")
     @Schema(name = "startTime", description = "開始日付")
@@ -77,6 +86,12 @@ public class IUOrderVO extends NormalVO {
 
     @Schema(name = "airport", description = "空港（空港送、迎）")
     private String airport;
+
+    @Schema(name = "airportCode", description = "空港（空港送、迎）")
+    private String airportCode;
+
+    @Schema(name = "terminal", description = "航站楼")
+    private String terminal;
 
     @Schema(name = "feeType", description = "车费类型 全包 高停别")
     private String feeType;

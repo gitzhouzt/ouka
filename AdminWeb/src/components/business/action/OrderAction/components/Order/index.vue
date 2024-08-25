@@ -55,12 +55,15 @@
 						EnumOrderType[formValue.orderType ?? ''] === EnumOrderType.Airport_Y
 					">
 						<n-gi>
-							<!-- <n-form-item label="空港" path="airport">
-                <n-input v-model:value="formValue.airport" placeholder="成田空港" /></n-form-item
-            > -->
-							<n-form-item label="空港" path="airport">
-								<n-select v-model:value="formValue.airport" :options="airportTypeOptions" :consistent-menu-width="false"
+							<n-form-item label="空港" path="airportCode">
+								<n-select v-model:value="formValue.airportCode" :options="airportOptions" :consistent-menu-width="false"
 									@update:value="airportUpdateValue" />
+							</n-form-item>
+						</n-gi>
+						<n-gi>
+							<n-form-item label="ターミナル" path="terminal">
+								<n-select v-model:value="formValue.terminal" :options="terminalOptions"
+									:consistent-menu-width="false" />
 							</n-form-item>
 						</n-gi>
 						<n-gi>
@@ -69,39 +72,33 @@
 					</template>
 
 					<n-gi>
-						<n-form-item label="基本料金" path="orderPrice">
-							<n-input-number v-model:value="formValue.orderPrice" :precision="0" :min="0" :show-button="false">
-								<template #suffix> 円 </template>
-							</n-input-number></n-form-item></n-gi>
+						<n-form-item label="料金通貨" path="currency">
+							<n-input v-model:value="formValue.currency" placeholder="クリック通貨を選択" readonly
+								@click="showDict('pay_currency')" />
+						</n-form-item></n-gi><n-gi>
+						<n-form-item label="基本金額" path="currencyAmount">
+							<n-input-number v-model:value="formValue.currencyAmount" :min="0" :precision="0" :show-button="false">
+								<template #prefix> {{ formValue.currencyCode === 'usd' ? '$' : '￥' }} </template>
+							</n-input-number>
+						</n-form-item></n-gi>
 					<n-gi>
 						<n-form-item label="车费类型" path="feeType">
 							<n-radio-group v-model:value="formValue.feeType" path="feeType" name="feeTypeRdo">
 								<n-radio-button key="全包" value="全包" label="全包" />
 								<n-radio-button key="高停别" value="高停别" label="高停别" /> </n-radio-group></n-form-item></n-gi>
-					<!-- <n-gi>
-            <n-form-item label="是否收现" path="isCash">
-              <n-radio-group v-model:value="formValue.isCash" path="isCash" name="isCashRdo">
-                <n-radio-button key="true" value="true" label="是" />
-                <n-radio-button key="false" value="false" label="否" />
-              </n-radio-group>
-              <span class="ml-2">(收现名目请在料金窗口添加)</span>
-            </n-form-item></n-gi
-          > -->
 					<n-gi>
 						<n-form-item label="時間超過料" path="isOutTimeCash">
 							<n-radio-group v-model:value="formValue.isOutTimeCash" name="isOutTimeCashRdo">
 								<n-radio-button key="true" value="true" label="是" />
 								<n-radio-button key="false" value="false" label="否" /></n-radio-group></n-form-item></n-gi>
-					<n-gi>
+					<n-gi v-if="formValue.isOutTimeCash === 'true'">
 						<n-form-item label="超過料金" path="outTimeAmount">
-							<n-input-number v-model:value="formValue.outTimeAmount" :precision="0" :min="0" :show-button="false"
-								:disabled="formValue.isOutTimeCash == 'false'">
+							<n-input-number v-model:value="formValue.outTimeAmount" :precision="0" :min="0" :show-button="false">
 								<template #suffix> 円/30分 </template>
 							</n-input-number></n-form-item></n-gi>
 					<n-gi>
 						<n-form-item label="荷物数" path="luggageNum">
-							<n-input-number v-model:value="formValue.luggageNum" :precision="0" :min="0" :max="10"
-								:show-button="false">
+							<n-input-number v-model:value="formValue.luggageNum" :precision="0" :min="0" :show-button="false">
 								<template #suffix> 件 </template>
 							</n-input-number></n-form-item></n-gi>
 					<n-gi>
@@ -121,29 +118,17 @@
 						</n-form-item>
 					</n-gi>
 					<n-gi>
-						<n-form-item label="車両" path="carName">
+						<n-form-item label="車両支配" path="carName">
 							<n-input-group>
 								<n-input v-model:value="formValue.carName" readonly placeholder="クリック車両を選択"
 									@click="showCar()"></n-input>
 							</n-input-group> </n-form-item></n-gi>
 					<n-gi>
-						<n-form-item label="ドライバー" path="driverName">
+						<n-form-item label="ドライバー支配" path="driverName">
 							<n-input-group>
 								<n-input v-model:value="formValue.driverName" readonly placeholder="クリックドライバーを選択"
 									@click="showDriver()"></n-input>
 							</n-input-group> </n-form-item></n-gi>
-					<n-gi :span="2">
-						<n-form-item label="お客様要望" path="customerRemark">
-							<n-input v-model:value="formValue.customerRemark" type="textarea" :autosize="{
-								minRows: 3,
-								maxRows: 3
-							}" placeholder="お客様の要望を入力してください" /></n-form-item></n-gi>
-					<n-gi :span="2">
-						<n-form-item label="備考" path="companyRemark">
-							<n-input v-model:value="formValue.companyRemark" type="textarea" :autosize="{
-								minRows: 3,
-								maxRows: 3
-							}" placeholder="備考を入力してください" /></n-form-item></n-gi>
 				</n-grid>
 				<dict-select-modal ref="dictModal" @click="selectDict" />
 				<car-select-modal ref="carModal" @click="selectCar" />
@@ -162,7 +147,7 @@
 import { ref, PropType, onMounted } from 'vue';
 import { FormInst, useMessage, useLoadingBar, SelectOption } from 'naive-ui';
 import moment from 'moment';
-import { EnumOrderType, EnumAirportType } from '@/enum';
+import { EnumOrderType, EnumAirport } from '@/enum';
 import { useMyOptions } from '@/composables';
 import { request } from '@/service/request';
 
@@ -175,8 +160,7 @@ const props = defineProps({
 		}
 	}
 });
-const { orderTypeOptions } = useMyOptions();
-const { airportTypeOptions } = useMyOptions();
+const { orderTypeOptions, terminalOptions, airportOptions } = useMyOptions();
 const formRef = ref<FormInst | null>(null);
 const size = ref<'small' | 'medium' | 'large'>('medium');
 const message = useMessage();
@@ -193,15 +177,21 @@ const formValue = ref<MyModel.Order>({
 	adultNum: props.model?.adultNum,
 	childrenNum: props.model?.childrenNum,
 	luggageNum: props.model?.luggageNum,
-	orderPrice: props.model?.orderPrice,
+
+	amount: props.model?.amount,
+	currencyAmount: props.model?.currencyAmount,
+	currency: props.model?.currency,
+	currencyCode: props.model?.currencyCode,
+
 	orderFrom: props.model?.orderFrom,
 	orderTo: props.model?.orderTo,
 	orderFromDetails: props.model?.orderFromDetails,
 	orderToDetails: props.model?.orderToDetails,
-	customerRemark: props.model?.customerRemark,
-	companyRemark: props.model?.companyRemark,
+
 	flightNo: props.model?.flightNo,
 	airport: props.model?.airport,
+	airportCode: props.model?.airportCode,
+	terminal: props.model?.terminal,
 
 	feeType: props.model?.feeType ?? '全包',
 	isCash: props.model?.isCash === true ? 'true' : 'false',
@@ -258,13 +248,30 @@ const rules = {
 		trigger: 'change',
 		message: '選択してください'
 	},
-	orderPrice: {
+	currency: {
+		required: true,
+		message: '選択してください',
+		trigger: 'change'
+	},
+	currencyAmount: {
 		required: true,
 		message: '入力してください',
 		type: 'number',
 		trigger: ['blur', 'change']
 	},
 	outTimeAmount: {
+		required: true,
+		message: '入力してください',
+		type: 'number',
+		trigger: ['blur', 'change']
+	},
+	adultNum: {
+		required: true,
+		message: '入力してください',
+		type: 'number',
+		trigger: ['blur', 'change']
+	},
+	luggageNum: {
 		required: true,
 		message: '入力してください',
 		type: 'number',
@@ -281,19 +288,6 @@ const rules = {
 		trigger: 'input',
 		message: '200文字まで入力してください',
 		max: 200
-	},
-
-	customerRemark: {
-		required: false,
-		trigger: 'input',
-		message: '2000文字まで入力してください',
-		max: 2000
-	},
-	companyRemark: {
-		required: false,
-		trigger: 'input',
-		message: '2000文字まで入力してください',
-		max: 2000
 	}
 };
 
@@ -315,15 +309,19 @@ const save = () => {
 		adultNum: formValue.value.adultNum,
 		childrenNum: formValue.value.childrenNum,
 		luggageNum: formValue.value.luggageNum,
-		orderPrice: formValue.value.orderPrice,
+		amount: formValue.value.amount,
+		currencyAmount: formValue.value.currencyAmount,
+		currency: formValue.value.currency,
+		currencyCode: formValue.value.currencyCode,
+
 		orderFrom: formValue.value.orderFrom,
 		orderTo: formValue.value.orderTo,
 		orderFromDetails: formValue.value.orderFromDetails,
 		orderToDetails: formValue.value.orderToDetails,
-		customerRemark: formValue.value?.customerRemark,
-		companyRemark: formValue.value?.companyRemark,
 		flightNo: formValue.value?.flightNo,
 		airport: formValue.value?.airport,
+		airportCode: formValue.value?.airportCode,
+		terminal: formValue.value?.terminal,
 
 		feeType: formValue.value?.feeType,
 		isCash: formValue.value?.isCash === 'true',
@@ -411,6 +409,11 @@ const selectDict = (result: any) => {
 		case 'car_type':
 			formValue.value.specifyCarType = result.text;
 			break;
+		case 'pay_currency':
+			formValue.value.currency = result.text;
+			formValue.value.currencyCode = result.value;
+			break;
+
 		default:
 			break;
 	}
@@ -439,15 +442,16 @@ const selectDriver = (result: any) => {
 };
 
 const airportUpdateValue = (value: string) => {
-	const type = value as MyEnumType.EnumAirportTypeKey;
+	const type = value as MyEnumType.EnumAirportKey;
+	formValue.value.airport = EnumAirport[type];
 	let hours = 1;
-	switch (EnumAirportType[type]) {
-		case EnumAirportType.Narita_N:
-		case EnumAirportType.Narita_Y:
+	switch (EnumAirport[type]) {
+		case EnumAirport.Narita_N:
+		case EnumAirport.Narita_Y:
 			hours = 4;
 			break;
-		case EnumAirportType.Haneda_N:
-		case EnumAirportType.Haneda_Y:
+		case EnumAirport.Haneda_N:
+		case EnumAirport.Haneda_Y:
 			hours = 3;
 			break;
 		default:

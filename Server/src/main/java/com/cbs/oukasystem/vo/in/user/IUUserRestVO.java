@@ -4,7 +4,7 @@ import java.util.Date;
 
 import javax.persistence.Column;
 
-import com.cbs.oukasystem.vo.QueryVO;
+import com.cbs.oukasystem.vo.NormalVO;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -12,7 +12,7 @@ import lombok.Data;
 
 @Data
 @Schema
-public class IUUserRestVO extends QueryVO {
+public class IUUserRestVO extends NormalVO {
 
     @Schema(name = "userId", description = "userId")
     private String userId;

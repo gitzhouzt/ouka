@@ -168,7 +168,7 @@ public class EmailUtils {
         textBuilder.append("<div>乗車住所：" + order.getOrderFromDetails() + "</div>");
         textBuilder.append("<div>下車住所：" + order.getOrderToDetails() + "</div>");
         textBuilder.append("<div>お客様の備考" + order.getCustomerRemark() + "</div>");
-        textBuilder.append("<div>予約金額：" + order.getOrderPrice() + "円</div>");
+        textBuilder.append("<div>予約金額：" + order.getCurrencyAmount() + " " + order.getCurrencyCode() + "</div>");
         textBuilder.append("<br/>");
         textBuilder.append(getEmailFooter());
         textBuilder.append("</html></body>");
@@ -209,7 +209,7 @@ public class EmailUtils {
             textBuilder.append("<div>乗車住所：" + order.getOrderFromDetails() + "</div>");
             textBuilder.append("<div>下車住所：" + order.getOrderToDetails() + "</div>");
             textBuilder.append("<div>お客様の備考" + order.getCustomerRemark() + "</div>");
-            textBuilder.append("<div>予約金額：" + order.getOrderPrice() + "円</div>");
+            textBuilder.append("<div>予約金額：" + order.getCurrencyAmount() + " " + order.getCurrencyCode() + "</div>");
             textBuilder.append("<br/>");
             textBuilder.append(getEmailFooter());
             textBuilder.append("</html></body>");
@@ -237,7 +237,8 @@ public class EmailUtils {
             textBuilder.append("<div>Boarding Address:" + order.getOrderFromDetails() + "</div>");
             textBuilder.append("<div>Get off Address:" + order.getOrderToDetails() + "</div>");
             textBuilder.append("<div>Customer Remark:" + order.getCustomerRemark() + "</div>");
-            textBuilder.append("<div>Booking Amount:" + order.getOrderPrice() + "円</div>");
+            textBuilder.append(
+                    "<div>Booking Amount:" + order.getCurrencyAmount() + " " + order.getCurrencyCode() + "円</div>");
             textBuilder.append("<br/>");
             textBuilder.append(getEmailFooter());
             textBuilder.append("</html></body>");
@@ -265,7 +266,7 @@ public class EmailUtils {
             textBuilder.append("<div>上车地址：" + order.getOrderFromDetails() + "</div>");
             textBuilder.append("<div>下车地址：" + order.getOrderToDetails() + "</div>");
             textBuilder.append("<div>乘客备注：" + order.getCustomerRemark() + "</div>");
-            textBuilder.append("<div>订单金额：" + order.getOrderPrice() + "日元</div>");
+            textBuilder.append("<div>订单金额：" + order.getCurrencyAmount() + " " + order.getCurrencyCode() + "</div>");
             textBuilder.append("<br/>");
             textBuilder.append(getEmailFooter());
             textBuilder.append("</html></body>");
@@ -309,7 +310,7 @@ public class EmailUtils {
             textBuilder.append("<div>乗車住所：" + order.getOrderFromDetails() + "</div>");
             textBuilder.append("<div>下車住所：" + order.getOrderToDetails() + "</div>");
             textBuilder.append("<div>お客様の備考" + order.getCustomerRemark() + "</div>");
-            textBuilder.append("<div>予約金額：" + order.getOrderPrice() + "円</div>");
+            textBuilder.append("<div>予約金額：" + order.getCurrencyAmount() + " " + order.getCurrencyCode() + "</div>");
             textBuilder.append("<br/>");
             textBuilder.append(getEmailFooter());
             textBuilder.append("</html></body>");
@@ -338,7 +339,8 @@ public class EmailUtils {
             textBuilder.append("<div>Boarding Address:" + order.getOrderFromDetails() + "</div>");
             textBuilder.append("<div>Get off Address:" + order.getOrderToDetails() + "</div>");
             textBuilder.append("<div>Customer Remark:" + order.getCustomerRemark() + "</div>");
-            textBuilder.append("<div>Booking Amount:" + order.getOrderPrice() + "円</div>");
+            textBuilder.append(
+                    "<div>Booking Amount:" + order.getCurrencyAmount() + " " + order.getCurrencyCode() + "</div>");
             textBuilder.append("<br/>");
             textBuilder.append(getEmailFooter());
             textBuilder.append("</html></body>");
@@ -366,7 +368,7 @@ public class EmailUtils {
             textBuilder.append("<div>上车地址：" + order.getOrderFromDetails() + "</div>");
             textBuilder.append("<div>下车地址：" + order.getOrderToDetails() + "</div>");
             textBuilder.append("<div>乘客备注：" + order.getCustomerRemark() + "</div>");
-            textBuilder.append("<div>订单金额：" + order.getOrderPrice() + "日元</div>");
+            textBuilder.append("<div>订单金额：" + order.getCurrencyAmount() + " " + order.getCurrencyCode() + "</div>");
             textBuilder.append("<br/>");
             textBuilder.append(getEmailFooter());
             textBuilder.append("</html></body>");
@@ -406,7 +408,7 @@ public class EmailUtils {
         textBuilder.append("<div>乗車住所：" + order.getOrderFromDetails() + "</div>");
         textBuilder.append("<div>下車住所：" + order.getOrderToDetails() + "</div>");
         textBuilder.append("<div>お客様の備考" + order.getCustomerRemark() + "</div>");
-        textBuilder.append("<div>決済金額：" + order.getOrderPrice() + "円</div>");
+        textBuilder.append("<div>決済金額：" + order.getCurrencyAmount() + " " + order.getCurrencyCode() + "</div>");
         textBuilder.append("<br/>");
         textBuilder.append(getEmailFooter());
         textBuilder.append("</html></body>");
@@ -452,7 +454,7 @@ public class EmailUtils {
             textBuilder.append("<div>乗車住所：" + order.getOrderFromDetails() + "</div>");
             textBuilder.append("<div>下車住所：" + order.getOrderToDetails() + "</div>");
             textBuilder.append("<div>お客様の備考" + order.getCustomerRemark() + "</div>");
-            textBuilder.append("<div>決済金額：" + order.getOrderPrice() + "円</div>");
+            textBuilder.append("<div>決済金額：" + order.getCurrencyAmount() + " " + order.getCurrencyCode() + "</div>");
             textBuilder.append("<br/>");
             textBuilder.append(getEmailFooter());
             textBuilder.append("</html></body>");
@@ -482,7 +484,8 @@ public class EmailUtils {
             textBuilder.append("<div>Boarding Address:" + order.getOrderFromDetails() + "</div>");
             textBuilder.append("<div>Get off Address:" + order.getOrderToDetails() + "</div>");
             textBuilder.append("<div>Customer Remark:" + order.getCustomerRemark() + "</div>");
-            textBuilder.append("<div>Booking Amount:" + order.getOrderPrice() + "円</div>");
+            textBuilder.append(
+                    "<div>Booking Amount:" + order.getCurrencyAmount() + " " + order.getCurrencyCode() + "</div>");
             textBuilder.append("<br/>");
             textBuilder.append(getEmailFooter());
             textBuilder.append("</html></body>");
@@ -509,7 +512,7 @@ public class EmailUtils {
             textBuilder.append("<div>上车地址：" + order.getOrderFromDetails() + "</div>");
             textBuilder.append("<div>下车地址：" + order.getOrderToDetails() + "</div>");
             textBuilder.append("<div>乘客备注：" + order.getCustomerRemark() + "</div>");
-            textBuilder.append("<div>订单金额：" + order.getOrderPrice() + "日元</div>");
+            textBuilder.append("<div>订单金额：" + order.getCurrencyAmount() + " " + order.getCurrencyCode() + "</div>");
             textBuilder.append("<br/>");
             textBuilder.append(getEmailFooter());
             textBuilder.append("</html></body>");
@@ -547,7 +550,7 @@ public class EmailUtils {
         textBuilder.append("<div>乗車住所：" + order.getOrderFromDetails() + "</div>");
         textBuilder.append("<div>下車住所：" + order.getOrderToDetails() + "</div>");
         textBuilder.append("<div>お客様の備考" + order.getCustomerRemark() + "</div>");
-        textBuilder.append("<div>決済金額：" + order.getOrderPrice() + "円</div>");
+        textBuilder.append("<div>決済金額：" + order.getCurrencyAmount() + " " + order.getCurrencyCode() + "</div>");
         textBuilder.append("<br/>");
         textBuilder.append("<div>※予約後、キャセル手数料は下記の通りです。円</div>");
         textBuilder.append("<div>1日以内キャンセル手数料：全額。</div>");
@@ -588,7 +591,7 @@ public class EmailUtils {
         textBuilder.append("<div>乗車住所：" + order.getOrderFromDetails() + "</div>");
         textBuilder.append("<div>下車住所：" + order.getOrderToDetails() + "</div>");
         textBuilder.append("<div>お客様の備考" + order.getCustomerRemark() + "</div>");
-        textBuilder.append("<div>決済金額：" + order.getOrderPrice() + "円</div>");
+        textBuilder.append("<div>決済金額：" + order.getCurrencyAmount() + " " + order.getCurrencyCode() + "</div>");
         textBuilder.append("<br/>");
         textBuilder.append("<div>※予約後、キャセル手数料は下記の通りです。円</div>");
         textBuilder.append("<div>1日以内キャンセル手数料：全額。</div>");
@@ -632,7 +635,7 @@ public class EmailUtils {
         textBuilder.append("<div>乗車住所：" + order.getOrderFromDetails() + "</div>");
         textBuilder.append("<div>下車住所：" + order.getOrderToDetails() + "</div>");
         textBuilder.append("<div>お客様の備考" + order.getCustomerRemark() + "</div>");
-        textBuilder.append("<div>決済金額：" + order.getOrderPrice() + "円</div>");
+        textBuilder.append("<div>決済金額：" + order.getCurrencyAmount() + " " + order.getCurrencyCode() + "</div>");
         textBuilder.append("<br/>");
         textBuilder.append("<div>＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝</div>");
         textBuilder.append("<br/>");
@@ -650,7 +653,8 @@ public class EmailUtils {
         textBuilder.append("<div>Boarding Address:" + order.getOrderFromDetails() + "</div>");
         textBuilder.append("<div>Get off Address:" + order.getOrderToDetails() + "</div>");
         textBuilder.append("<div>Customer Remark:" + order.getCustomerRemark() + "</div>");
-        textBuilder.append("<div>Booking Amount:" + order.getOrderPrice() + "円</div>");
+        textBuilder
+                .append("<div>Booking Amount:" + order.getCurrencyAmount() + " " + order.getCurrencyCode() + "</div>");
 
         textBuilder.append("<br/>");
         textBuilder.append("<div>＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝</div>");
@@ -670,7 +674,7 @@ public class EmailUtils {
         textBuilder.append("<div>下车地址：" + order.getOrderToDetails() + "</div>");
 
         textBuilder.append("<div>乘客备注：" + order.getCustomerRemark() + "</div>");
-        textBuilder.append("<div>订单金额：" + order.getOrderPrice() + "日元</div>");
+        textBuilder.append("<div>订单金额：" + order.getCurrencyAmount() + " " + order.getCurrencyCode() + "</div>");
         textBuilder.append("<br/>");
 
         textBuilder.append(getEmailFooter());
@@ -711,7 +715,7 @@ public class EmailUtils {
         textBuilder.append("<div>乗車住所：" + order.getOrderFromDetails() + "</div>");
         textBuilder.append("<div>下車住所：" + order.getOrderToDetails() + "</div>");
         textBuilder.append("<div>お客様の備考" + order.getCustomerRemark() + "</div>");
-        textBuilder.append("<div>決済金額：" + order.getOrderPrice() + "円</div>");
+        textBuilder.append("<div>決済金額：" + order.getCurrencyAmount() + " " + order.getCurrencyCode() + "</div>");
         textBuilder.append("<br/>");
         textBuilder.append("<div>＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝</div>");
         textBuilder.append("<br/>");
@@ -730,7 +734,8 @@ public class EmailUtils {
         if (null != order.getOrderToDetails() && !order.getOrderToDetails().isEmpty()) {
             textBuilder.append("<div>Get off Address:" + order.getOrderToDetails() + "</div>");
         }
-        textBuilder.append("<div>Booking Amount:" + order.getOrderPrice() + "円</div>");
+        textBuilder
+                .append("<div>Booking Amount:" + order.getCurrencyAmount() + " " + order.getCurrencyCode() + "</div>");
 
         textBuilder.append("<br/>");
         textBuilder.append("<div>＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝</div>");
@@ -748,7 +753,7 @@ public class EmailUtils {
         textBuilder.append("<div>上车地址：" + order.getOrderFromDetails() + "</div>");
         textBuilder.append("<div>下车地址：" + order.getOrderToDetails() + "</div>");
         textBuilder.append("<div>乘客备注：" + order.getCustomerRemark() + "</div>");
-        textBuilder.append("<div>订单金额：" + order.getOrderPrice() + "日元</div>");
+        textBuilder.append("<div>订单金额：" + order.getCurrencyAmount() + " " + order.getCurrencyCode() + "</div>");
         textBuilder.append("<br/>");
         textBuilder.append(getEmailFooter());
         textBuilder.append("</html></body>");

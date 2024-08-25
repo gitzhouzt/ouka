@@ -23,7 +23,7 @@ public interface EarningsVOEntityMapStruct {
         @Mapping(target = "sellerName", source = "order.sellerName")
         @Mapping(target = "carNo", source = "order.carNo")
         @Mapping(target = "driverName", source = "order.driverName")
-        @Mapping(target = "orderPrice", source = "order.orderPrice")
+        @Mapping(target = "amount", source = "order.amount")
         EarningsVO toVO(EarningsEntity entity);
 
         EarningsEntity toEntity(IUEarningsVO iuVo);
@@ -37,6 +37,6 @@ public interface EarningsVOEntityMapStruct {
         @Mapping(target = "sellerName", source = "order.sellerName")
         @Mapping(target = "carNo", source = "order.carNo")
         @Mapping(target = "driverName", source = "order.driverName")
-        @Mapping(target = "orderPrice", source = "order.orderPrice")
+        @Mapping(target = "amount", source = "order.amount")
         List<EarningsVO> toVOs(List<EarningsEntity> entities);
 }

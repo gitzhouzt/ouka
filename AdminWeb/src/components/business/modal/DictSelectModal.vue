@@ -54,7 +54,7 @@ const setTitle = (title: string) => {
 };
 const setDictCode = (dictCode: string) => {
 	searchParams.dictCode = dictCode;
-	searchQuery();
+	searchReset();
 };
 
 function searchReset() {

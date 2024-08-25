@@ -5,14 +5,16 @@
 				<van-cell-group inset title="ー 注文情報 ー">
 					<van-cell>
 						<div class="flex justify-around m-1">
-							<van-button v-if="EnumOrderStatus[modelRef.orderStatus ?? ''] ===
-			EnumOrderStatus.Check
-			" color="#fb8c00" @click="onConfirm">
+							<van-button v-if="
+								EnumOrderStatus[modelRef.orderStatus ?? ''] ===
+								EnumOrderStatus.Check
+							" color="#fb8c00" @click="onConfirm">
 								注文確認
 							</van-button>
-							<van-button v-else-if="EnumOrderStatus[modelRef.orderStatus ?? ''] ===
-			EnumOrderStatus.Booked
-			" color="#fb8c00" @click="onWork">
+							<van-button v-else-if="
+								EnumOrderStatus[modelRef.orderStatus ?? ''] ===
+								EnumOrderStatus.Booked
+							" color="#fb8c00" @click="onWork">
 								注文開始
 							</van-button>
 							<van-button v-else color="#fb8c00" @click="onComplete">
@@ -28,19 +30,18 @@
 					</van-cell>
 					<van-cell title="注文番号">{{ modelRef.orderNo }}</van-cell>
 					<van-cell title="注文内容">{{ modelRef.orderTypeName }}</van-cell>
-					<van-cell title="基础料金">{{ modelRef.orderPrice + '円' }}</van-cell>
 					<van-cell title="车费内容">{{ modelRef.feeType ?? '全包' }}</van-cell>
 					<van-cell title="是否收现">{{
-			modelRef.isCash ? '是(具体查看收现名目)' : '否'
-		}}</van-cell>
+						modelRef.isCash ? '是(具体查看收现名目)' : '否'
+					}}</van-cell>
 					<van-cell title="超时收现">
 						<template #value>
 							{{ modelRef.isOutTimeCash ? '是' : '否' }}
 						</template>
 						<template #label>
 							{{
-			modelRef.isOutTimeCash ? `${modelRef.outTimeAmount}円/30分` : ''
-		}}
+								modelRef.isOutTimeCash ? `${modelRef.outTimeAmount}円/30分` : ''
+							}}
 						</template>
 					</van-cell>
 					<van-cell title="OP备注">
@@ -56,12 +57,14 @@
 					<van-cell v-if="modelRef.orderTypeName === EnumOrderType.Haiya" title="结束时间">{{ modelRef.endTime }}</van-cell>
 					<van-cell title="出发地" :value="modelRef.orderFrom" :label="modelRef.orderFromDetails" />
 					<van-cell title="目的地" :value="modelRef.orderTo" :label="modelRef.orderToDetails" />
-					<van-cell v-if="modelRef.orderTypeName === EnumOrderType.Airport_S ||
-			modelRef.orderTypeName === EnumOrderType.Airport_Y
-			" title="航班号">{{ modelRef.flightNo }}</van-cell>
-					<van-cell v-if="modelRef.orderTypeName === EnumOrderType.Airport_S ||
-			modelRef.orderTypeName === EnumOrderType.Airport_Y
-			" title="机场">{{ modelRef.airport }}</van-cell>
+					<van-cell v-if="
+						modelRef.orderTypeName === EnumOrderType.Airport_S ||
+						modelRef.orderTypeName === EnumOrderType.Airport_Y
+					" title="航班号">{{ modelRef.flightNo }}</van-cell>
+					<van-cell v-if="
+						modelRef.orderTypeName === EnumOrderType.Airport_S ||
+						modelRef.orderTypeName === EnumOrderType.Airport_Y
+					" title="机场">{{ modelRef.airport }}</van-cell>
 					<van-cell title="大人数">{{ modelRef.adultNum + '人' }}</van-cell>
 					<van-cell title="小孩数">{{ modelRef.childrenNum + '人' }}</van-cell>
 					<van-cell title="行李数">{{ modelRef.luggageNum + '件' }}</van-cell>
@@ -69,14 +72,14 @@
 				<van-cell-group inset title="ー お客様情報 ー">
 					<van-cell title="お客様">{{ modelRef.customerName }}</van-cell>
 					<van-cell title="連絡方法①">{{
-			`${modelRef.contactMethod1} ${modelRef.contactContent1}`
-		}}</van-cell>
+						`${modelRef.contactMethod1} ${modelRef.contactContent1}`
+					}}</van-cell>
 					<van-cell v-if="modelRef.contactContent2" title="連絡方法②">{{
-			`${modelRef.contactContent2} ${modelRef.contactContent2}`
-		}}</van-cell>
+						`${modelRef.contactContent2} ${modelRef.contactContent2}`
+					}}</van-cell>
 					<van-cell v-if="modelRef.contactContent3" title="連絡方法③">{{
-			`${modelRef.contactContent3} ${modelRef.contactContent3}`
-		}}</van-cell>
+						`${modelRef.contactContent3} ${modelRef.contactContent3}`
+					}}</van-cell>
 					<van-cell title="お客様要望">
 						<template #label>
 							{{ modelRef.customerRemark }}
@@ -97,14 +100,14 @@
 					<van-cell v-for="pay in payRef" :key="pay.id" :title="pay.payItem ? pay.payItem : pay.financeTypeName">
 						<template #value>
 							{{
-			pay.amount +
-			`${pay.currencyCode === 'usd'
-				? '美元'
-				: pay.currencyCode === 'cny'
-					? '元'
-					: '円'
-			}`
-		}}
+								pay.amount +
+								`${pay.currencyCode === 'usd'
+									? '美元'
+									: pay.currencyCode === 'cny'
+										? '元'
+										: '円'
+								}`
+							}}
 						</template>
 						<template #label>
 							{{ pay.remark ?? '' }}

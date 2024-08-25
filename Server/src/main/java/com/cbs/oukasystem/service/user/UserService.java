@@ -373,25 +373,21 @@ public class UserService {
      * 休暇
      */
     public Boolean rest(IUUserRestVO iVo) {
-        UserEntity entity = null;
-        if (null == iVo.getId() || iVo.getId().isEmpty()) {
-            entity = repository.findByUserNo(iVo.getUserNo());
-            iVo.setUserId(entity.getId());
-            iVo.setUserName(entity.getUserName());
-            iVo.setUserRoles(entity.getUserRoles());
-        } else {
-            entity = getEntity(iVo.getId());
-        }
-        UserRestVO userRestVO = restService.addOrEdit(iVo);
+        UserEntity entity = repository.findByUserNo(iVo.getUserNo());
+        iVo.setUserId(entity.getId());
+        iVo.setUserName(entity.getUserName());
+        iVo.setUserRoles(entity.getUserRoles());
+
+        UserRestEntity restEntity = restService.insertOrUpdate(iVo);
 
         // 先删除日程表
-        scheduleService.deletePhysicsByRestId(userRestVO.getId(), EnumTargetType.Driver);
+        scheduleService.deletePhysicsByRestId(restEntity.getId(), EnumTargetType.Driver);
 
         // 休暇 ドライバー スケジュール
         List<ScheduleEntity> scheduleEntities = new ArrayList<ScheduleEntity>();
         SimpleDateFormat sf = new SimpleDateFormat("yyyy/MM/dd");
-        Date sd = userRestVO.getStartTime();
-        Date ed = userRestVO.getEndTime();
+        Date sd = restEntity.getStartTime();
+        Date ed = restEntity.getEndTime();
         Calendar sCalendar = Calendar.getInstance();
         Calendar dCalendar = Calendar.getInstance();
         sCalendar.setTime(sd);
@@ -402,14 +398,14 @@ public class UserService {
         int index = 0;
         do {
             scheduleEntity = new ScheduleEntity();
-            scheduleEntity.setTargetId(userRestVO.getUserId());
-            scheduleEntity.setTargetNo(userRestVO.getUserNo());
-            scheduleEntity.setTargetName(userRestVO.getUserName());
-            scheduleEntity.setActionId(userRestVO.getId());
+            scheduleEntity.setTargetId(restEntity.getUserId());
+            scheduleEntity.setTargetNo(restEntity.getUserNo());
+            scheduleEntity.setTargetName(restEntity.getUserName());
+            scheduleEntity.setActionId(restEntity.getId());
             scheduleEntity.setTargetType(EnumTargetType.Driver);
             scheduleEntity.setActionType(EnumActionType.Rest);
             scheduleEntity.setRemark(String.format("%S",
-                    userRestVO.getRestType()));
+                    restEntity.getRestType()));
             sCalendar.setTime(sd);
             sCalendar.add(Calendar.DATE, index);
             scheduleEntity.setWorkDate(sf.format(sCalendar.getTime()));
@@ -418,17 +414,7 @@ public class UserService {
             index++;
         } while (index <= days);
         scheduleService.saveAll(scheduleEntities);
-
-        // 如果休息时间是当天，改变司机状态
-        sCalendar.setTime(userRestVO.getStartTime());
-        Date today = new Date();
-        Calendar todayCalendar = Calendar.getInstance();
-        todayCalendar.setTime(today);
-        if (todayCalendar.get(Calendar.DATE) == sCalendar.get(Calendar.DATE)) {
-            entity.setStatus(EnumUserStatus.Resting);
-            entity.setStatusName(EnumUserStatus.Resting.getMessage());
-        }
-        repository.save(entity);
+        isRest(restEntity, entity);
         return true;
     }
 
@@ -476,19 +462,28 @@ public class UserService {
 
     public Boolean restCancel(String restId) {
         UserRestEntity restEntity = restService.getEntity(restId);
-
+        UserEntity entity = getEntity(restEntity.getUserId());
         // 如果休息时间是当天，改变司机状态
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(restEntity.getStartTime());
-        Date today = new Date();
-        Calendar todayCalendar = Calendar.getInstance();
-        todayCalendar.setTime(today);
-        if (todayCalendar.get(Calendar.DATE) == calendar.get(Calendar.DATE)) {
-            resetStatus(restEntity.getUserId(), EnumUserStatus.Working);
-        }
+        isRest(restEntity, entity);
         restService.delete(restId);
         scheduleService.deletePhysicsByRestId(restId, EnumTargetType.Driver);
         return true;
+    }
+
+    /*
+     * 判断是否在休息时间
+     */
+    public void isRest(UserRestEntity restEntity, UserEntity entity) {
+        Date sd = restEntity.getStartTime();
+        Date ed = restEntity.getEndTime();
+        Date today = new Date();
+
+        // 如果当天在休息时间内，改变司机状态
+        if (sd.compareTo(today) <= 0 && ed.compareTo(today) >= 0) {
+            entity.setStatus(EnumUserStatus.Resting);
+            entity.setStatusName(EnumUserStatus.Resting.getMessage());
+        }
+        repository.save(entity);
     }
 
     /*

@@ -4,7 +4,7 @@
 			<n-form ref="formRef" label-placement="left" :label-width="150" :model="formValue" :rules="rules" :size="size">
 				<n-grid :cols="2">
 					<n-gi>
-						<n-form-item label="注文元" path="orderSource">
+						<n-form-item label="订单来源" path="orderSource">
 							<n-input v-model:value="formValue.orderSource" placeholder="クリック分類を選択" readonly
 								@click="showDict('order_source', '')" />
 						</n-form-item>
@@ -107,11 +107,18 @@ const formValue = ref<MyModel.Order>({
 	adultNum: props.model?.adultNum,
 	childrenNum: props.model?.childrenNum,
 	orderStatus: props.model?.orderStatus,
-	orderPrice: props.model?.orderPrice,
+
+	amount: props.model?.amount,
+	currency: props.model?.currency,
+	currencyCode: props.model?.currencyCode,
+	currencyAmount: props.model?.currencyAmount,
+
 	orderFromDetails: props.model?.orderFromDetails,
 	orderToDetails: props.model?.orderToDetails,
 	flightNo: props.model?.flightNo,
 	airport: props.model?.airport,
+	airportCode: props.model?.airportCode,
+	terminal: props.model?.terminal,
 
 	customerName: props.model?.customerName,
 	billingAddress: props.model?.billingAddress,

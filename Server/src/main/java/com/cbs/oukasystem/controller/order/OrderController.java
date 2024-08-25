@@ -133,6 +133,14 @@ public class OrderController {
     }
 
     @ResponseBody
+    @Operation(summary = "Add/Edit Other - 追加・編集他の情報")
+    @PostMapping(value = "/setOther")
+    @Parameters(@Parameter(name = "iuOrderVO", description = "追加・編集他の情報", required = true))
+    public ResultVO<OrderVO> setOther(@Validated @RequestBody IUOrderVO iuOrderVO) {
+        return ResultVO.success(service.setOther(iuOrderVO));
+    }
+
+    @ResponseBody
     @Operation(summary = "deploy Order - ドライバー&車両支配")
     @PostMapping(value = "/deploy")
     @Parameters(@Parameter(name = "OrderDeployVO", description = "支配", required = true))

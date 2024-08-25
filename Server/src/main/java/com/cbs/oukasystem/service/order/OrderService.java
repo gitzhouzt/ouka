@@ -60,6 +60,7 @@ import com.cbs.oukasystem.entity.order.OrderEntity;
 import com.cbs.oukasystem.mapstruct.finance.PayRecordVOEntityMapStruct;
 import com.cbs.oukasystem.mapstruct.order.OrderVOEntityMapStruct;
 import com.cbs.oukasystem.repository.order.OrderRepository;
+import com.cbs.oukasystem.service.base.DictItemService;
 import com.cbs.oukasystem.service.car.CarService;
 import com.cbs.oukasystem.service.finance.AdvanceService;
 import com.cbs.oukasystem.service.finance.EarningsService;
@@ -67,6 +68,7 @@ import com.cbs.oukasystem.service.finance.PayRecordService;
 import com.cbs.oukasystem.service.operate.ScheduleService;
 import com.cbs.oukasystem.service.user.UserService;
 import com.cbs.oukasystem.vo.ListVO;
+import com.cbs.oukasystem.vo.in.base.QueryDictItemVO;
 import com.cbs.oukasystem.vo.in.finance.IUAdvanceVO;
 import com.cbs.oukasystem.vo.in.finance.IUEarningsVO;
 import com.cbs.oukasystem.vo.in.finance.IUPayRecordVO;
@@ -75,6 +77,7 @@ import com.cbs.oukasystem.vo.in.order.OrderCancelVO;
 import com.cbs.oukasystem.vo.in.order.OrderDeployVO;
 import com.cbs.oukasystem.vo.in.order.QueryDeployRecordVO;
 import com.cbs.oukasystem.vo.in.order.QueryOrderVO;
+import com.cbs.oukasystem.vo.out.base.DictItemVO;
 import com.cbs.oukasystem.vo.out.driverApp.TodayOrderVO;
 import com.cbs.oukasystem.vo.out.finance.PayRecordVO;
 import com.cbs.oukasystem.vo.out.finance.SettlementVO;
@@ -114,6 +117,9 @@ public class OrderService {
 
     @Autowired
     private CarService carService;
+
+    @Autowired
+    private DictItemService itemService;
 
     @Autowired
     private EmailUtils emailUtils;
@@ -505,14 +511,38 @@ public class OrderService {
             entity.setOrderType(iuVo.getOrderType());
             entity.setOrderTypeName(iuVo.getOrderType().getMessage());
             entity.setOrderDays(iuVo.getOrderDays());
-            entity.setCustomerRemark(iuVo.getCustomerRemark());
-            entity.setOrderPrice(iuVo.getOrderPrice());
+
+            /*
+             * 金额转换
+             */
+            entity.setCurrency(iuVo.getCurrency());
+            entity.setCurrencyCode(iuVo.getCurrencyCode());
+            entity.setCurrencyAmount(iuVo.getCurrencyAmount());
+
+            if (null == iuVo.getAmount() || iuVo.getAmount() == 0) {
+                QueryDictItemVO qVo = new QueryDictItemVO();
+                qVo.setDictCode("pay_exchange_rate");
+                if (entity.getCurrencyCode().equals("jpy")) {
+                    entity.setAmount(entity.getCurrencyAmount());
+                } else if (entity.getCurrencyCode().equals("cny")) {
+                    qVo.setItemCode("cny_jpy");
+                    DictItemVO itemVO = itemService.getByCode(qVo);
+                    entity.setAmount(entity.getCurrencyAmount() * Double.parseDouble(itemVO.getItemName()));
+                } else if (entity.getCurrencyCode().equals("usd")) {
+                    qVo.setItemCode("usd_jpy");
+                    DictItemVO itemVO = itemService.getByCode(qVo);
+                    entity.setAmount(entity.getCurrencyAmount() * Double.parseDouble(itemVO.getItemName()));
+                }
+            }
+
             entity.setOrderFrom(iuVo.getOrderFrom());
             entity.setOrderTo(iuVo.getOrderTo());
             entity.setOrderFromDetails(iuVo.getOrderFromDetails());
             entity.setOrderToDetails(iuVo.getOrderToDetails());
             entity.setFlightNo(iuVo.getFlightNo());
             entity.setAirport(iuVo.getAirport());
+            entity.setAirportCode(iuVo.getAirportCode());
+            entity.setTerminal(iuVo.getTerminal());
 
             entity.setLuggageNum(iuVo.getLuggageNum());
             entity.setAdultNum(iuVo.getAdultNum());
@@ -525,7 +555,6 @@ public class OrderService {
             entity.setIsCash(iuVo.getIsCash());
             entity.setIsOutTimeCash(iuVo.getIsOutTimeCash());
             entity.setOutTimeAmount(iuVo.getOutTimeAmount());
-            entity.setCompanyRemark(iuVo.getCompanyRemark());
 
             entity.setIsLodgingTips(true);
             entity.setIsETC(false);
@@ -542,6 +571,9 @@ public class OrderService {
             entity.setCarSeat(iuVo.getCarSeat());
             entity.setCarType(iuVo.getCarType());
 
+            /*
+             * 車両&司机支配
+             */
             OrderDeployVO deployVO = new OrderDeployVO();
             if (null != entity.getCarId() && !entity.getCarId().isEmpty()) {
                 // 車両
@@ -589,6 +621,26 @@ public class OrderService {
             iuEarningsVO.setOrder(entity);
             iuEarningsVO.setOrderNo(entity.getOrderNo());
             earningsService.addOrEdit(iuEarningsVO);
+        } catch (Exception e) {
+            throw new BaseException(EnumIOUCheck.ERROR, KEY + ":" + e.getMessage());
+        }
+        return entity;
+    }
+
+    public OrderVO setOther(IUOrderVO iuVo) {
+        return OrderVOEntityMapStruct.INSTANCE.toVO(saveOther(iuVo));
+    }
+
+    public OrderEntity saveOther(IUOrderVO iuVo) {
+        OrderEntity entity = null;
+        try {
+            if (null == iuVo.getId() || iuVo.getId().isEmpty()) {
+                throw new BaseException(EnumIOUCheck.ERROR, KEY + "Id" + EnumDataCheck.NOT_EXIST.getErrorMsg());
+            }
+            entity = getEntity(iuVo.getId());
+            entity.setCustomerRemark(iuVo.getCustomerRemark());
+            entity.setCompanyRemark(iuVo.getCompanyRemark());
+            entity = repository.save(entity);
         } catch (Exception e) {
             throw new BaseException(EnumIOUCheck.ERROR, KEY + ":" + e.getMessage());
         }
@@ -1074,10 +1126,10 @@ public class OrderService {
                             break;
                     }
                 }
-                int price = entity.getOrderPrice() <= 0 ? 1 : entity.getOrderPrice();
+                double price = entity.getAmount() <= 0 ? 1 : entity.getAmount();
                 earningsEntity
                         .setProfit(
-                                entity.getOrderPrice() - (earningsEntity.getHandlingFee() + earningsEntity.getOilFee()
+                                entity.getAmount() - (earningsEntity.getHandlingFee() + earningsEntity.getOilFee()
                                         + earningsEntity.getEtc() + earningsEntity.getEntrustSalary()
                                         + earningsEntity.getSalary()
                                         + earningsEntity.getEntrust() + earningsEntity.getParking()));

@@ -2,8 +2,6 @@ package com.cbs.oukasystem.service.base;
 
 import java.util.List;
 import java.util.Optional;
-import java.io.FileInputStream;
-import java.io.InputStream;
 import java.util.ArrayList;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -19,25 +17,16 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-
-import com.cbs.oukasystem.common.CommonUtils;
-import com.cbs.oukasystem.common.CsvUtils;
-import com.cbs.oukasystem.common.FileUploadUtil;
-import com.cbs.oukasystem.common.LoginUtils;
 import com.cbs.oukasystem.common.MessageEnum.EnumDataCheck;
 import com.cbs.oukasystem.common.MessageEnum.EnumDeleteCheck;
 import com.cbs.oukasystem.common.MessageEnum.EnumIOUCheck;
-import com.cbs.oukasystem.common.MessageEnum.EnumUploadCheck;
 import com.cbs.oukasystem.config.BaseException;
 import com.cbs.oukasystem.entity.base.DictEntity;
-import com.cbs.oukasystem.entity.base.DictItemEntity;
 import com.cbs.oukasystem.mapstruct.base.DictVOEntityMapStruct;
 import com.cbs.oukasystem.repository.base.DictRepository;
 import com.cbs.oukasystem.vo.ListVO;
 import com.cbs.oukasystem.vo.in.base.IUDictVO;
 import com.cbs.oukasystem.vo.in.base.QueryDictVO;
-import com.cbs.oukasystem.vo.in.user.IUUserRestVO;
 import com.cbs.oukasystem.vo.out.base.DictVO;
 
 @Service

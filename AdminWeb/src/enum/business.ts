@@ -94,7 +94,7 @@ export enum EnumFinanceType {
 /**
  * 注文空港 タイプ
  */
-export enum EnumAirportType {
+export enum EnumAirport {
   '' = '選択してください',
   'Narita_N' = '成田（都内）',
   'Narita_Y' = '成田（都外）',
@@ -102,6 +102,16 @@ export enum EnumAirportType {
   'Haneda_Y' = '羽田（都外）',
   'Kansai' = '関西',
   'Ibaraki' = '茨城'
+}
+
+/**
+ * 注文 ターミナル
+ */
+export enum EnumTerminal {
+  '' = '選択してください',
+  'T1' = 'T1',
+  'T2' = 'T2',
+  'T3' = 'T3'
 }
 
 /**
@@ -155,6 +165,7 @@ export enum EnumDeleteStepModule {
 export enum EnumOrderStepModule {
   'action-customer' = 'お客様情報入力',
   'action-order' = '注文情報入力',
+  'action-other' = ' 他の情報入力',
   'action-confirmed' = '情報確認',
   'action-success' = '保存済'
 }

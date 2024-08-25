@@ -58,11 +58,10 @@
 		</n-space>
 		<order-details ref="detailsModal" />
 		<deploy-action ref="deployModal" @close="searchQuery" />
-		<dict-select-modal ref="dictModal" @click="selectDict" />
 		<driver-select-modal ref="driverModal" @click="selectDriver" />
 		<car-select-modal ref="carModal" @click="selectCar" />
 		<set-cols-drawer ref="colsModal" @click="setCols" />
-		<query-drawer ref="queryModal" @click="onQuery" @reset="searchReset" />
+		<query-drawer ref="queryModal" @click="onQuery" @reset="handleReset" />
 	</div>
 </template>
 
@@ -111,6 +110,11 @@ const {
 } = useDataTable<MyModel.Order>(module, moduleParams);
 resetParams();
 
+const handleReset = () => {
+	searchParams.orderTime = null;
+	searchParams.orderType = null;
+	searchReset();
+};
 const { orderStatusTagType } = useMyTags();
 const { orderTypeOptions } = useMyOptions();
 const { isMobile, isWrap } = useMyCommon();
@@ -157,61 +161,124 @@ const rowClassName = (row: MyModel.Order) => {
 };
 const columns: DataTableColumn<MyModel.Order>[] = [
 	{
+		title: '詳細',
+		key: 'details',
+		width: 20,
+		align: 'center',
+		render(row) {
+			const option = h(
+				NButton,
+				{
+					quaternary: true,
+					size: 'small',
+					type: 'info',
+					onClick: () => handleDetails('注文詳細', row)
+				},
+				{ default: () => '閲覧' }
+			);
+			return option;
+		}
+	},
+	{
 		title: '订单来源',
 		key: 'orderSource',
-		align: 'center',
 		sorter: true,
-		width: 80
+		align: 'left',
+		width: 30,
+		resizable: true,
+		ellipsis: {
+			tooltip: true
+		},
+		render(row) {
+			return [h('div', {}, { default: () => (row.orderSource ? row.orderSource : '-') })];
+		}
 	},
 	{
 		title: '注文番号',
 		key: 'orderNo',
-		align: 'center',
 		sorter: true,
-		width: 50
+		align: 'left',
+		width: 40,
+		resizable: true,
+		ellipsis: {
+			tooltip: true
+		}
 	},
 	{
 		title: 'ツアー開始日',
-		key: 'startTime',
-		align: 'center',
 		sorter: true,
-		width: 60,
+		key: 'startTime',
+		align: 'left',
+		width: 40,
+		ellipsis: {
+			tooltip: true
+		},
 		render(row) {
-			return row?.startTime ? `${row?.startTime}` : '未定';
+			return [
+				h(
+					'div',
+					{
+						style: { textAlign: 'right' }
+					},
+					{ default: () => (row.startTime ? row.startTime : '未定') }
+				)
+			];
 		}
 	},
 	{
 		title: 'ツアー終了日',
+		sorter: true,
 		key: 'endTime',
-		align: 'center',
-		width: 60,
+		align: 'left',
+		width: 40,
+		ellipsis: {
+			tooltip: true
+		},
 		render(row) {
-			return row?.endTime ? `${row?.endTime}` : '未定';
+			return [
+				h(
+					'div',
+					{
+						style: { textAlign: 'right' }
+					},
+					{ default: () => (row.endTime ? row.endTime : '未定') }
+				)
+			];
 		}
 	},
 	{
 		title: '運行内容',
 		key: 'orderType',
-		align: 'center',
-		width: 50,
+		align: 'left',
+		resizable: true,
+		width: 30,
+		ellipsis: {
+			tooltip: true
+		},
 		render(row) {
 			const orderType = row.orderType as MyEnumType.EnumOrderTypeKey;
 			const status = EnumOrderType[orderType];
-			return h(
-				'span',
-				{},
-				{
-					default: () => status
-				}
-			);
+			return h('div', {}, [
+				h(
+					'span',
+					{},
+					{
+						default: () => status || '未定'
+					}
+				)
+			]);
 		}
 	},
 	{
 		title: 'ドライバー',
 		key: 'driverName',
 		sorter: true,
-		align: 'center',
+		align: 'left',
+		resizable: true,
 		width: 50,
+		ellipsis: {
+			tooltip: true
+		},
 		render(row) {
 			const deployOption = h(
 				NButton,
@@ -237,9 +304,12 @@ const columns: DataTableColumn<MyModel.Order>[] = [
 	{
 		title: '車両',
 		key: 'carNo',
-		align: 'center',
-		sorter: true,
+		align: 'left',
+		resizable: true,
 		width: 50,
+		ellipsis: {
+			tooltip: true
+		},
 		render(row) {
 			const deployOption = h(
 				NButton,
@@ -265,8 +335,11 @@ const columns: DataTableColumn<MyModel.Order>[] = [
 	{
 		title: '航空便',
 		key: 'flightNo',
-		align: 'center',
+		align: 'left',
 		width: 30,
+		ellipsis: {
+			tooltip: true
+		},
 		render(row) {
 			return [h('div', {}, { default: () => row.flightNo ?? '-' })];
 		}
@@ -274,53 +347,13 @@ const columns: DataTableColumn<MyModel.Order>[] = [
 	{
 		title: '出発地',
 		key: 'orderFrom',
-		align: 'center',
-		width: 120,
-		render(row) {
-			return [h(NEllipsis, { lineClamp: 1, tooltip: true }, { default: () => (row.orderFrom ? row.orderFrom : '-') })];
-		}
-	},
-	{
-		title: '目的地',
-		key: 'orderTo',
-		align: 'center',
-		width: 120,
-		render(row) {
-			return [h(NEllipsis, { lineClamp: 1, tooltip: true }, { default: () => (row.orderTo ? row.orderTo : '-') })];
-		}
-	},
-	{
-		title: 'お客様要望',
-		key: 'customerRemark',
-		align: 'center',
-		width: 130,
-		render(row) {
-			return [
-				h(
-					NEllipsis,
-					{ lineClamp: 1, tooltip: true },
-					{ default: () => (row.customerRemark ? row.customerRemark : '-') }
-				)
-			];
-		}
-	},
-	{
-		title: '備考',
-		key: 'companyRemark',
-		align: 'center',
-		width: 130,
-		render(row) {
-			return [
-				h(NEllipsis, { lineClamp: 1, tooltip: true }, { default: () => (row.companyRemark ? row.companyRemark : '-') })
-			];
-		}
-	},
-	{
-		title: 'お客様',
-		key: 'customerName',
-		align: 'center',
-		width: 100,
+		sorter: true,
+		align: 'left',
 		resizable: true,
+		width: 30,
+		ellipsis: {
+			tooltip: true
+		},
 		render(row) {
 			return [
 				h(
@@ -328,87 +361,267 @@ const columns: DataTableColumn<MyModel.Order>[] = [
 					{
 						style: { textAlign: 'left' }
 					},
-					{ default: () => (row.customerName ? row.customerName : '-') }
+
+					{ default: () => (row.orderFrom ? row.orderFrom : '-') }
 				)
 			];
 		}
 	},
 	{
+		title: '目的地',
+		key: 'orderTo',
+		align: 'left',
+		resizable: true,
+		width: 30,
+		ellipsis: {
+			tooltip: true
+		},
+		render(row) {
+			return [
+				h(
+					'div',
+					{
+						style: { textAlign: 'left' }
+					},
+
+					{ default: () => (row.orderTo ? row.orderTo : '-') }
+				)
+			];
+		}
+	},
+	{
+		title: 'お客様要望',
+		key: 'customerRemark',
+		align: 'left',
+		resizable: true,
+		width: 30,
+		ellipsis: {
+			tooltip: true
+		},
+		render(row) {
+			return [h('span', {}, { default: () => (row.customerRemark ? row.customerRemark : '-') })];
+		}
+	},
+	{
+		title: '備考',
+		key: 'companyRemark',
+		align: 'left',
+		resizable: true,
+		width: 30,
+		ellipsis: {
+			tooltip: true
+		},
+		render(row) {
+			return [h('span', {}, { default: () => (row.companyRemark ? row.companyRemark : '-') })];
+		}
+	},
+	{
+		title: 'お客様',
+		key: 'customerName',
+		align: 'left',
+		resizable: true,
+		width: 30,
+		ellipsis: {
+			tooltip: true
+		},
+		render(row) {
+			return [h('span', {}, { default: () => (row.customerName ? row.customerName : '-') })];
+		}
+	},
+	{
 		title: '連絡方法①',
 		key: 'contactMethod1',
-		align: 'center',
-		width: 70,
+		align: 'left',
+		resizable: true,
+		width: 30,
+		ellipsis: {
+			tooltip: true
+		},
+		render(row) {
+			return h('div', {}, [h('span', {}, { default: () => `${row.contactMethod1}：${row.contactContent1}` })]);
+		}
+	},
+	{
+		title: '連絡方法②',
+		key: 'contactMethod2',
+		align: 'left',
+		resizable: true,
+		width: 30,
+		ellipsis: {
+			tooltip: true
+		},
+		render(row) {
+			return [
+				h('div', {}, [h('span', {}, row.contactMethod2 ? `${row.contactMethod2}：${row.contactContent2}` : '-')])
+			];
+		}
+	},
+	{
+		title: '連絡方法③',
+		key: 'contactMethod3',
+		align: 'left',
+		resizable: true,
+		width: 30,
+		ellipsis: {
+			tooltip: true
+		},
+		render(row) {
+			return [h('div', {}, [h('span', {}, row.contactMethod3 ? `${row.contactMethod3}：${row.contactMethod3}` : '-')])];
+		}
+	},
+	{
+		title: '大人数',
+		key: 'adultNum',
+		align: 'left',
+		width: 20,
 		resizable: true,
 		render(row) {
-			return h(
-				'div',
-				{
-					style: { textAlign: 'left' }
-				},
-				[h('span', {}, { default: () => `${row.contactMethod1}：${row.contactContent1}` })]
-			);
+			return [
+				h(
+					'div',
+					{
+						style: { textAlign: 'right' }
+					},
+					{ default: () => (row.adultNum ? row.adultNum : '-') }
+				)
+			];
 		}
 	},
 	{
 		title: '子供数',
 		key: 'childrenNum',
-		align: 'center',
-		width: 20
+		align: 'left',
+		width: 20,
+		resizable: true,
+		render(row) {
+			return [
+				h(
+					'div',
+					{
+						style: { textAlign: 'right' }
+					},
+					{ default: () => (row.childrenNum ? row.childrenNum : '-') }
+				)
+			];
+		}
 	},
-	{
-		title: '大人数',
-		key: 'adultNum',
-		align: 'center',
-		width: 20
-	},
+
 	{
 		title: '希望車両',
 		key: 'specifyCarType',
-		align: 'center',
-		width: 50
+		align: 'left',
+		resizable: true,
+		width: 30,
+		ellipsis: {
+			tooltip: true
+		},
+		render(row) {
+			return [
+				h(
+					'div',
+					{
+						class: 'text-right'
+					},
+					{ default: () => (row.specifyCarType ? row.specifyCarType : '-') }
+				)
+			];
+		}
 	},
 	{
 		title: '第三者',
 		key: 'orderKey',
-		align: 'center',
-		width: 100
+		align: 'left',
+		resizable: true,
+		width: 30,
+		ellipsis: {
+			tooltip: true
+		},
+		render(row) {
+			return [h('div', {}, { default: () => (row.orderKey ? row.orderKey : '-') })];
+		}
 	},
 	{
 		title: '荷物数',
 		key: 'luggageNum',
-		align: 'center',
-		width: 20
+		align: 'left',
+		width: 20,
+		resizable: true,
+		render(row) {
+			return [
+				h(
+					'div',
+					{
+						style: { textAlign: 'right' }
+					},
+					{ default: () => (row.luggageNum ? row.luggageNum : '-') }
+				)
+			];
+		}
 	},
 	{
-		title: '座席数',
+		title: '座椅数',
 		key: 'carSeat',
-		align: 'center',
+		align: 'left',
 		width: 20,
+		resizable: true,
 		render(row) {
-			return [h('div', {}, { default: () => row.carSeat ?? '-' })];
+			return [
+				h(
+					'div',
+					{
+						style: { textAlign: 'right' }
+					},
+					{ default: () => (row.carSeat ? row.carSeat : '-') }
+				)
+			];
 		}
 	},
 	{
 		title: '空港',
 		key: 'airport',
-		align: 'center',
-		width: 50,
+		align: 'left',
+		resizable: true,
+		width: 30,
+		ellipsis: {
+			tooltip: true
+		},
 		render(row) {
-			return [h('div', {}, { default: () => row.airport ?? '-' })];
+			let div = '-';
+			if (row.airport) {
+				div = row.airport;
+			}
+			if (row.terminal && div === row.airport) {
+				div = `${row.airport} / ${row.terminal}`;
+			}
+			return [h('div', {}, { default: () => div })];
 		}
 	},
-
 	{
 		title: '注文日時',
 		key: 'createTime',
 		sorter: true,
-		align: 'center',
-		width: 60
+		align: 'left',
+		width: 40,
+		ellipsis: {
+			tooltip: true
+		},
+		render(row) {
+			return [
+				h(
+					'div',
+					{
+						style: { textAlign: 'right' }
+					},
+					{ default: () => (row.createTime ? row.createTime : '未定') }
+				)
+			];
+		}
 	},
 	{
 		title: 'ステータス',
 		key: 'orderStatus',
-		align: 'center',
+		sorter: true,
+		align: 'left',
 		width: 30,
 		render(row) {
 			const orderStatus = row.orderStatus as MyEnumType.EnumOrderStatusKey;
@@ -425,30 +638,11 @@ const columns: DataTableColumn<MyModel.Order>[] = [
 				}
 			);
 		}
-	},
-	{
-		title: '詳細',
-		key: 'details',
-		width: 20,
-		align: 'center',
-		render(row) {
-			const detailsOption = h(
-				NButton,
-				{
-					quaternary: true,
-					size: 'small',
-					type: 'info',
-					onClick: () => handleDetails('注文詳細', row)
-				},
-				{ default: () => '詳細' }
-			);
-			return detailsOption;
-		}
 	}
 ];
 
 const cols = ref<any>(columns);
-const scrollX = ref<number>(5000);
+const scrollX = ref<number>(3200);
 const colsModal = ref<any>(null);
 const handleCols = () => {
 	colsModal.value?.setTitle('表示項目設定');
@@ -456,44 +650,16 @@ const handleCols = () => {
 };
 const setCols = (c: any) => {
 	cols.value = c;
-	const x = c.length === columns.length ? 5000 : 5000 - (columns.length - c.length) * 250;
+	const x = c.length === columns.length ? 3200 : 3200 - (columns.length - c.length) * 100;
 	scrollX.value = x;
 };
 
-const dictModal = ref<any>(null);
-const showDict = (typeCode: string) => {
-	dictModal.value?.showModal();
-	dictModal.value?.setDictCode(typeCode);
-};
-const selectDict = (result: any) => {
-	switch (result.type) {
-		case 'order_source':
-			searchParams.orderSource = result.text;
-			break;
-		case 'order_city':
-			searchParams.city = result.text;
-			break;
-		case 'order_key':
-			searchParams.orderKey = result.text;
-			break;
-		default:
-			break;
-	}
-};
 const driverModal = ref<any>(null);
 const showDriver = () => {
 	driverModal.value?.showModal();
 };
 const selectDriver = (result: any) => {
 	searchParams.driverName = result.userName;
-};
-
-const staffModal = ref<any>(null);
-const showStaff = () => {
-	staffModal.value?.showModal();
-};
-const selectStaff = (result: any) => {
-	searchParams.sellerName = result.userName;
 };
 
 const carModal = ref<any>(null);
@@ -515,8 +681,6 @@ const onQuery = (params: any) => {
 };
 
 const onUpdate = (value: [number, number] | null, formattedValue: [string, string] | null) => {
-	console.log('111', value);
-
 	searchParams.startBeginTime = value ? value[0] : undefined;
 	searchParams.startEndTime = value ? value[1] : undefined;
 };

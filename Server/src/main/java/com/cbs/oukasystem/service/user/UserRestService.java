@@ -1,9 +1,7 @@
 package com.cbs.oukasystem.service.user;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -22,23 +20,17 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import com.cbs.oukasystem.common.BusinessEnum.EnumActionType;
-import com.cbs.oukasystem.common.BusinessEnum.EnumTargetType;
 import com.cbs.oukasystem.common.LoginUtils;
 import com.cbs.oukasystem.common.MessageEnum.EnumDataCheck;
 import com.cbs.oukasystem.common.MessageEnum.EnumDeleteCheck;
 import com.cbs.oukasystem.common.MessageEnum.EnumIOUCheck;
 import com.cbs.oukasystem.config.BaseException;
-import com.cbs.oukasystem.entity.operate.ScheduleEntity;
 import com.cbs.oukasystem.entity.user.UserRestEntity;
 import com.cbs.oukasystem.mapstruct.user.UserRestVOEntityMapStruct;
 import com.cbs.oukasystem.repository.user.UserRestRepository;
-import com.cbs.oukasystem.service.operate.ScheduleService;
 import com.cbs.oukasystem.vo.ListVO;
-import com.cbs.oukasystem.vo.in.operate.QueryScheduleVO;
 import com.cbs.oukasystem.vo.in.user.IUUserRestVO;
 import com.cbs.oukasystem.vo.in.user.QueryUserRestVO;
-import com.cbs.oukasystem.vo.out.operate.ScheduleVO;
 import com.cbs.oukasystem.vo.out.user.UserRestVO;
 
 @Service
