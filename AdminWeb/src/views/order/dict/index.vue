@@ -1,7 +1,7 @@
 <template>
 	<div class="h-max">
 		<n-space :vertical="true">
-			<n-space>
+			<n-space v-if="false">
 				<n-form :inline="!isMobile" :label-width="100" label-placement="left">
 					<n-form-item label="キーワード">
 						<n-input v-model:value="searchParams.keyword" style="min-width: 30%" type="text" placeholder="データ分類/備考"
@@ -19,18 +19,18 @@
 			<n-grid :cols="2">
 				<n-grid-item>
 					<loading-empty-wrapper :style="{ height: hightRef + 'px' }" :loading="loading" :empty="empty">
-						<n-data-table remote bordered :columns="typeColumns" :data="dataSource" :pagination="pagination"
-							:scroll-x="800" :single-line="false" :flex-height="true" :style="{ height: hightRef + 'px' }"
-							:row-props="rowProps" @update:checked-row-keys="onChecked" @update:page="handlePageChange"
-							@update:page-size="handleUpdatePageSize" />
+						<n-data-table size="small" remote bordered :columns="typeColumns" :data="dataSource"
+							:pagination="pagination" :scroll-x="800" :single-line="false" :flex-height="true"
+							:style="{ height: hightRef + 'px' }" :row-props="rowProps" @update:checked-row-keys="onChecked"
+							@update:page="handlePageChange" @update:page-size="handleUpdatePageSize" />
 					</loading-empty-wrapper>
 				</n-grid-item>
 				<n-grid-item>
 					<loading-empty-wrapper :style="{ height: hightRef + 'px' }" :loading="itemLoading" :empty="empty">
-						<n-data-table remote bordered :columns="dictColumns" :data="itemData" :pagination="itemPagination"
-							:scroll-x="800" :single-line="false" :flex-height="true" :style="{ height: hightRef + 'px' }"
-							@update:page="handleItemPageChange" @update:page-size="handleItemUpdatePageSize" />
-					</loading-empty-wrapper></n-grid-item>
+						<n-data-table size="small" remote bordered :columns="dictColumns" :data="itemData"
+							:pagination="itemPagination" :scroll-x="800" :single-line="false" :flex-height="true"
+							:style="{ height: hightRef + 'px' }" @update:page="handleItemPageChange"
+							@update:page-size="handleItemUpdatePageSize" /> </loading-empty-wrapper></n-grid-item>
 			</n-grid>
 		</n-space>
 		<item-add-or-edit ref="itemAoeModal" @close="getItem()" />
@@ -103,23 +103,35 @@ const typeColumns: DataTableColumn<MyModel.Dict>[] = [
 	{
 		title: '分類',
 		key: 'dictName',
-		align: 'center'
+		align: 'left',
+		width: 50,
+		ellipsis: {
+			tooltip: true
+		}
 	},
 	{
 		title: 'コード',
 		key: 'dictCode',
-		align: 'center'
+		align: 'left',
+		width: 50,
+		ellipsis: {
+			tooltip: true
+		}
 	},
 	{
 		title: '備考',
 		key: 'remark',
-		align: 'center'
+		align: 'left',
+		width: 50,
+		ellipsis: {
+			tooltip: true
+		}
 	},
 	{
 		title: '追加データ',
 		key: 'add',
-		width: 100,
-		align: 'center',
+		width: 50,
+		align: 'left',
 		render(row) {
 			const newRow: MyModel.DictItem = {
 				id: '',
@@ -148,22 +160,31 @@ const dictColumns: DataTableColumn<MyModel.DictItem>[] = [
 	{
 		title: '表示',
 		key: 'itemName',
-		align: 'center'
+		width: 50,
+		ellipsis: {
+			tooltip: true
+		}
 	},
 	{
 		title: 'コード',
 		key: 'itemCode',
-		align: 'center'
+		width: 50,
+		ellipsis: {
+			tooltip: true
+		}
 	},
 	{
 		title: '備考',
 		key: 'remark',
-		align: 'center'
+		width: 50,
+		ellipsis: {
+			tooltip: true
+		}
 	},
 	{
 		title: '編集',
 		key: 'edit',
-		width: 80,
+		width: 50,
 		align: 'center',
 		render(row) {
 			const editOption = h(
@@ -182,7 +203,7 @@ const dictColumns: DataTableColumn<MyModel.DictItem>[] = [
 	{
 		title: '操作',
 		key: 'actions',
-		width: 80,
+		width: 50,
 		align: 'center',
 		render(row) {
 			const delOption = h(

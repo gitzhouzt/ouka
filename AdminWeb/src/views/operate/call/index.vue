@@ -23,7 +23,7 @@
 				<n-button type="primary" @click="handleAmCall('点呼登録', undefined)">点呼登録</n-button>
 			</n-space>
 			<loading-empty-wrapper :style="{ height: hightRef + 'px' }" :loading="loading" :empty="empty">
-				<n-data-table remote bordered :columns="columns" :data="dataSource" :pagination="pagination"
+				<n-data-table size="small" remote bordered :columns="columns" :data="dataSource" :pagination="pagination"
 					:row-class-name="rowClassName" :scroll-x="2000" :single-line="false" :flex-height="true"
 					:style="{ height: hightRef + 'px' }" @update:page="handlePageChange"
 					@update:page-size="handleUpdatePageSize" />

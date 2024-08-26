@@ -72,6 +72,12 @@ export default function useDataTable<T = MyModel.Root>(module: string, modulePar
     });
   }
 
+  function clearParams() {
+    Object.keys(moduleParams).forEach(p => {
+      searchParamsReactive[p] = null;
+    });
+  }
+
   const dataSourceRef = ref<T[]>([]) as Ref<T[]>;
 
   function searchQuery(beforeFun?: Function, afterFun?: Function) {
@@ -113,7 +119,14 @@ export default function useDataTable<T = MyModel.Root>(module: string, modulePar
     resetParams();
     searchParamsReactive.beginTime = null;
     searchParamsReactive.endTime = null;
-    searchParamsReactive.selTime = null;
+    searchParamsReactive.page = 1;
+    searchQuery();
+  }
+
+  function searchClear() {
+    clearParams();
+    searchParamsReactive.beginTime = null;
+    searchParamsReactive.endTime = null;
     searchParamsReactive.keyword = null;
     searchParamsReactive.page = 1;
     searchQuery();
@@ -173,6 +186,7 @@ export default function useDataTable<T = MyModel.Root>(module: string, modulePar
     handleSorter,
     searchQuery,
     searchReset,
+    searchClear,
     resetParams,
     setEmpty,
     beforeLoad,

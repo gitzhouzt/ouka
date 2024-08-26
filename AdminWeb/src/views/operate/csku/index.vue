@@ -27,9 +27,9 @@
 				</n-form>
 			</n-space>
 			<loading-empty-wrapper :style="{ height: hightRef + 'px' }" :loading="loading" :empty="empty">
-				<n-data-table remote bordered :columns="columns" :data="schedule" :pagination="pagination" :scroll-x="scrollX"
-					:single-line="false" :flex-height="true" :style="{ height: hightRef + 'px' }" @update:page="handlePageChange"
-					@update:sorter="handleSorter" @update:page-size="handleUpdatePageSize" />
+				<n-data-table size="small" remote bordered :columns="columns" :data="schedule" :pagination="pagination"
+					:scroll-x="scrollX" :single-line="false" :flex-height="true" :style="{ height: hightRef + 'px' }"
+					@update:page="handlePageChange" @update:sorter="handleSorter" @update:page-size="handleUpdatePageSize" />
 			</loading-empty-wrapper>
 		</n-space>
 	</div>

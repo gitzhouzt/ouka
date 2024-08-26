@@ -22,9 +22,10 @@
 				</n-form>
 			</n-space>
 			<loading-empty-wrapper :style="{ height: hightRef + 'px' }" :loading="loading" :empty="empty">
-				<n-data-table remote bordered :columns="columns" :data="dataSource" :pagination="pagination" :scroll-x="2000"
-					:single-line="false" :flex-height="true" :style="{ height: hightRef + 'px' }" :row-class-name="rowClassName"
-					@update:page="handlePageChange" @update:sorter="handleSorter" @update:page-size="handleUpdatePageSize" />
+				<n-data-table size="small" remote bordered :columns="columns" :data="dataSource" :pagination="pagination"
+					:scroll-x="2000" :single-line="false" :flex-height="true" :style="{ height: hightRef + 'px' }"
+					:row-class-name="rowClassName" @update:page="handlePageChange" @update:sorter="handleSorter"
+					@update:page-size="handleUpdatePageSize" />
 			</loading-empty-wrapper>
 		</n-space>
 		<add-or-edit ref="aoeModal" @close="searchQuery" />

@@ -43,9 +43,9 @@
 				</div>
 			</n-space>
 			<loading-empty-wrapper :style="{ height: hightRef + 'px' }" :loading="loading" :empty="empty">
-				<n-data-table remote bordered :columns="cols" :data="dataSource" :pagination="pagination" :scroll-x="scrollX"
-					:single-line="false" :flex-height="true" :style="{ height: hightRef + 'px' }" @update:page="handlePageChange"
-					@update:sorter="handleSorter" @update:page-size="handleUpdatePageSize" />
+				<n-data-table size="small" remote bordered :columns="cols" :data="dataSource" :pagination="pagination"
+					:scroll-x="scrollX" :single-line="false" :flex-height="true" :style="{ height: hightRef + 'px' }"
+					@update:page="handlePageChange" @update:sorter="handleSorter" @update:page-size="handleUpdatePageSize" />
 			</loading-empty-wrapper>
 		</n-space>
 		<order-action ref="actionModal" @close="searchQuery" />

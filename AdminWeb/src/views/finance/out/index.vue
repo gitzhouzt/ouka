@@ -45,10 +45,11 @@
 				<n-button type="primary" @click="handleExport">ダウンロード</n-button>
 			</n-space>
 			<loading-empty-wrapper :style="{ height: hightRef + 'px' }" :loading="loading" :empty="empty">
-				<n-data-table :row-key="rowKey" :summary="summary" remote bordered :v-model:checked-row-keys="checkedRowKeys"
-					:columns="columns" :data="dataSource" :pagination="pagination" :scroll-x="2000" :single-line="false"
-					:flex-height="true" :style="{ height: hightRef + 'px' }" @update:checked-row-keys="handleChecked"
-					@update:page="handlePageChange" @update:sorter="handleSorter" @update:page-size="handleUpdatePageSize" />
+				<n-data-table size="small" :row-key="rowKey" :summary="summary" remote bordered
+					:v-model:checked-row-keys="checkedRowKeys" :columns="columns" :data="dataSource" :pagination="pagination"
+					:scroll-x="2000" :single-line="false" :flex-height="true" :style="{ height: hightRef + 'px' }"
+					@update:checked-row-keys="handleChecked" @update:page="handlePageChange" @update:sorter="handleSorter"
+					@update:page-size="handleUpdatePageSize" />
 			</loading-empty-wrapper>
 		</n-space>
 		<driver-select-modal ref="driverModal" @click="selectDriver" />

@@ -29,7 +29,7 @@
 									clearable @update:value="onUpdate" />
 							</n-form-item>
 							<n-form-item label="ステータス" path="orderStatus">
-								<n-select v-model:value="params.orderStatus" class="w-50" multiple :options="orderStatusOptions"
+								<n-select v-model:value="params.orderStatus" class="w-50" multiple :options="deployStatusOptions"
 									:consistent-menu-width="false" />
 							</n-form-item>
 						</n-grid-item>
@@ -50,7 +50,7 @@
 import { ref } from 'vue';
 import { useMyOptions } from '@/composables';
 
-const { orderStatusOptions } = useMyOptions();
+const { deployStatusOptions } = useMyOptions();
 
 const emits = defineEmits(['click', 'reset']);
 const params = ref<any>();

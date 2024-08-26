@@ -47,9 +47,9 @@
 				<n-button type="primary" @click="handleExport">ダウンロード</n-button>
 			</n-space>
 			<loading-empty-wrapper :style="{ height: hightRef + 'px' }" :loading="loading" :empty="empty">
-				<n-data-table :row-key="rowKey" remote bordered :v-model:checked-row-keys="checkedRowKeys" :columns="columns"
-					:data="dataSource" :pagination="pagination" :scroll-x="4000" :single-line="false" :flex-height="true"
-					:style="{ height: hightRef + 'px' }" @update:checked-row-keys="handleChecked"
+				<n-data-table size="small" :row-key="rowKey" remote bordered :v-model:checked-row-keys="checkedRowKeys"
+					:columns="columns" :data="dataSource" :pagination="pagination" :scroll-x="4000" :single-line="false"
+					:flex-height="true" :style="{ height: hightRef + 'px' }" @update:checked-row-keys="handleChecked"
 					@update:page-size="handleUpdatePageSize" @update:page="handlePageChange" />
 			</loading-empty-wrapper>
 		</n-space>

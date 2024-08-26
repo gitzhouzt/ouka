@@ -519,20 +519,18 @@ public class OrderService {
             entity.setCurrencyCode(iuVo.getCurrencyCode());
             entity.setCurrencyAmount(iuVo.getCurrencyAmount());
 
-            if (null == iuVo.getAmount() || iuVo.getAmount() == 0) {
-                QueryDictItemVO qVo = new QueryDictItemVO();
-                qVo.setDictCode("pay_exchange_rate");
-                if (entity.getCurrencyCode().equals("jpy")) {
-                    entity.setAmount(entity.getCurrencyAmount());
-                } else if (entity.getCurrencyCode().equals("cny")) {
-                    qVo.setItemCode("cny_jpy");
-                    DictItemVO itemVO = itemService.getByCode(qVo);
-                    entity.setAmount(entity.getCurrencyAmount() * Double.parseDouble(itemVO.getItemName()));
-                } else if (entity.getCurrencyCode().equals("usd")) {
-                    qVo.setItemCode("usd_jpy");
-                    DictItemVO itemVO = itemService.getByCode(qVo);
-                    entity.setAmount(entity.getCurrencyAmount() * Double.parseDouble(itemVO.getItemName()));
-                }
+            QueryDictItemVO qVo = new QueryDictItemVO();
+            qVo.setDictCode("pay_exchange_rate");
+            if (entity.getCurrencyCode().equals("jpy")) {
+                entity.setAmount(entity.getCurrencyAmount());
+            } else if (entity.getCurrencyCode().equals("cny")) {
+                qVo.setItemCode("cny_jpy");
+                DictItemVO itemVO = itemService.getByCode(qVo);
+                entity.setAmount(entity.getCurrencyAmount() * Double.parseDouble(itemVO.getItemName()));
+            } else if (entity.getCurrencyCode().equals("usd")) {
+                qVo.setItemCode("usd_jpy");
+                DictItemVO itemVO = itemService.getByCode(qVo);
+                entity.setAmount(entity.getCurrencyAmount() * Double.parseDouble(itemVO.getItemName()));
             }
 
             entity.setOrderFrom(iuVo.getOrderFrom());

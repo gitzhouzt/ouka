@@ -4,15 +4,15 @@
 			<n-space>
 				<n-form :inline="!isMobile && !isWrap" :label-width="100" label-placement="left">
 					<n-form :inline="!isMobile" :label-width="100" label-placement="left">
-					<n-form-item label="キーワード">
-						<n-input v-model:value="searchParams.keyword" style="min-width: 30%" type="text" placeholder="番号/名前"
-							clearable />
-					</n-form-item>
-					<n-form-item label="役職">
-						<n-select v-model:value="searchParams.userRole" :options="userRoleOptions" :consistent-menu-width="false"
-							style="min-width: 30%" />
-					</n-form-item>
-				</n-form>
+						<n-form-item label="キーワード">
+							<n-input v-model:value="searchParams.keyword" style="min-width: 30%" type="text" placeholder="番号/名前"
+								clearable />
+						</n-form-item>
+						<n-form-item label="役職">
+							<n-select v-model:value="searchParams.userRole" :options="userRoleOptions" :consistent-menu-width="false"
+								style="min-width: 30%" />
+						</n-form-item>
+					</n-form>
 					<n-form-item>
 						<n-button type="primary" @click="() => {
 								searchQuery();
@@ -27,9 +27,9 @@
 				<n-button type="primary" class="ml-2" @click="handleExport">ダウンロード</n-button>
 			</n-space>
 			<loading-empty-wrapper :style="{ height: hightRef + 'px' }" :loading="loading" :empty="empty">
-				<n-data-table remote bordered :columns="columns" :data="dataSource" :pagination="pagination" :scroll-x="2500"
-					:single-line="false" :flex-height="true" :style="{ height: hightRef + 'px' }" @update:page="handlePageChange"
-					@update:sorter="handleSorter" @update:page-size="handleUpdatePageSize" />
+				<n-data-table size="small" remote bordered :columns="columns" :data="dataSource" :pagination="pagination"
+					:scroll-x="2500" :single-line="false" :flex-height="true" :style="{ height: hightRef + 'px' }"
+					@update:page="handlePageChange" @update:sorter="handleSorter" @update:page-size="handleUpdatePageSize" />
 			</loading-empty-wrapper>
 		</n-space>
 		<add-or-edit ref="aoeModal" @close="searchQuery" />

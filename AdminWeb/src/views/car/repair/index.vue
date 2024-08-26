@@ -21,7 +21,7 @@
 					<n-button type="primary" @click="handleAdd('車両修理')">車両修理</n-button>
 				</n-space>
 				<loading-empty-wrapper class="h-620px" :loading="loading" :empty="empty">
-					<n-data-table striped remote :columns="columns" :data="dataSource" :pagination="pagination"
+					<n-data-table size="small" striped remote :columns="columns" :data="dataSource" :pagination="pagination"
 						:flex-height="true" :scroll-x="1000" class="h-620px" @update:page="handlePageChange"
 						@update:page-size="handleUpdatePageSize" />
 				</loading-empty-wrapper>

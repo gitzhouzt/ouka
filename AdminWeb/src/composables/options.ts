@@ -71,6 +71,18 @@ export function useMyOptions() {
     return options;
   }
 
+  function deployStatusOptions() {
+    const keys = ['Assigning', 'Booked', 'Working', 'Sending', 'Check'] as MyEnumType.EnumOrderStatusKey[];
+    const options: any = [];
+    keys.forEach((key: MyEnumType.EnumOrderStatusKey) => {
+      options.push({
+        value: key,
+        label: EnumOrderStatus[key]
+      });
+    });
+    return options;
+  }
+
   function orderTypeOptions() {
     const keys = Object.keys(EnumOrderType) as MyEnumType.EnumOrderTypeKey[];
     const options: any = [];
@@ -139,6 +151,7 @@ export function useMyOptions() {
 
     orderStatusOptions: orderStatusOptions(),
     orderTypeOptions: orderTypeOptions(),
+    deployStatusOptions: deployStatusOptions(),
 
     airportOptions: airportOptions(),
     terminalOptions: terminalOptions(),
